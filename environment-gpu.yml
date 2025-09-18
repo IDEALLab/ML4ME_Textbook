@@ -1,0 +1,10 @@
+name: ml4me-student
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11.8
+  - pip
+  
+  # CUDA and cuDNN for GPU support
+  - conda-forge::cuda=12.8
+  - conda-forge::cudnn

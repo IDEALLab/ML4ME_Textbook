@@ -1,0 +1,47 @@
+[project]
+name = "ml4me-textbook"
+version = "0.1.0"
+description = "Machine Learning for Mechanical Engineering - Student Environment"
+authors = [
+    {name = "Mark Fuge", email = "mafuge@ethz.ch"}
+]
+readme = "README.md"
+requires-python = ">=3.11"
+
+dependencies = [
+    # Core ML and Data Science
+    "numpy>=1.26.4",
+    "matplotlib>=3.8.4",
+    "seaborn>=0.13.2",
+    "scikit-learn>=1.4.2",
+    "pandas>=2.2.2",
+    "scipy>=1.13.1",
+    
+    # Jupyter and Interactive Computing
+    "jupyter>=1.0.0",
+    "notebook>=7.1.2",
+    "ipywidgets>=8.1.2",
+    
+    # Image Processing
+    "Pillow>=10.3.0",
+    
+    # Note: PyTorch is installed separately in setup scripts
+    # because it requires different installation commands for different platforms
+]
+
+[project.optional-dependencies]
+# Optional dependencies for advanced users
+dev = [
+    "pytest>=7.0.0",
+    "black>=23.0.0",
+    "flake8>=6.0.0",
+]
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["*"]
+exclude = ["tests*", "notebooks*", "problems*", "part*", "appendices*"]
