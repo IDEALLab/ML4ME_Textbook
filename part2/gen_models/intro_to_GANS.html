@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Mark Fuge">
+<meta name="dcterms.date" content="2025-10-12">
+
+<title>9&nbsp; Introduction to Push-Forward Generative Models – Generative Adversarial Networks (GANs) – Machine Learning for Mechanical Engineering</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../part2/gen_models/GAN_pitfalls.html" rel="next">
+<link href="../../part2/review_neural_networks.html" rel="prev">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-0dd2bd5de344125cf763a379ddc3eb04.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+<script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@*/dist/embed-amd.js" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating slimcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../part2/part2.html">Foundations of Generative Models</a></li><li class="breadcrumb-item"><a href="../../part2/gen_models/intro_to_GANS.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Introduction to Push-Forward Generative Models – Generative Adversarial Networks (GANs)</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">Machine Learning for Mechanical Engineering</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../part1/part1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Foundational Skills</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../part1/reviewing_supervised_linear_models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Reviewing Supervised Linear Models</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/cross_validation_linear_regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Evaluating Machine Learning Models</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/supervised_linear_models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Introduction to Gradient Descent</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../part1/linear_decompositions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Review of Linear Unsupervised Learning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../part1/taking_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Taking Derivatives with Automatic Differentiation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../part1/distribution_distance.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Measuring Distribution Distances</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../part1/introduction_to_inference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Introduction to Inference</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../part2/part2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Foundations of Generative Models</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../part2/review_neural_networks.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Review of Neural Networks</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../part2/gen_models/intro_to_GANS.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Introduction to Push-Forward Generative Models – Generative Adversarial Networks (GANs)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../part2/gen_models/GAN_pitfalls.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">GAN Training Pitfalls</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../part2/gen_models/OT.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Optimal Transport for Generative Models</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../part2/gen_models/VAEs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Variational Autoencoders (VAEs)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../part2/gen_models/normalizing_flows.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Normalizing Flows</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../part2/gen_models/continuous_flows.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">From Discrete Transformations to Continuous Flows</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../part2/gen_models/score_matching.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">From Continuous Flows to Score Matching</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../part2/gen_models/diffusion_models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">From Score Matching to Diffusion Models</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../part2/gen_models/flow_matching.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Flow Matching</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../part2/gen_models/latent_generative_models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Latent Generative Models</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../part2/introduction_to_reinforcement_learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Introduction to Deep Reinforcement Learning</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../problems/problems.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Problems</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../problems/ps1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Problem Set 1</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../problems/ps2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Problem Set 2</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../notebooks/notebooks.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">In-Class Notebooks</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/california_housing_visualization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Housing Price Data Visualization In-Class Exercise</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../appendices/helpful_tooling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Helpful Tooling for Working with and Debugging Machine Learning Models</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../appendices/course_progression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Course Lecture Progression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../appendices/review_of_singular_value_decomposition.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Review of Matrices and the Singular Value Decomposition</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../appendices/review_of_math_and_computing_foundations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Reviewing Mathematical and Computational Foundations for Machine Learning</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#what-are-generative-models-really-doing" id="toc-what-are-generative-models-really-doing" class="nav-link active" data-scroll-target="#what-are-generative-models-really-doing"><span class="header-section-number">9.1</span> What are Generative Models really doing?</a></li>
+  <li><a href="#basic-deterministic-push-forward-models-from-latent-space-to-data-space" id="toc-basic-deterministic-push-forward-models-from-latent-space-to-data-space" class="nav-link" data-scroll-target="#basic-deterministic-push-forward-models-from-latent-space-to-data-space"><span class="header-section-number">9.2</span> Basic Deterministic Push-Forward Models: From Latent Space to Data Space</a></li>
+  <li><a href="#toy-dataset-ring-of-gaussians" id="toc-toy-dataset-ring-of-gaussians" class="nav-link" data-scroll-target="#toy-dataset-ring-of-gaussians"><span class="header-section-number">9.3</span> Toy Dataset: Ring of Gaussians</a></li>
+  <li><a href="#what-is-a-generative-adversarial-network-gan" id="toc-what-is-a-generative-adversarial-network-gan" class="nav-link" data-scroll-target="#what-is-a-generative-adversarial-network-gan"><span class="header-section-number">9.4</span> What is a Generative Adversarial Network (GAN)?</a>
+  <ul class="collapse">
+  <li><a href="#mathematical-formulation" id="toc-mathematical-formulation" class="nav-link" data-scroll-target="#mathematical-formulation"><span class="header-section-number">9.4.1</span> Mathematical Formulation</a></li>
+  </ul></li>
+  <li><a href="#a-simple-generative-adversarial-network-gan" id="toc-a-simple-generative-adversarial-network-gan" class="nav-link" data-scroll-target="#a-simple-generative-adversarial-network-gan"><span class="header-section-number">9.5</span> A Simple Generative Adversarial Network (GAN)</a></li>
+  <li><a href="#basic-training-loop" id="toc-basic-training-loop" class="nav-link" data-scroll-target="#basic-training-loop"><span class="header-section-number">9.6</span> Basic Training Loop</a></li>
+  <li><a href="#conditional-generation-examples" id="toc-conditional-generation-examples" class="nav-link" data-scroll-target="#conditional-generation-examples"><span class="header-section-number">9.7</span> Conditional Generation Examples</a>
+  <ul class="collapse">
+  <li><a href="#conditional-example-a-one-hot-mode-conditioning" id="toc-conditional-example-a-one-hot-mode-conditioning" class="nav-link" data-scroll-target="#conditional-example-a-one-hot-mode-conditioning"><span class="header-section-number">9.7.1</span> Conditional Example A — One-Hot Mode Conditioning</a></li>
+  <li><a href="#conditional-example-b-continuous-radius-conditioning" id="toc-conditional-example-b-continuous-radius-conditioning" class="nav-link" data-scroll-target="#conditional-example-b-continuous-radius-conditioning"><span class="header-section-number">9.7.2</span> Conditional Example B — Continuous Radius Conditioning</a></li>
+  </ul></li>
+  <li><a href="#summary-and-next-steps" id="toc-summary-and-next-steps" class="nav-link" data-scroll-target="#summary-and-next-steps"><span class="header-section-number">9.8</span> Summary and Next Steps:</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../part2/part2.html">Foundations of Generative Models</a></li><li class="breadcrumb-item"><a href="../../part2/gen_models/intro_to_GANS.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Introduction to Push-Forward Generative Models – Generative Adversarial Networks (GANs)</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Introduction to Push-Forward Generative Models – Generative Adversarial Networks (GANs)</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Mark Fuge </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">October 12, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>In this chapter, we will build geometric intuition for push-forward generative models, which are essentially trying to transport probability distributions from one space to another. We will start with simple linear maps to gain a sense of how they modify a simple 2D data space, then scale up to a small MLP GAN on a ring-of-Gaussians toy dataset. We will also talk about common metrics to evaluate generative models. Even though GANs may be comparatively simple compared to more advanced generative models that we will explore later, they will nevertheless be useful in building intuition for how push-forward generative models work.</p>
+<div id="9774db43" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Show Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Setup and Imports (shared utilities)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.optim <span class="im">as</span> optim</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot <span class="im">as</span> plt</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Import shared utilities from the local module</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gen_models_utilities <span class="im">import</span> (</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    RNG_SEED, device, _compute_axis_limits, create_ring_gaussians, </span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    GanHistory, make_loader,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    compute_diversity_metric, plot_model_diagnostics, plot_latent_interpolation,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    make_conditional_loader_onehot, plot_conditional_samples_discrete</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># get the location of this file</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>main_fpath <span class="op">=</span> os.path.abspath(<span class="st">''</span>)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>os.chdir(main_fpath)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Optional interactive widgets</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>:</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    <span class="im">from</span> ipywidgets <span class="im">import</span> interact, FloatSlider, IntSlider</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span> <span class="pp">Exception</span>:</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    interact <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    FloatSlider <span class="op">=</span> IntSlider <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Using device: </span><span class="sc">{</span>device<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Using device: cuda</code></pre>
+</div>
+</div>
+<section id="what-are-generative-models-really-doing" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="what-are-generative-models-really-doing"><span class="header-section-number">9.1</span> What are Generative Models really doing?</h2>
+<p>Fundamentally, generative models are really just functions that transform a probability distribution from one space to another – you can think of them as “distribution transformers” or, move intuitively, as moving probability mass around in space. As an analogy, consider that you are sitting in a sandbox with a smooth mound of sand in front of you – the 2D Gaussian that we will use below is not too far from this, actually. A generative model is kind of like your hands, which you can use to push the sand around, creating hills and valleys, and moving the sand from one place to another. In this way, we are essentially moving the probability mass (sand, in this analogy) from a simple distribution (the smooth mound of sand) to a more complex distribution (the hills and valleys that you create with your hands). Different models that we will explore later (e.g., VAEs, normalizing flows, diffusion models) have different ways of doing this, but the core goal is the same, and they essentially all try to do one or more of three operations:</p>
+<ul>
+<li><span class="math inline">\(f(z) \rightarrow x\)</span>: Mapping points from one space (typically called the <em>latent space</em>) to another (typically, the <em>data space</em>).</li>
+<li><span class="math inline">\(f^{-1}(x) \rightarrow z\)</span>: Mapping points from data space back to latent space.</li>
+<li><span class="math inline">\(p(x) \Leftrightarrow  p(z)\)</span>: Mapping probability densities from data space to latent space (and vice versa).</li>
+</ul>
+<p>As we go forward, we will see how different types of models are better or worse at these different operations, and, in some cases, how they can be combined to create more powerful models.</p>
+</section>
+<section id="basic-deterministic-push-forward-models-from-latent-space-to-data-space" class="level2" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="basic-deterministic-push-forward-models-from-latent-space-to-data-space"><span class="header-section-number">9.2</span> Basic Deterministic Push-Forward Models: From Latent Space to Data Space</h2>
+<p>A push-forward generative model defines a mapping <span class="math inline">\(x = f(z)\)</span>, where <span class="math inline">\(z\)</span> is sampled from a simple latent distribution (often a standard Gaussian, though it need not be) and <span class="math inline">\(f\)</span> is a deterministic function (e.g., linear map or neural network).</p>
+<p>We’ll start with a 2D latent <span class="math inline">\(z \sim N(0, I)\)</span> (i.e., a standard Gaussian) and inspect how different choices of <span class="math inline">\(f\)</span> reshape the distribution in data space. In this case, the latent space is 2D and the data space is also 2D, so we can visualize both spaces directly, however, in general, the latent space is often lower-dimensional than the data space.</p>
+<div id="83961cea" class="cell" data-execution_count="2">
+<details class="code-fold">
+<summary>Show Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_pushforward(z: np.ndarray, x: np.ndarray, title: <span class="bu">str</span> <span class="op">=</span> <span class="st">"Linear push-forward"</span>):</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">4</span>))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">0</span>].scatter(z[:, <span class="dv">0</span>], z[:, <span class="dv">1</span>], s<span class="op">=</span><span class="dv">8</span>, alpha<span class="op">=</span><span class="fl">0.35</span>, color<span class="op">=</span><span class="st">'tab:gray'</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">0</span>].set_title(<span class="st">'Latent samples z ~ N(0, I)'</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">0</span>].set_xlabel(<span class="st">'z1'</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">0</span>].set_ylabel(<span class="st">'z2'</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">0</span>].axis(<span class="st">'equal'</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">0</span>].grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">1</span>].scatter(x[:, <span class="dv">0</span>], x[:, <span class="dv">1</span>], s<span class="op">=</span><span class="dv">8</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, color<span class="op">=</span><span class="st">'tab:blue'</span>)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">1</span>].set_title(title)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">1</span>].set_xlabel(<span class="st">'x1'</span>)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">1</span>].set_ylabel(<span class="st">'x2'</span>)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">1</span>].axis(<span class="st">'equal'</span>)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">1</span>].grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div id="8825fc61" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Linear push-forward demo with interactive sliders</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> linear_pushforward_demo(A: np.ndarray, b: np.ndarray, n: <span class="bu">int</span> <span class="op">=</span> <span class="dv">1000</span>, seed: <span class="bu">int</span> <span class="op">=</span> RNG_SEED):</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    rng <span class="op">=</span> np.random.default_rng(seed)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    z <span class="op">=</span> rng.standard_normal(size<span class="op">=</span>(n, <span class="dv">2</span>))</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> (z <span class="op">@</span> A.T) <span class="op">+</span> b</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> z, x</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Default transform</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>A0 <span class="op">=</span> np.array([[<span class="fl">1.2</span>, <span class="fl">0.4</span>],[<span class="fl">0.0</span>, <span class="fl">0.8</span>]], dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>b0 <span class="op">=</span> np.array([<span class="fl">0.0</span>, <span class="fl">0.0</span>], dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>z_lin, x_lin <span class="op">=</span> linear_pushforward_demo(A0, b0, n<span class="op">=</span><span class="dv">2000</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>plot_pushforward(z_lin, x_lin, title<span class="op">=</span><span class="st">'x = A z + b'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="intro_to_GANS_files/figure-html/cell-4-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can see from above that the simple linear map has slightly “moved” or shifted the location of the probability mass, just like if you were sculpting sand in your sandbox. You can play below with some of the sliders to manipulate the simple 2x2 weight matrix and 2x1 bias vector to see how this works interactively:</p>
+<div id="6fb4ac02" class="cell" data-execution_count="4">
+<details class="code-fold">
+<summary>Show Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> interact <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> _interactive_pushforward(a11<span class="op">=</span><span class="fl">1.2</span>, a12<span class="op">=</span><span class="fl">0.4</span>, a21<span class="op">=</span><span class="fl">0.0</span>, a22<span class="op">=</span><span class="fl">0.8</span>, bx<span class="op">=</span><span class="fl">0.0</span>, by<span class="op">=</span><span class="fl">0.0</span>):</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>        A <span class="op">=</span> np.array([[a11, a12],[a21, a22]], dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        b <span class="op">=</span> np.array([bx, by], dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>        z, x <span class="op">=</span> linear_pushforward_demo(A, b, n<span class="op">=</span><span class="dv">2000</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        plot_pushforward(z, x, title<span class="op">=</span><span class="ss">f'x = A z + b'</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    interact(</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        _interactive_pushforward,</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        a11<span class="op">=</span>FloatSlider(<span class="bu">min</span><span class="op">=-</span><span class="fl">2.0</span>, <span class="bu">max</span><span class="op">=</span><span class="fl">2.0</span>, step<span class="op">=</span><span class="fl">0.05</span>, value<span class="op">=</span><span class="fl">1.2</span>, description<span class="op">=</span><span class="st">'a11'</span>),</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        a12<span class="op">=</span>FloatSlider(<span class="bu">min</span><span class="op">=-</span><span class="fl">2.0</span>, <span class="bu">max</span><span class="op">=</span><span class="fl">2.0</span>, step<span class="op">=</span><span class="fl">0.05</span>, value<span class="op">=</span><span class="fl">0.4</span>, description<span class="op">=</span><span class="st">'a12'</span>),</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        a21<span class="op">=</span>FloatSlider(<span class="bu">min</span><span class="op">=-</span><span class="fl">2.0</span>, <span class="bu">max</span><span class="op">=</span><span class="fl">2.0</span>, step<span class="op">=</span><span class="fl">0.05</span>, value<span class="op">=</span><span class="fl">0.0</span>, description<span class="op">=</span><span class="st">'a21'</span>),</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        a22<span class="op">=</span>FloatSlider(<span class="bu">min</span><span class="op">=-</span><span class="fl">2.0</span>, <span class="bu">max</span><span class="op">=</span><span class="fl">2.0</span>, step<span class="op">=</span><span class="fl">0.05</span>, value<span class="op">=</span><span class="fl">0.8</span>, description<span class="op">=</span><span class="st">'a22'</span>),</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>        bx<span class="op">=</span>FloatSlider(<span class="bu">min</span><span class="op">=-</span><span class="fl">2.0</span>, <span class="bu">max</span><span class="op">=</span><span class="fl">2.0</span>, step<span class="op">=</span><span class="fl">0.05</span>, value<span class="op">=</span><span class="fl">0.0</span>, description<span class="op">=</span><span class="st">'b1'</span>),</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>        by<span class="op">=</span>FloatSlider(<span class="bu">min</span><span class="op">=-</span><span class="fl">2.0</span>, <span class="bu">max</span><span class="op">=</span><span class="fl">2.0</span>, step<span class="op">=</span><span class="fl">0.05</span>, value<span class="op">=</span><span class="fl">0.0</span>, description<span class="op">=</span><span class="st">'b2'</span>),</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"c90663e6511449f496d76fd226408310","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+</div>
+</section>
+<section id="toy-dataset-ring-of-gaussians" class="level2" data-number="9.3">
+<h2 data-number="9.3" class="anchored" data-anchor-id="toy-dataset-ring-of-gaussians"><span class="header-section-number">9.3</span> Toy Dataset: Ring of Gaussians</h2>
+<p>OK, now that we have some intuition for how simple linear maps can move probability mass around in space, let’s try a more complex example where it is not so clear that a simple linear map will be sufficient. Below, we will create a common toy dataset consisting of a “ring of Gaussians” – that is, several Gaussian blobs arranged in a circle. You can see from above that no combination of weights in a simple linear map will be able to move our original probability mass from a standard Gaussian to this ring of Gaussians, so we will need something more powerful. A simple starting point for this is something called a Generative Adversarial Network (GAN), which we will explore next.</p>
+<div id="737285f0" class="cell" data-execution_count="5">
+<details class="code-fold">
+<summary>Show Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>X_ring, y_ring <span class="op">=</span> create_ring_gaussians()</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="fl">5.5</span>,<span class="fl">5.5</span>))</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>sc <span class="op">=</span> plt.scatter(X_ring[:,<span class="dv">0</span>], X_ring[:,<span class="dv">1</span>], c<span class="op">=</span>y_ring, cmap<span class="op">=</span><span class="st">'tab10'</span>, s<span class="op">=</span><span class="dv">10</span>, alpha<span class="op">=</span><span class="fl">0.6</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>plt.colorbar(sc, label<span class="op">=</span><span class="st">'Mode index'</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Toy Dataset: Colored Gaussian Ring'</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'x1'</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'x2'</span>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">'equal'</span>)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.2</span>)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>ring_latent_limits <span class="op">=</span> ((<span class="op">-</span><span class="fl">3.5</span>, <span class="fl">3.5</span>), (<span class="op">-</span><span class="fl">3.5</span>, <span class="fl">3.5</span>))</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>ring_data_limits <span class="op">=</span> _compute_axis_limits(X_ring)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="intro_to_GANS_files/figure-html/cell-6-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="what-is-a-generative-adversarial-network-gan" class="level2 page-columns page-full" data-number="9.4">
+<h2 data-number="9.4" class="anchored" data-anchor-id="what-is-a-generative-adversarial-network-gan"><span class="header-section-number">9.4</span> What is a Generative Adversarial Network (GAN)?</h2>
+<p>A Generative Adversarial Network (GAN) is a framework for training generative models using two competing neural networks: a <strong>generator</strong> and a <strong>discriminator</strong>. The generator, <span class="math inline">\(G\)</span>, learns to map random noise from a latent space (e.g., <span class="math inline">\(z \sim p_z(z)\)</span> or <span class="math inline">\(f(z)=x\)</span>, where <span class="math inline">\(G\)</span> functions as <span class="math inline">\(f\)</span> here) to data space, aiming to produce samples that resemble the real data. It is tempting to want to train just the Generator by minimizing Mean Squared Error between <span class="math inline">\(z\)</span> and <span class="math inline">\(f(z)=x\)</span>, except we have one big problem for right now – we do not know apriori which samples of <span class="math inline">\(x\)</span> correspond to which samples of <span class="math inline">\(z\)</span>, and so it is not straightforward to compute this MSE.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> Instead, what we will do is train a separate network, the Discriminator, that can help us push the samples produced by the Generator closer to the real data distribution.</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Indeed, we will return to this idea in later notebooks once we have introduced the concept of Optimal Transport, which solves this mapping problem, but for now, let’s assume that we don’t know how to do this.</p></div></div><p>Specifically, the discriminator, <span class="math inline">\(D\)</span>, tries to distinguish between real data samples and those produced by the generator and our loss function will encourage the discriminator to become better and better at this task. In turn, the generator will be trained to produce samples that the discriminator classifies as real – that is to try to fool the disciminator.</p>
+<p>The two networks are trained simultaneously in something called a <em>minimax game</em>:</p>
+<ul>
+<li>The <strong>generator</strong> tries to “fool” the discriminator by generating realistic samples.</li>
+<li>The <strong>discriminator</strong> tries to correctly classify real vs.&nbsp;generated samples.</li>
+</ul>
+<section id="mathematical-formulation" class="level3" data-number="9.4.1">
+<h3 data-number="9.4.1" class="anchored" data-anchor-id="mathematical-formulation"><span class="header-section-number">9.4.1</span> Mathematical Formulation</h3>
+<p>The standard GAN objective, as introduced by Goodfellow et al.&nbsp;(2014), is:</p>
+<p><span class="math display">\[
+\min_G \max_D \; V(D, G) = \mathbb{E}_{x \sim p_{\text{data}}(x)} \left[ \log D(x) \right] + \mathbb{E}_{z \sim p_z(z)} \left[ \log (1 - D(G(z))) \right]
+\]</span></p>
+<ul>
+<li><span class="math inline">\(p_{\text{data}}(x)\)</span>: Distribution of real data.</li>
+<li><span class="math inline">\(p_z(z)\)</span>: Prior distribution over latent variables (often standard normal).</li>
+<li><span class="math inline">\(G(z)\)</span>: Generator’s output given latent input <span class="math inline">\(z\)</span>.</li>
+<li><span class="math inline">\(D(x)\)</span>: Discriminator’s estimate of the probability that <span class="math inline">\(x\)</span> is real.</li>
+</ul>
+<p>The generator and discriminator are typically neural networks trained with stochastic gradient descent. The generator improves by producing samples that the discriminator cannot distinguish from real data (the second term on the right-hand side of the equation above), while the discriminator improves by getting better at distinguishing real from fake (the first term on the right-hand side of the equation above).</p>
+</section>
+</section>
+<section id="a-simple-generative-adversarial-network-gan" class="level2" data-number="9.5">
+<h2 data-number="9.5" class="anchored" data-anchor-id="a-simple-generative-adversarial-network-gan"><span class="header-section-number">9.5</span> A Simple Generative Adversarial Network (GAN)</h2>
+<p>Now we will define a small GAN and see how it moves probability mass around after passing samples through the Generator. You can feel free to modify the architecture below if you like and see how that impacts the below results, but for now we will use a single hidden layer MLP with LeakyReLU activation for both the Generator and Discriminator.</p>
+<div id="127cec2e" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MLPGenerator(nn.Module):</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, noise_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>, hidden_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">256</span>, out_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>):</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.main <span class="op">=</span> nn.Sequential(</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>            nn.Linear(noise_dim, hidden_dim), nn.LeakyReLU(),</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>            nn.Linear(hidden_dim, hidden_dim), nn.LeakyReLU(),</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>            nn.Linear(hidden_dim, out_dim),</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, z: torch.Tensor) <span class="op">-&gt;</span> torch.Tensor:</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.main(z)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MLPDiscriminator(nn.Module):</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, input_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>, hidden_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">256</span>):</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.main <span class="op">=</span> nn.Sequential(</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>            nn.Linear(input_dim, hidden_dim), nn.LeakyReLU(<span class="fl">0.2</span>),</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>            nn.Linear(hidden_dim, hidden_dim), nn.LeakyReLU(<span class="fl">0.2</span>),</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>            nn.Linear(hidden_dim, <span class="dv">1</span>),</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x: torch.Tensor) <span class="op">-&gt;</span> torch.Tensor:</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.main(x).squeeze(<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_generator(noise_dim<span class="op">=</span><span class="dv">2</span>, hidden_dim<span class="op">=</span><span class="dv">256</span>):</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> MLPGenerator(noise_dim<span class="op">=</span>noise_dim, hidden_dim<span class="op">=</span>hidden_dim).to(device)</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_discriminator(hidden_dim<span class="op">=</span><span class="dv">256</span>):</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> MLPDiscriminator(hidden_dim<span class="op">=</span>hidden_dim).to(device)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="basic-training-loop" class="level2" data-number="9.6">
+<h2 data-number="9.6" class="anchored" data-anchor-id="basic-training-loop"><span class="header-section-number">9.6</span> Basic Training Loop</h2>
+<p>With the models defined, we will now set up the training loop to optimize both the generator and discriminator.</p>
+<div id="4640bc6c" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_vanilla_gan(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    data: np.ndarray, <span class="op">*</span>, noise_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>, batch_size: <span class="bu">int</span> <span class="op">=</span> <span class="dv">256</span>, epochs: <span class="bu">int</span> <span class="op">=</span> <span class="dv">120</span>,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    lr_g: <span class="bu">float</span> <span class="op">=</span> <span class="fl">2e-4</span>, lr_d: <span class="bu">float</span> <span class="op">=</span> <span class="fl">2e-4</span>, hidden_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">256</span>, print_every: <span class="bu">int</span> <span class="op">=</span> <span class="dv">40</span>) <span class="op">-&gt;</span> <span class="bu">tuple</span>[nn.Module, nn.Module, GanHistory]:</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Load the data into a DataLoader for batching and make PyTorch happy</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    loader <span class="op">=</span> make_loader(data, batch_size)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Set up the basic networks</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    G <span class="op">=</span> build_generator(noise_dim<span class="op">=</span>noise_dim, hidden_dim<span class="op">=</span>hidden_dim)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    D <span class="op">=</span> build_discriminator(hidden_dim<span class="op">=</span>hidden_dim)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Instantiate the optimizers for each model</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    opt_g <span class="op">=</span> optim.Adam(G.parameters(), lr<span class="op">=</span>lr_g, betas<span class="op">=</span>(<span class="fl">0.5</span>, <span class="fl">0.999</span>))</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    opt_d <span class="op">=</span> optim.Adam(D.parameters(), lr<span class="op">=</span>lr_d, betas<span class="op">=</span>(<span class="fl">0.5</span>, <span class="fl">0.999</span>))</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    bce <span class="op">=</span> nn.BCEWithLogitsLoss()</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Record the loss history for plotting later</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    hist <span class="op">=</span> GanHistory([], [], [], [], [])</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Now we do the training loop for # epochs defined in `epochs`</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> ep <span class="kw">in</span> <span class="bu">range</span>(epochs):</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>        d_losses<span class="op">=</span>[]</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>        g_losses<span class="op">=</span>[]</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>        real_scores<span class="op">=</span>[]</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>        fake_scores<span class="op">=</span>[]</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> (xb,) <span class="kw">in</span> loader:</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Send the data to the GPU, if using.</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>            xb <span class="op">=</span> xb.to(device)</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Take a Discriminator step</span></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>            z <span class="op">=</span> torch.randn(xb.size(<span class="dv">0</span>), noise_dim, device<span class="op">=</span>device)</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>            <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>                x_fake <span class="op">=</span> G(z)</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>            opt_d.zero_grad()</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>            d_real <span class="op">=</span> D(xb)</span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>            d_fake <span class="op">=</span> D(x_fake)</span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>            loss_d <span class="op">=</span> bce(d_real, torch.ones_like(d_real)) <span class="op">+</span> bce(d_fake, torch.zeros_like(d_fake))</span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>            loss_d.backward()</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>            opt_d.step()</span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>            d_losses.append(<span class="bu">float</span>(loss_d.detach().cpu().item()))</span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>            real_scores.append(d_real.mean().item())</span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>            fake_scores.append(d_fake.mean().item())</span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Take a Generator step</span></span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>            z <span class="op">=</span> torch.randn(xb.size(<span class="dv">0</span>), noise_dim, device<span class="op">=</span>device)</span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>            opt_g.zero_grad()</span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>            xg <span class="op">=</span> G(z)</span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>            dg <span class="op">=</span> D(xg)</span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a>            loss_g <span class="op">=</span> bce(dg, torch.ones_like(dg))</span>
+<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a>            loss_g.backward()</span>
+<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>            opt_g.step()</span>
+<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>            g_losses.append(<span class="bu">float</span>(loss_g.detach().cpu().item()))</span>
+<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a>        <span class="co"># We'll record some epoch metrics</span></span>
+<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a>            z_eval <span class="op">=</span> torch.randn(<span class="dv">2048</span>, noise_dim, device<span class="op">=</span>device)</span>
+<span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a>            samples <span class="op">=</span> G(z_eval)</span>
+<span id="cb8-55"><a href="#cb8-55" aria-hidden="true" tabindex="-1"></a>            div <span class="op">=</span> compute_diversity_metric(samples)</span>
+<span id="cb8-56"><a href="#cb8-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-57"><a href="#cb8-57" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Now we'll record the metrics for plotting later and reporting</span></span>
+<span id="cb8-58"><a href="#cb8-58" aria-hidden="true" tabindex="-1"></a>        hist.d_loss.append(<span class="bu">float</span>(np.mean(d_losses)))</span>
+<span id="cb8-59"><a href="#cb8-59" aria-hidden="true" tabindex="-1"></a>        hist.g_loss.append(<span class="bu">float</span>(np.mean(g_losses)))</span>
+<span id="cb8-60"><a href="#cb8-60" aria-hidden="true" tabindex="-1"></a>        hist.diversity.append(div)</span>
+<span id="cb8-61"><a href="#cb8-61" aria-hidden="true" tabindex="-1"></a>        hist.real_scores.append(<span class="bu">float</span>(np.mean(real_scores)))</span>
+<span id="cb8-62"><a href="#cb8-62" aria-hidden="true" tabindex="-1"></a>        hist.fake_scores.append(<span class="bu">float</span>(np.mean(fake_scores)))</span>
+<span id="cb8-63"><a href="#cb8-63" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (ep<span class="op">+</span><span class="dv">1</span>) <span class="op">%</span> <span class="bu">max</span>(<span class="dv">1</span>, print_every) <span class="op">==</span> <span class="dv">0</span> <span class="kw">or</span> ep<span class="op">==</span><span class="dv">0</span>:</span>
+<span id="cb8-64"><a href="#cb8-64" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"Epoch </span><span class="sc">{</span>ep<span class="op">+</span><span class="dv">1</span><span class="sc">:03d}</span><span class="ss">/</span><span class="sc">{</span>epochs<span class="sc">}</span><span class="ss"> | D </span><span class="sc">{</span>hist<span class="sc">.</span>d_loss[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:.3f}</span><span class="ss"> | G </span><span class="sc">{</span>hist<span class="sc">.</span>g_loss[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:.3f}</span><span class="ss"> | Div </span><span class="sc">{</span>div<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb8-65"><a href="#cb8-65" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> G, D, hist</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>You can feel free to modify some of the training elements here, such as the epoch length or learning rates of the Generator or Discriminator, respectively.</p>
+<div id="fd179e70" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>G, D, H <span class="op">=</span> train_vanilla_gan(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    X_ring, epochs<span class="op">=</span><span class="dv">120</span>, batch_size<span class="op">=</span><span class="dv">256</span>, </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    lr_g<span class="op">=</span><span class="fl">2e-4</span>, lr_d<span class="op">=</span><span class="fl">2e-4</span>, </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    hidden_dim<span class="op">=</span><span class="dv">256</span>, noise_dim<span class="op">=</span><span class="dv">2</span>, </span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    print_every<span class="op">=</span><span class="dv">40</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch 001/120 | D 1.128 | G 0.734 | Div 0.809
+Epoch 040/120 | D 1.300 | G 0.769 | Div 4.310
+Epoch 080/120 | D 1.340 | G 0.754 | Div 4.409
+Epoch 120/120 | D 1.368 | G 0.732 | Div 4.444</code></pre>
+</div>
+</div>
+<p>OK, now the model is trained, so let’s look at some basic visualizations of how it did. In the below plots, which we will re-use for other models later on, we will show four things:</p>
+<ul>
+<li>Upper Left: Any training losses for the model, as a function of training epoch. In the case of a GAN, this will plot both the Generator and Discriminator losses. This plot type allows us to assess something about the convergence and stability of training.</li>
+<li>Upper Right: The Sample Diversity, as a function of Epoch. This is computing and plotting the variance of <span class="math inline">\(\mathbf{x}\)</span> as a function of epoch, where <span class="math inline">\(\mathbf{x}\)</span> are samples drawn from the Generator at each epoch. This plot type allows us one way to assess whether the model is suffering from mode collapse (i.e., low diversity in the generated samples) or not.</li>
+<li>Lower Right: A plot of the real data samples (in light grey) and samples drawn from the Generator (in reddish-orange). This plot type allows us to visually assess how well the model is capturing the data distribution. This will be easy to compare in this simple 2D case, but will be harder in higher dimensions, and in those cases you might have to resort to just comparing selected samples or overall distribution summary statistics.</li>
+<li>Lower Right: This plot will vary depending on the specific model we are studying, but in this case it will show the specific scores of the Discriminator (often called the “Critic”) with respect to its classification accuracy on real vs.&nbsp;fake samples. In the context of a GAN model, this allows us to assess how well a Generator is fooling the discriminator, since a well-trained Generator should produce samples that the Discriminator classifies as real, and thus both the “Real Score” and “Fake Score” should have around 50% accuracy. (i.e., the Discriminator is effectively guessing randomly).</li>
+</ul>
+<div id="3dcd7ef2" class="cell" data-execution_count="9">
+<details class="code-fold">
+<summary>Show Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>plot_model_diagnostics(H, X_ring, G, noise_dim<span class="op">=</span><span class="dv">2</span>, title_suffix<span class="op">=</span><span class="st">' (Vanilla GAN)'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="intro_to_GANS_files/figure-html/cell-10-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In addition to the above training diagnostics, it can also be useful to plot interpolations in latent space to see how smoothly the Generator can move between different modes of the data distribution. In the case of a well-trained GAN, we would expect that interpolating between two points in latent space should produce a smooth transition in data space, moving through intermediate samples that also look realistic. In this case, this means hopping smoothly between the different Gaussian blobs in our ring-of-Gaussians dataset, and not jumping back-and-forth randomly between them.</p>
+<div id="b1ff2988" class="cell" data-execution_count="10">
+<details class="code-fold">
+<summary>Show Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>plot_latent_interpolation(G, noise_dim<span class="op">=</span><span class="dv">2</span>, title_suffix<span class="op">=</span><span class="st">' (Vanilla GAN)'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="intro_to_GANS_files/figure-html/cell-11-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>To give you some interactive control on visualizing the forward mapping <span class="math inline">\(f(z) \rightarrow x\)</span>, use the sliders below to move a single latent vector (left-side plot) and observe the corresponding generated point in data space (right-side plot). By moving around in <span class="math inline">\(z\)</span> you can try to align the generated point with a particular mode on the ring.</p>
+<div id="bccc810d" class="cell" data-execution_count="11">
+<details class="code-fold">
+<summary>Show Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> interact <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> _move_latent(z1: <span class="bu">float</span> <span class="op">=</span> <span class="fl">0.0</span>, z2: <span class="bu">float</span> <span class="op">=</span> <span class="fl">0.0</span>):</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>        <span class="co">"""</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co">        Visualize the effect of moving a latent vector z = [z1, z2] through the generator.</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co">        Left: latent space (z1, z2) with current point highlighted.</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co">        Right: generated data point in data space, overlaid on the real data.</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co">        """</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>        z <span class="op">=</span> torch.tensor([[z1, z2]], dtype<span class="op">=</span>torch.float32, device<span class="op">=</span>device)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>            x <span class="op">=</span> G(z).cpu().numpy()[<span class="dv">0</span>]</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>        fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="dv">5</span>))</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Left: latent space</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>        axes[<span class="dv">0</span>].scatter(<span class="dv">0</span>, <span class="dv">0</span>, s<span class="op">=</span><span class="dv">40</span>, color<span class="op">=</span><span class="st">'gray'</span>, alpha<span class="op">=</span><span class="fl">0.2</span>, label<span class="op">=</span><span class="st">'Origin'</span>)</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>        axes[<span class="dv">0</span>].scatter(z1, z2, s<span class="op">=</span><span class="dv">120</span>, color<span class="op">=</span><span class="st">'crimson'</span>, edgecolors<span class="op">=</span><span class="st">'k'</span>, linewidths<span class="op">=</span><span class="fl">0.5</span>, label<span class="op">=</span><span class="st">'Current z'</span>)</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>        axes[<span class="dv">0</span>].set_title(<span class="st">'Latent Space (z)'</span>)</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>        axes[<span class="dv">0</span>].set_xlabel(<span class="st">'z1'</span>)</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>        axes[<span class="dv">0</span>].set_ylabel(<span class="st">'z2'</span>)</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>        axes[<span class="dv">0</span>].set_xlim(ring_latent_limits[<span class="dv">0</span>])</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>        axes[<span class="dv">0</span>].set_ylim(ring_latent_limits[<span class="dv">1</span>])</span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>        axes[<span class="dv">0</span>].grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>        axes[<span class="dv">0</span>].legend(loc<span class="op">=</span><span class="st">'upper left'</span>, frameon<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Right: data space</span></span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>        axes[<span class="dv">1</span>].scatter(X_ring[:,<span class="dv">0</span>], X_ring[:,<span class="dv">1</span>], s<span class="op">=</span><span class="dv">10</span>, alpha<span class="op">=</span><span class="fl">0.15</span>, color<span class="op">=</span><span class="st">'gray'</span>, label<span class="op">=</span><span class="st">'Real'</span>)</span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>        axes[<span class="dv">1</span>].scatter([x[<span class="dv">0</span>]], [x[<span class="dv">1</span>]], s<span class="op">=</span><span class="dv">120</span>, color<span class="op">=</span><span class="st">'crimson'</span>, edgecolors<span class="op">=</span><span class="st">'k'</span>, linewidths<span class="op">=</span><span class="fl">0.5</span>, label<span class="op">=</span><span class="st">'Generated'</span>)</span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>        axes[<span class="dv">1</span>].set_title(<span class="st">'Generated Data Point'</span>)</span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>        axes[<span class="dv">1</span>].set_xlabel(<span class="st">'x1'</span>)</span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>        axes[<span class="dv">1</span>].set_ylabel(<span class="st">'x2'</span>)</span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>        axes[<span class="dv">1</span>].set_xlim(ring_data_limits[<span class="dv">0</span>])</span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>        axes[<span class="dv">1</span>].set_ylim(ring_data_limits[<span class="dv">1</span>])</span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a>        axes[<span class="dv">1</span>].grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a>        axes[<span class="dv">1</span>].legend(loc<span class="op">=</span><span class="st">'upper left'</span>, frameon<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a>        plt.tight_layout()</span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a>        plt.show()</span>
+<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a>    interact(</span>
+<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a>        _move_latent,</span>
+<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a>        z1<span class="op">=</span>FloatSlider(<span class="bu">min</span><span class="op">=-</span><span class="fl">3.0</span>, <span class="bu">max</span><span class="op">=</span><span class="fl">3.0</span>, step<span class="op">=</span><span class="fl">0.05</span>, value<span class="op">=</span><span class="fl">0.0</span>, description<span class="op">=</span><span class="st">'z1'</span>),</span>
+<span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a>        z2<span class="op">=</span>FloatSlider(<span class="bu">min</span><span class="op">=-</span><span class="fl">3.0</span>, <span class="bu">max</span><span class="op">=</span><span class="fl">3.0</span>, step<span class="op">=</span><span class="fl">0.05</span>, value<span class="op">=</span><span class="fl">0.0</span>, description<span class="op">=</span><span class="st">'z2'</span>),</span>
+<span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb13-43"><a href="#cb13-43" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">'ipywidgets not available; skipping latent sliders.'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"f078a3975fd548559bf429997200319a","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+</div>
+</section>
+<section id="conditional-generation-examples" class="level2" data-number="9.7">
+<h2 data-number="9.7" class="anchored" data-anchor-id="conditional-generation-examples"><span class="header-section-number">9.7</span> Conditional Generation Examples</h2>
+<p>So far, we’ve explored unconditional generative models that learn to produce samples from the overall data distribution. However, in many practical applications, we want to control what we generate by conditioning on additional information. For example, we might want to generate samples from a specific mode of the distribution, or generate samples with particular properties.</p>
+<p>In this section, we’ll explore two types of conditioning:</p>
+<ol type="1">
+<li><strong>Discrete Conditioning (One-Hot Mode Index):</strong> Condition the GAN on which Gaussian mode in our ring dataset the sample should come from.</li>
+<li><strong>Continuous Conditioning (Radius):</strong> Condition the GAN on a continuous scalar representing the radius from the origin.</li>
+</ol>
+<p>These conditioning strategies are widely applicable and form the basis for more complex conditional generation tasks, such as class-conditional image generation or text-to-image synthesis.</p>
+<section id="conditional-example-a-one-hot-mode-conditioning" class="level3" data-number="9.7.1">
+<h3 data-number="9.7.1" class="anchored" data-anchor-id="conditional-example-a-one-hot-mode-conditioning"><span class="header-section-number">9.7.1</span> Conditional Example A — One-Hot Mode Conditioning</h3>
+<p>In this example, we’ll condition the GAN on which of the 8 Gaussian modes in the ring dataset we want to generate from. We provide a one-hot encoded vector indicating the target mode to both the generator and discriminator.</p>
+<p>The key idea is simple: we concatenate the one-hot label to the inputs of both networks. The generator receives both random noise <span class="math inline">\(z\)</span> and the label <span class="math inline">\(y\)</span>, learning to map <span class="math inline">\((z, y) \rightarrow x\)</span>. The discriminator receives both the data point <span class="math inline">\(x\)</span> and the label <span class="math inline">\(y\)</span>, learning to distinguish real pairs <span class="math inline">\((x, y)\)</span> from fake pairs <span class="math inline">\((G(z, y), y)\)</span>.</p>
+<div id="dabfed35" class="cell" data-execution_count="12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Conditional Generator: takes noise + one-hot label</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ConditionalMLPGenerator(nn.Module):</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, noise_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>, label_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">8</span>, hidden_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">256</span>, out_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>):</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.main <span class="op">=</span> nn.Sequential(</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>            nn.Linear(noise_dim <span class="op">+</span> label_dim, hidden_dim), nn.LeakyReLU(),</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>            nn.Linear(hidden_dim, hidden_dim), nn.LeakyReLU(),</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>            nn.Linear(hidden_dim, out_dim),</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, z: torch.Tensor, y: torch.Tensor) <span class="op">-&gt;</span> torch.Tensor:</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Concatenate noise and label</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>        zy <span class="op">=</span> torch.cat([z, y], dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.main(zy)</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Conditional Discriminator: takes data + one-hot label</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ConditionalMLPDiscriminator(nn.Module):</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, input_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>, label_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">8</span>, hidden_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">256</span>):</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.main <span class="op">=</span> nn.Sequential(</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>            nn.Linear(input_dim <span class="op">+</span> label_dim, hidden_dim), nn.LeakyReLU(<span class="fl">0.2</span>),</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>            nn.Linear(hidden_dim, hidden_dim), nn.LeakyReLU(<span class="fl">0.2</span>),</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>            nn.Linear(hidden_dim, <span class="dv">1</span>),</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x: torch.Tensor, y: torch.Tensor) <span class="op">-&gt;</span> torch.Tensor:</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>        xy <span class="op">=</span> torch.cat([x, y], dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.main(xy).squeeze(<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_conditional_gan_onehot(</span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>    data: np.ndarray, labels: np.ndarray, n_classes: <span class="bu">int</span> <span class="op">=</span> <span class="dv">8</span>, <span class="op">*</span>,</span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>    noise_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>, batch_size: <span class="bu">int</span> <span class="op">=</span> <span class="dv">256</span>, epochs: <span class="bu">int</span> <span class="op">=</span> <span class="dv">120</span>,</span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>    lr_g: <span class="bu">float</span> <span class="op">=</span> <span class="fl">2e-4</span>, lr_d: <span class="bu">float</span> <span class="op">=</span> <span class="fl">2e-4</span>, hidden_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">256</span>, print_every: <span class="bu">int</span> <span class="op">=</span> <span class="dv">40</span></span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> <span class="bu">tuple</span>[nn.Module, nn.Module, GanHistory]:</span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>    loader <span class="op">=</span> make_conditional_loader_onehot(data, labels, batch_size, n_classes)</span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>    G <span class="op">=</span> ConditionalMLPGenerator(noise_dim<span class="op">=</span>noise_dim, label_dim<span class="op">=</span>n_classes, hidden_dim<span class="op">=</span>hidden_dim).to(device)</span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>    D <span class="op">=</span> ConditionalMLPDiscriminator(input_dim<span class="op">=</span><span class="dv">2</span>, label_dim<span class="op">=</span>n_classes, hidden_dim<span class="op">=</span>hidden_dim).to(device)</span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>    opt_g <span class="op">=</span> optim.Adam(G.parameters(), lr<span class="op">=</span>lr_g, betas<span class="op">=</span>(<span class="fl">0.5</span>, <span class="fl">0.999</span>))</span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>    opt_d <span class="op">=</span> optim.Adam(D.parameters(), lr<span class="op">=</span>lr_d, betas<span class="op">=</span>(<span class="fl">0.5</span>, <span class="fl">0.999</span>))</span>
+<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>    bce <span class="op">=</span> nn.BCEWithLogitsLoss()</span>
+<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a>    hist <span class="op">=</span> GanHistory([], [], [], [], [])</span>
+<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> ep <span class="kw">in</span> <span class="bu">range</span>(epochs):</span>
+<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a>        d_losses, g_losses, real_scores, fake_scores <span class="op">=</span> [], [], [], []</span>
+<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> xb, yb <span class="kw">in</span> loader:</span>
+<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a>            xb, yb <span class="op">=</span> xb.to(device), yb.to(device)</span>
+<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Discriminator step</span></span>
+<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a>            z <span class="op">=</span> torch.randn(xb.size(<span class="dv">0</span>), noise_dim, device<span class="op">=</span>device)</span>
+<span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a>            <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a>                x_fake <span class="op">=</span> G(z, yb)</span>
+<span id="cb14-49"><a href="#cb14-49" aria-hidden="true" tabindex="-1"></a>            opt_d.zero_grad()</span>
+<span id="cb14-50"><a href="#cb14-50" aria-hidden="true" tabindex="-1"></a>            d_real <span class="op">=</span> D(xb, yb)</span>
+<span id="cb14-51"><a href="#cb14-51" aria-hidden="true" tabindex="-1"></a>            d_fake <span class="op">=</span> D(x_fake, yb)</span>
+<span id="cb14-52"><a href="#cb14-52" aria-hidden="true" tabindex="-1"></a>            loss_d <span class="op">=</span> bce(d_real, torch.ones_like(d_real)) <span class="op">+</span> bce(d_fake, torch.zeros_like(d_fake))</span>
+<span id="cb14-53"><a href="#cb14-53" aria-hidden="true" tabindex="-1"></a>            loss_d.backward()</span>
+<span id="cb14-54"><a href="#cb14-54" aria-hidden="true" tabindex="-1"></a>            opt_d.step()</span>
+<span id="cb14-55"><a href="#cb14-55" aria-hidden="true" tabindex="-1"></a>            d_losses.append(<span class="bu">float</span>(loss_d.detach().cpu().item()))</span>
+<span id="cb14-56"><a href="#cb14-56" aria-hidden="true" tabindex="-1"></a>            real_scores.append(d_real.mean().item())</span>
+<span id="cb14-57"><a href="#cb14-57" aria-hidden="true" tabindex="-1"></a>            fake_scores.append(d_fake.mean().item())</span>
+<span id="cb14-58"><a href="#cb14-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-59"><a href="#cb14-59" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Generator step</span></span>
+<span id="cb14-60"><a href="#cb14-60" aria-hidden="true" tabindex="-1"></a>            z <span class="op">=</span> torch.randn(xb.size(<span class="dv">0</span>), noise_dim, device<span class="op">=</span>device)</span>
+<span id="cb14-61"><a href="#cb14-61" aria-hidden="true" tabindex="-1"></a>            opt_g.zero_grad()</span>
+<span id="cb14-62"><a href="#cb14-62" aria-hidden="true" tabindex="-1"></a>            xg <span class="op">=</span> G(z, yb)</span>
+<span id="cb14-63"><a href="#cb14-63" aria-hidden="true" tabindex="-1"></a>            dg <span class="op">=</span> D(xg, yb)</span>
+<span id="cb14-64"><a href="#cb14-64" aria-hidden="true" tabindex="-1"></a>            loss_g <span class="op">=</span> bce(dg, torch.ones_like(dg))</span>
+<span id="cb14-65"><a href="#cb14-65" aria-hidden="true" tabindex="-1"></a>            loss_g.backward()</span>
+<span id="cb14-66"><a href="#cb14-66" aria-hidden="true" tabindex="-1"></a>            opt_g.step()</span>
+<span id="cb14-67"><a href="#cb14-67" aria-hidden="true" tabindex="-1"></a>            g_losses.append(<span class="bu">float</span>(loss_g.detach().cpu().item()))</span>
+<span id="cb14-68"><a href="#cb14-68" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb14-69"><a href="#cb14-69" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb14-70"><a href="#cb14-70" aria-hidden="true" tabindex="-1"></a>            z_eval <span class="op">=</span> torch.randn(<span class="dv">2048</span>, noise_dim, device<span class="op">=</span>device)</span>
+<span id="cb14-71"><a href="#cb14-71" aria-hidden="true" tabindex="-1"></a>            y_eval <span class="op">=</span> torch.nn.functional.one_hot(</span>
+<span id="cb14-72"><a href="#cb14-72" aria-hidden="true" tabindex="-1"></a>                torch.randint(<span class="dv">0</span>, n_classes, (<span class="dv">2048</span>,), device<span class="op">=</span>device), num_classes<span class="op">=</span>n_classes</span>
+<span id="cb14-73"><a href="#cb14-73" aria-hidden="true" tabindex="-1"></a>            ).to(torch.float32)</span>
+<span id="cb14-74"><a href="#cb14-74" aria-hidden="true" tabindex="-1"></a>            samples <span class="op">=</span> G(z_eval, y_eval)</span>
+<span id="cb14-75"><a href="#cb14-75" aria-hidden="true" tabindex="-1"></a>            div <span class="op">=</span> compute_diversity_metric(samples)</span>
+<span id="cb14-76"><a href="#cb14-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-77"><a href="#cb14-77" aria-hidden="true" tabindex="-1"></a>        hist.d_loss.append(<span class="bu">float</span>(np.mean(d_losses)))</span>
+<span id="cb14-78"><a href="#cb14-78" aria-hidden="true" tabindex="-1"></a>        hist.g_loss.append(<span class="bu">float</span>(np.mean(g_losses)))</span>
+<span id="cb14-79"><a href="#cb14-79" aria-hidden="true" tabindex="-1"></a>        hist.diversity.append(div)</span>
+<span id="cb14-80"><a href="#cb14-80" aria-hidden="true" tabindex="-1"></a>        hist.real_scores.append(<span class="bu">float</span>(np.mean(real_scores)))</span>
+<span id="cb14-81"><a href="#cb14-81" aria-hidden="true" tabindex="-1"></a>        hist.fake_scores.append(<span class="bu">float</span>(np.mean(fake_scores)))</span>
+<span id="cb14-82"><a href="#cb14-82" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (ep<span class="op">+</span><span class="dv">1</span>) <span class="op">%</span> <span class="bu">max</span>(<span class="dv">1</span>, print_every) <span class="op">==</span> <span class="dv">0</span> <span class="kw">or</span> ep<span class="op">==</span><span class="dv">0</span>:</span>
+<span id="cb14-83"><a href="#cb14-83" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"Epoch </span><span class="sc">{</span>ep<span class="op">+</span><span class="dv">1</span><span class="sc">:03d}</span><span class="ss">/</span><span class="sc">{</span>epochs<span class="sc">}</span><span class="ss"> | D </span><span class="sc">{</span>hist<span class="sc">.</span>d_loss[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:.3f}</span><span class="ss"> | G </span><span class="sc">{</span>hist<span class="sc">.</span>g_loss[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:.3f}</span><span class="ss"> | Div </span><span class="sc">{</span>div<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb14-84"><a href="#cb14-84" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> G, D, hist</span>
+<span id="cb14-85"><a href="#cb14-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-86"><a href="#cb14-86" aria-hidden="true" tabindex="-1"></a><span class="co"># Train the conditional GAN</span></span>
+<span id="cb14-87"><a href="#cb14-87" aria-hidden="true" tabindex="-1"></a>G_cond_onehot, D_cond_onehot, H_cond_onehot <span class="op">=</span> train_conditional_gan_onehot(</span>
+<span id="cb14-88"><a href="#cb14-88" aria-hidden="true" tabindex="-1"></a>    X_ring, y_ring, n_classes<span class="op">=</span><span class="dv">8</span>, epochs<span class="op">=</span><span class="dv">480</span>, batch_size<span class="op">=</span><span class="dv">256</span>, </span>
+<span id="cb14-89"><a href="#cb14-89" aria-hidden="true" tabindex="-1"></a>    lr_g<span class="op">=</span><span class="fl">2e-4</span>, lr_d<span class="op">=</span><span class="fl">2e-4</span>, hidden_dim<span class="op">=</span><span class="dv">256</span>, noise_dim<span class="op">=</span><span class="dv">2</span>, print_every<span class="op">=</span><span class="dv">40</span></span>
+<span id="cb14-90"><a href="#cb14-90" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch 001/480 | D 1.250 | G 0.706 | Div 0.029
+Epoch 040/480 | D 1.399 | G 0.691 | Div 4.734
+Epoch 080/480 | D 1.386 | G 0.697 | Div 4.626
+Epoch 120/480 | D 1.387 | G 0.689 | Div 4.322
+Epoch 160/480 | D 1.385 | G 0.707 | Div 4.171
+Epoch 200/480 | D 1.401 | G 0.658 | Div 3.566
+Epoch 240/480 | D 1.390 | G 0.710 | Div 4.966
+Epoch 280/480 | D 1.387 | G 0.702 | Div 4.233
+Epoch 320/480 | D 1.384 | G 0.708 | Div 4.220
+Epoch 360/480 | D 1.386 | G 0.680 | Div 4.759
+Epoch 400/480 | D 1.388 | G 0.699 | Div 4.590
+Epoch 440/480 | D 1.387 | G 0.682 | Div 4.703
+Epoch 480/480 | D 1.388 | G 0.700 | Div 4.429</code></pre>
+</div>
+</div>
+<p>Now let’s visualize the conditional samples. We’ll generate samples for each of the 8 modes and plot them to see if the generator has learned to respect the conditioning signal.</p>
+<div id="842a41a0" class="cell" data-execution_count="13">
+<details class="code-fold">
+<summary>Show Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate conditional samples for each mode</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>G_cond_onehot.<span class="bu">eval</span>()</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>samples_by_label <span class="op">=</span> {}</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>n_samples_per_mode <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> label <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">8</span>):</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    z <span class="op">=</span> torch.randn(n_samples_per_mode, <span class="dv">2</span>, device<span class="op">=</span>device)</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> torch.nn.functional.one_hot(</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>        torch.full((n_samples_per_mode,), label, device<span class="op">=</span>device), num_classes<span class="op">=</span><span class="dv">8</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    ).to(torch.float32)</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>        samples <span class="op">=</span> G_cond_onehot(z, y).cpu().numpy()</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    samples_by_label[label] <span class="op">=</span> samples</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>plot_conditional_samples_discrete(</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>    samples_by_label, X_ring, y_ring, title<span class="op">=</span><span class="st">"Conditional GAN: One-Hot Mode Conditioning"</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="intro_to_GANS_files/figure-html/cell-14-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="conditional-example-b-continuous-radius-conditioning" class="level3" data-number="9.7.2">
+<h3 data-number="9.7.2" class="anchored" data-anchor-id="conditional-example-b-continuous-radius-conditioning"><span class="header-section-number">9.7.2</span> Conditional Example B — Continuous Radius Conditioning</h3>
+<p>Instead of conditioning on discrete labels, we can also condition on continuous scalar values. In this example, we’ll condition the GAN on the radius (distance from the origin) of the generated samples. This allows us to control where on the ring samples are generated.</p>
+<p>To handle continuous conditioning, we typically embed the scalar through a small MLP before concatenating it with other inputs. This gives the network more flexibility in how it uses the conditioning signal.</p>
+<div id="87bf3fe2" class="cell" data-execution_count="14">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gen_models_utilities <span class="im">import</span> make_conditional_loader_radius, plot_conditional_samples_continuous</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Conditional Generator with radius embedding</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ConditionalMLPGeneratorRadius(nn.Module):</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, noise_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>, cond_emb_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">16</span>, hidden_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">256</span>, out_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>):</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Embed the scalar radius into a higher-dimensional space</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.cond_embed <span class="op">=</span> nn.Sequential(</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>            nn.Linear(<span class="dv">1</span>, cond_emb_dim),</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>            nn.LeakyReLU(),</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>            nn.Linear(cond_emb_dim, cond_emb_dim),</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.main <span class="op">=</span> nn.Sequential(</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>            nn.Linear(noise_dim <span class="op">+</span> cond_emb_dim, hidden_dim), nn.LeakyReLU(),</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>            nn.Linear(hidden_dim, hidden_dim), nn.LeakyReLU(),</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>            nn.Linear(hidden_dim, out_dim),</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, z: torch.Tensor, r: torch.Tensor) <span class="op">-&gt;</span> torch.Tensor:</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>        r_emb <span class="op">=</span> <span class="va">self</span>.cond_embed(r)</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>        zr <span class="op">=</span> torch.cat([z, r_emb], dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.main(zr)</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Conditional Discriminator with radius embedding</span></span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ConditionalMLPDiscriminatorRadius(nn.Module):</span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, input_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>, cond_emb_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">16</span>, hidden_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">256</span>):</span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.cond_embed <span class="op">=</span> nn.Sequential(</span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>            nn.Linear(<span class="dv">1</span>, cond_emb_dim),</span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a>            nn.LeakyReLU(),</span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a>            nn.Linear(cond_emb_dim, cond_emb_dim),</span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.main <span class="op">=</span> nn.Sequential(</span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a>            nn.Linear(input_dim <span class="op">+</span> cond_emb_dim, hidden_dim), nn.LeakyReLU(<span class="fl">0.2</span>),</span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a>            nn.Linear(hidden_dim, hidden_dim), nn.LeakyReLU(<span class="fl">0.2</span>),</span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a>            nn.Linear(hidden_dim, <span class="dv">1</span>),</span>
+<span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x: torch.Tensor, r: torch.Tensor) <span class="op">-&gt;</span> torch.Tensor:</span>
+<span id="cb17-38"><a href="#cb17-38" aria-hidden="true" tabindex="-1"></a>        r_emb <span class="op">=</span> <span class="va">self</span>.cond_embed(r)</span>
+<span id="cb17-39"><a href="#cb17-39" aria-hidden="true" tabindex="-1"></a>        xr <span class="op">=</span> torch.cat([x, r_emb], dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb17-40"><a href="#cb17-40" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.main(xr).squeeze(<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb17-41"><a href="#cb17-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-42"><a href="#cb17-42" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_conditional_gan_radius(</span>
+<span id="cb17-43"><a href="#cb17-43" aria-hidden="true" tabindex="-1"></a>    data: np.ndarray, <span class="op">*</span>,</span>
+<span id="cb17-44"><a href="#cb17-44" aria-hidden="true" tabindex="-1"></a>    noise_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>, batch_size: <span class="bu">int</span> <span class="op">=</span> <span class="dv">256</span>, epochs: <span class="bu">int</span> <span class="op">=</span> <span class="dv">120</span>,</span>
+<span id="cb17-45"><a href="#cb17-45" aria-hidden="true" tabindex="-1"></a>    lr_g: <span class="bu">float</span> <span class="op">=</span> <span class="fl">2e-4</span>, lr_d: <span class="bu">float</span> <span class="op">=</span> <span class="fl">2e-4</span>, hidden_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">256</span>, print_every: <span class="bu">int</span> <span class="op">=</span> <span class="dv">40</span></span>
+<span id="cb17-46"><a href="#cb17-46" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> <span class="bu">tuple</span>[nn.Module, nn.Module, GanHistory]:</span>
+<span id="cb17-47"><a href="#cb17-47" aria-hidden="true" tabindex="-1"></a>    loader <span class="op">=</span> make_conditional_loader_radius(data, batch_size)</span>
+<span id="cb17-48"><a href="#cb17-48" aria-hidden="true" tabindex="-1"></a>    G <span class="op">=</span> ConditionalMLPGeneratorRadius(noise_dim<span class="op">=</span>noise_dim, hidden_dim<span class="op">=</span>hidden_dim).to(device)</span>
+<span id="cb17-49"><a href="#cb17-49" aria-hidden="true" tabindex="-1"></a>    D <span class="op">=</span> ConditionalMLPDiscriminatorRadius(input_dim<span class="op">=</span><span class="dv">2</span>, hidden_dim<span class="op">=</span>hidden_dim).to(device)</span>
+<span id="cb17-50"><a href="#cb17-50" aria-hidden="true" tabindex="-1"></a>    opt_g <span class="op">=</span> optim.Adam(G.parameters(), lr<span class="op">=</span>lr_g, betas<span class="op">=</span>(<span class="fl">0.5</span>, <span class="fl">0.999</span>))</span>
+<span id="cb17-51"><a href="#cb17-51" aria-hidden="true" tabindex="-1"></a>    opt_d <span class="op">=</span> optim.Adam(D.parameters(), lr<span class="op">=</span>lr_d, betas<span class="op">=</span>(<span class="fl">0.5</span>, <span class="fl">0.999</span>))</span>
+<span id="cb17-52"><a href="#cb17-52" aria-hidden="true" tabindex="-1"></a>    bce <span class="op">=</span> nn.BCEWithLogitsLoss()</span>
+<span id="cb17-53"><a href="#cb17-53" aria-hidden="true" tabindex="-1"></a>    hist <span class="op">=</span> GanHistory([], [], [], [], [])</span>
+<span id="cb17-54"><a href="#cb17-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-55"><a href="#cb17-55" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> ep <span class="kw">in</span> <span class="bu">range</span>(epochs):</span>
+<span id="cb17-56"><a href="#cb17-56" aria-hidden="true" tabindex="-1"></a>        d_losses, g_losses, real_scores, fake_scores <span class="op">=</span> [], [], [], []</span>
+<span id="cb17-57"><a href="#cb17-57" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> xb, rb <span class="kw">in</span> loader:</span>
+<span id="cb17-58"><a href="#cb17-58" aria-hidden="true" tabindex="-1"></a>            xb, rb <span class="op">=</span> xb.to(device), rb.to(device)</span>
+<span id="cb17-59"><a href="#cb17-59" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Discriminator step</span></span>
+<span id="cb17-60"><a href="#cb17-60" aria-hidden="true" tabindex="-1"></a>            z <span class="op">=</span> torch.randn(xb.size(<span class="dv">0</span>), noise_dim, device<span class="op">=</span>device)</span>
+<span id="cb17-61"><a href="#cb17-61" aria-hidden="true" tabindex="-1"></a>            <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb17-62"><a href="#cb17-62" aria-hidden="true" tabindex="-1"></a>                x_fake <span class="op">=</span> G(z, rb)</span>
+<span id="cb17-63"><a href="#cb17-63" aria-hidden="true" tabindex="-1"></a>            opt_d.zero_grad()</span>
+<span id="cb17-64"><a href="#cb17-64" aria-hidden="true" tabindex="-1"></a>            d_real <span class="op">=</span> D(xb, rb)</span>
+<span id="cb17-65"><a href="#cb17-65" aria-hidden="true" tabindex="-1"></a>            d_fake <span class="op">=</span> D(x_fake, rb)</span>
+<span id="cb17-66"><a href="#cb17-66" aria-hidden="true" tabindex="-1"></a>            loss_d <span class="op">=</span> bce(d_real, torch.ones_like(d_real)) <span class="op">+</span> bce(d_fake, torch.zeros_like(d_fake))</span>
+<span id="cb17-67"><a href="#cb17-67" aria-hidden="true" tabindex="-1"></a>            loss_d.backward()</span>
+<span id="cb17-68"><a href="#cb17-68" aria-hidden="true" tabindex="-1"></a>            opt_d.step()</span>
+<span id="cb17-69"><a href="#cb17-69" aria-hidden="true" tabindex="-1"></a>            d_losses.append(<span class="bu">float</span>(loss_d.detach().cpu().item()))</span>
+<span id="cb17-70"><a href="#cb17-70" aria-hidden="true" tabindex="-1"></a>            real_scores.append(d_real.mean().item())</span>
+<span id="cb17-71"><a href="#cb17-71" aria-hidden="true" tabindex="-1"></a>            fake_scores.append(d_fake.mean().item())</span>
+<span id="cb17-72"><a href="#cb17-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-73"><a href="#cb17-73" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Generator step</span></span>
+<span id="cb17-74"><a href="#cb17-74" aria-hidden="true" tabindex="-1"></a>            z <span class="op">=</span> torch.randn(xb.size(<span class="dv">0</span>), noise_dim, device<span class="op">=</span>device)</span>
+<span id="cb17-75"><a href="#cb17-75" aria-hidden="true" tabindex="-1"></a>            opt_g.zero_grad()</span>
+<span id="cb17-76"><a href="#cb17-76" aria-hidden="true" tabindex="-1"></a>            xg <span class="op">=</span> G(z, rb)</span>
+<span id="cb17-77"><a href="#cb17-77" aria-hidden="true" tabindex="-1"></a>            dg <span class="op">=</span> D(xg, rb)</span>
+<span id="cb17-78"><a href="#cb17-78" aria-hidden="true" tabindex="-1"></a>            loss_g <span class="op">=</span> bce(dg, torch.ones_like(dg))</span>
+<span id="cb17-79"><a href="#cb17-79" aria-hidden="true" tabindex="-1"></a>            loss_g.backward()</span>
+<span id="cb17-80"><a href="#cb17-80" aria-hidden="true" tabindex="-1"></a>            opt_g.step()</span>
+<span id="cb17-81"><a href="#cb17-81" aria-hidden="true" tabindex="-1"></a>            g_losses.append(<span class="bu">float</span>(loss_g.detach().cpu().item()))</span>
+<span id="cb17-82"><a href="#cb17-82" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb17-83"><a href="#cb17-83" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb17-84"><a href="#cb17-84" aria-hidden="true" tabindex="-1"></a>            z_eval <span class="op">=</span> torch.randn(<span class="dv">2048</span>, noise_dim, device<span class="op">=</span>device)</span>
+<span id="cb17-85"><a href="#cb17-85" aria-hidden="true" tabindex="-1"></a>            r_eval <span class="op">=</span> torch.norm(torch.randn(<span class="dv">2048</span>, <span class="dv">2</span>), dim<span class="op">=</span><span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>).to(device)</span>
+<span id="cb17-86"><a href="#cb17-86" aria-hidden="true" tabindex="-1"></a>            samples <span class="op">=</span> G(z_eval, r_eval)</span>
+<span id="cb17-87"><a href="#cb17-87" aria-hidden="true" tabindex="-1"></a>            div <span class="op">=</span> compute_diversity_metric(samples)</span>
+<span id="cb17-88"><a href="#cb17-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-89"><a href="#cb17-89" aria-hidden="true" tabindex="-1"></a>        hist.d_loss.append(<span class="bu">float</span>(np.mean(d_losses)))</span>
+<span id="cb17-90"><a href="#cb17-90" aria-hidden="true" tabindex="-1"></a>        hist.g_loss.append(<span class="bu">float</span>(np.mean(g_losses)))</span>
+<span id="cb17-91"><a href="#cb17-91" aria-hidden="true" tabindex="-1"></a>        hist.diversity.append(div)</span>
+<span id="cb17-92"><a href="#cb17-92" aria-hidden="true" tabindex="-1"></a>        hist.real_scores.append(<span class="bu">float</span>(np.mean(real_scores)))</span>
+<span id="cb17-93"><a href="#cb17-93" aria-hidden="true" tabindex="-1"></a>        hist.fake_scores.append(<span class="bu">float</span>(np.mean(fake_scores)))</span>
+<span id="cb17-94"><a href="#cb17-94" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (ep<span class="op">+</span><span class="dv">1</span>) <span class="op">%</span> <span class="bu">max</span>(<span class="dv">1</span>, print_every) <span class="op">==</span> <span class="dv">0</span> <span class="kw">or</span> ep<span class="op">==</span><span class="dv">0</span>:</span>
+<span id="cb17-95"><a href="#cb17-95" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"Epoch </span><span class="sc">{</span>ep<span class="op">+</span><span class="dv">1</span><span class="sc">:03d}</span><span class="ss">/</span><span class="sc">{</span>epochs<span class="sc">}</span><span class="ss"> | D </span><span class="sc">{</span>hist<span class="sc">.</span>d_loss[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:.3f}</span><span class="ss"> | G </span><span class="sc">{</span>hist<span class="sc">.</span>g_loss[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:.3f}</span><span class="ss"> | Div </span><span class="sc">{</span>div<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb17-96"><a href="#cb17-96" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> G, D, hist</span>
+<span id="cb17-97"><a href="#cb17-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-98"><a href="#cb17-98" aria-hidden="true" tabindex="-1"></a><span class="co"># Train the conditional GAN with radius conditioning</span></span>
+<span id="cb17-99"><a href="#cb17-99" aria-hidden="true" tabindex="-1"></a>G_cond_radius, D_cond_radius, H_cond_radius <span class="op">=</span> train_conditional_gan_radius(</span>
+<span id="cb17-100"><a href="#cb17-100" aria-hidden="true" tabindex="-1"></a>    X_ring, epochs<span class="op">=</span><span class="dv">480</span>, batch_size<span class="op">=</span><span class="dv">256</span>, </span>
+<span id="cb17-101"><a href="#cb17-101" aria-hidden="true" tabindex="-1"></a>    lr_g<span class="op">=</span><span class="fl">2e-4</span>, lr_d<span class="op">=</span><span class="fl">2e-4</span>, hidden_dim<span class="op">=</span><span class="dv">256</span>, noise_dim<span class="op">=</span><span class="dv">2</span>, print_every<span class="op">=</span><span class="dv">40</span></span>
+<span id="cb17-102"><a href="#cb17-102" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch 001/480 | D 1.295 | G 0.732 | Div 0.012
+Epoch 040/480 | D 1.100 | G 1.071 | Div 0.335
+Epoch 080/480 | D 1.265 | G 0.834 | Div 3.910
+Epoch 120/480 | D 1.242 | G 0.807 | Div 1.787
+Epoch 160/480 | D 1.284 | G 0.801 | Div 1.194
+Epoch 200/480 | D 1.323 | G 0.774 | Div 1.310
+Epoch 240/480 | D 1.341 | G 0.758 | Div 1.311
+Epoch 280/480 | D 1.351 | G 0.736 | Div 1.299
+Epoch 320/480 | D 1.355 | G 0.731 | Div 1.255
+Epoch 360/480 | D 1.367 | G 0.729 | Div 1.294
+Epoch 400/480 | D 1.362 | G 0.722 | Div 1.245
+Epoch 440/480 | D 1.359 | G 0.721 | Div 1.224
+Epoch 480/480 | D 1.365 | G 0.725 | Div 1.226</code></pre>
+</div>
+</div>
+<p>Now let’s generate samples at different radius values to see how the generator responds to continuous conditioning. We’ll sweep through several radius values and visualize the results.</p>
+<div id="bd0b8da8" class="cell" data-execution_count="17">
+<details class="code-fold">
+<summary>Show Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate conditional samples for different radius values</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>G_cond_radius.<span class="bu">eval</span>()</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>samples_by_radius <span class="op">=</span> {}</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>n_samples_per_radius <span class="op">=</span> <span class="dv">800</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>radius_values <span class="op">=</span> [<span class="op">-</span><span class="fl">1.0</span> , <span class="fl">0.01</span>, <span class="fl">0.5</span>, <span class="fl">1.5</span>, <span class="fl">1.7</span>, <span class="fl">2.0</span>, <span class="fl">2.5</span>, <span class="fl">3.0</span>, <span class="fl">3.5</span>, <span class="fl">4.0</span>]</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> r_val <span class="kw">in</span> radius_values:</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    z <span class="op">=</span> torch.randn(n_samples_per_radius, <span class="dv">2</span>, device<span class="op">=</span>device)</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> torch.full((n_samples_per_radius, <span class="dv">1</span>), r_val, device<span class="op">=</span>device)</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>        samples <span class="op">=</span> G_cond_radius(z, r).cpu().numpy()</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>    samples_by_radius[r_val] <span class="op">=</span> samples</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>plot_conditional_samples_continuous(</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>    samples_by_radius, X_ring, title<span class="op">=</span><span class="st">"Conditional GAN: Radius Conditioning"</span>, value_name<span class="op">=</span><span class="st">"radius"</span></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="intro_to_GANS_files/figure-html/cell-16-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="summary-and-next-steps" class="level2 page-columns page-full" data-number="9.8">
+<h2 data-number="9.8" class="anchored" data-anchor-id="summary-and-next-steps"><span class="header-section-number">9.8</span> Summary and Next Steps:</h2>
+<p>OK, so we have seen how a basic GAN is set up and trained, and covered some diagnostic plots that give us insight into how the training went. This gave us the following sets of useful tools:</p>
+<ul>
+<li>We could learn a forward mapping function <span class="math inline">\(f(z) \rightarrow x\)</span> that could push forward a given sample in <span class="math inline">\(z\)</span> to a corresponding sample in <span class="math inline">\(x\)</span>. This could learn distributions that were far more complex than a simple linear map could achieve above.</li>
+<li>This <span class="math inline">\(f\)</span> is a deterministic function – i.e., the same <span class="math inline">\(z\)</span> will always produce the same <span class="math inline">\(x\)</span>.</li>
+<li>We could produce latent interpolations in <span class="math inline">\(z\)</span> that produced smooth transitions in <span class="math inline">\(x\)</span> and seemed to capture the overall clustering behavior of certain distributions.</li>
+</ul>
+<p>Unfortunately, GANs did not give us any of the following properties, which will turn out to be useful later and motivate other types of generative models:</p>
+<ul>
+<li>We did not learn an inverse mapping <span class="math inline">\(f^{-1}(x) \rightarrow z\)</span>. This means that we cannot easily encode real data samples into the latent space, which would be useful for many applications. For example, if I wanted to slightly modify <span class="math inline">\(x\)</span> – e.g., <span class="math inline">\(x^\prime = x+\delta x\)</span> – and compute the corresponding latent coordinate <span class="math inline">\(z^\prime = z+\delta z\)</span>, GANS do not provide a built-it mechanism to do this.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> We will see how both Variational Autoencoders (VAEs) and Normalizing Flows (NFs) address this problem.</li>
+<li>We also cannot yet easily talk about or compute probability mappings between <span class="math inline">\(p(x)\)</span> and <span class="math inline">\(p(z)\)</span>, which would be useful for computing likelihoods of data samples or for evaluating how well the model fits the data distribution, both of which are quite useful. Again, we will see later how both VAEs and NFs address this problem.</li>
+</ul>
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;Of course, I could try to get at this another way, for example, by applying automatic differentiation to the Generator to compute <span class="math inline">\(\frac{\partial f}{\partial z}\)</span> and then use that to estimate <span class="math inline">\(\delta z \approx (\frac{\partial f}{\partial z})^{-1} \delta x\)</span>, but this requires extra work on our part and this is not always straightforward, especially if the Jacobian is ill-conditioned.</p></div></div><p>Before we move beyond GANs, however, we will first explore some of the complex training dynamics and other subtle issues that arise when applying them in practice. This will help you build up your intuition and experience in how to assess problems in generative models and will serve as a strong basis upon which to launch into more complex models later. It will also give us an opportunity to introduce the concept of <strong>Optimal Transport</strong>, which will be useful in its own right applications later on, and will also help us understand some of the limitations of GANs should you encounter their use in the future.</p>
+
+
+</section>
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../part2/review_neural_networks.html" class="pagination-link" aria-label="Review of Neural Networks">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Review of Neural Networks</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../part2/gen_models/GAN_pitfalls.html" class="pagination-link" aria-label="GAN Training Pitfalls">
+        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">GAN Training Pitfalls</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Machine Learning for Mechanical Engineers © 2025 by <a href="./index.qmd#sec-contributors">Mark Fuge and IDEAL Lab Contributors</a> is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

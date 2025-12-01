@@ -1,0 +1,2007 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Mark Fuge">
+<meta name="dcterms.date" content="2025-10-12">
+
+<title>12&nbsp; Variational Autoencoders (VAEs) – Machine Learning for Mechanical Engineering</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../part2/gen_models/normalizing_flows.html" rel="next">
+<link href="../../part2/gen_models/OT.html" rel="prev">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-0dd2bd5de344125cf763a379ddc3eb04.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../part2/part2.html">Foundations of Generative Models</a></li><li class="breadcrumb-item"><a href="../../part2/gen_models/VAEs.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Variational Autoencoders (VAEs)</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../../">Machine Learning for Mechanical Engineering</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../part1/part1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Foundational Skills</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../part1/reviewing_supervised_linear_models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Reviewing Supervised Linear Models</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/cross_validation_linear_regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Evaluating Machine Learning Models</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/supervised_linear_models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Introduction to Gradient Descent</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../part1/linear_decompositions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Review of Linear Unsupervised Learning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../part1/taking_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Taking Derivatives with Automatic Differentiation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../part1/distribution_distance.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Measuring Distribution Distances</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../part1/introduction_to_inference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Introduction to Inference</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../part2/part2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Foundations of Generative Models</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../part2/review_neural_networks.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Review of Neural Networks</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../part2/gen_models/intro_to_GANS.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Introduction to Push-Forward Generative Models – Generative Adversarial Networks (GANs)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../part2/gen_models/GAN_pitfalls.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">GAN Training Pitfalls</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../part2/gen_models/OT.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Optimal Transport for Generative Models</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../part2/gen_models/VAEs.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Variational Autoencoders (VAEs)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../part2/gen_models/normalizing_flows.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Normalizing Flows</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../part2/gen_models/continuous_flows.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">From Discrete Transformations to Continuous Flows</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../part2/gen_models/score_matching.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">From Continuous Flows to Score Matching</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../part2/gen_models/diffusion_models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">From Score Matching to Diffusion Models</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../part2/gen_models/flow_matching.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Flow Matching</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../part2/gen_models/latent_generative_models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Latent Generative Models</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../part2/introduction_to_reinforcement_learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Introduction to Deep Reinforcement Learning</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../problems/problems.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Problems</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../problems/ps1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Problem Set 1</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../problems/ps2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Problem Set 2</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../notebooks/notebooks.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">In-Class Notebooks</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../notebooks/california_housing_visualization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Housing Price Data Visualization In-Class Exercise</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../appendices/helpful_tooling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Helpful Tooling for Working with and Debugging Machine Learning Models</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../appendices/course_progression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Course Lecture Progression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../appendices/review_of_singular_value_decomposition.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Review of Matrices and the Singular Value Decomposition</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../appendices/review_of_math_and_computing_foundations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Reviewing Mathematical and Computational Foundations for Machine Learning</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#variational-autoencoders-vaes" id="toc-variational-autoencoders-vaes" class="nav-link active" data-scroll-target="#variational-autoencoders-vaes"><span class="header-section-number">13</span> Variational Autoencoders (VAEs)</a>
+  <ul class="collapse">
+  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link" data-scroll-target="#learning-objectives"><span class="header-section-number">13.1</span> Learning Objectives</a></li>
+  <li><a href="#what-is-a-variational-autoencoder" id="toc-what-is-a-variational-autoencoder" class="nav-link" data-scroll-target="#what-is-a-variational-autoencoder"><span class="header-section-number">13.2</span> What is a Variational Autoencoder?</a>
+  <ul class="collapse">
+  <li><a href="#the-elbo-why-vaes-work" id="toc-the-elbo-why-vaes-work" class="nav-link" data-scroll-target="#the-elbo-why-vaes-work"><span class="header-section-number">13.2.1</span> The ELBO: Why VAEs Work</a></li>
+  <li><a href="#the-reparameterization-trick" id="toc-the-reparameterization-trick" class="nav-link" data-scroll-target="#the-reparameterization-trick"><span class="header-section-number">13.2.2</span> The Reparameterization Trick</a></li>
+  </ul></li>
+  <li><a href="#building-a-simple-vae" id="toc-building-a-simple-vae" class="nav-link" data-scroll-target="#building-a-simple-vae"><span class="header-section-number">13.3</span> Building a Simple VAE</a>
+  <ul class="collapse">
+  <li><a href="#vae-architecture" id="toc-vae-architecture" class="nav-link" data-scroll-target="#vae-architecture"><span class="header-section-number">13.3.1</span> VAE Architecture</a></li>
+  <li><a href="#the-vae-loss-function" id="toc-the-vae-loss-function" class="nav-link" data-scroll-target="#the-vae-loss-function"><span class="header-section-number">13.3.2</span> The VAE Loss Function</a></li>
+  <li><a href="#training-the-vae" id="toc-training-the-vae" class="nav-link" data-scroll-target="#training-the-vae"><span class="header-section-number">13.3.3</span> Training the VAE</a></li>
+  <li><a href="#visualizing-training-progress" id="toc-visualizing-training-progress" class="nav-link" data-scroll-target="#visualizing-training-progress"><span class="header-section-number">13.3.4</span> Visualizing Training Progress</a></li>
+  </ul></li>
+  <li><a href="#exploring-the-learned-latent-space" id="toc-exploring-the-learned-latent-space" class="nav-link" data-scroll-target="#exploring-the-learned-latent-space"><span class="header-section-number">13.4</span> Exploring the Learned Latent Space</a>
+  <ul class="collapse">
+  <li><a href="#visualizing-q_phizx" id="toc-visualizing-q_phizx" class="nav-link" data-scroll-target="#visualizing-q_phizx"><span class="header-section-number">13.4.1</span> Visualizing <span class="math inline">\(q_\phi(z|x)\)</span></a></li>
+  <li><a href="#visualizing-the-latent-space-manifold" id="toc-visualizing-the-latent-space-manifold" class="nav-link" data-scroll-target="#visualizing-the-latent-space-manifold"><span class="header-section-number">13.4.2</span> Visualizing the Latent Space Manifold</a></li>
+  </ul></li>
+  <li><a href="#conditional-generation-examples" id="toc-conditional-generation-examples" class="nav-link" data-scroll-target="#conditional-generation-examples"><span class="header-section-number">13.5</span> Conditional Generation Examples</a>
+  <ul class="collapse">
+  <li><a href="#conditional-example-a-one-hot-mode-conditioning" id="toc-conditional-example-a-one-hot-mode-conditioning" class="nav-link" data-scroll-target="#conditional-example-a-one-hot-mode-conditioning"><span class="header-section-number">13.5.1</span> Conditional Example A — One-Hot Mode Conditioning</a></li>
+  <li><a href="#conditional-example-b-continuous-radius-conditioning" id="toc-conditional-example-b-continuous-radius-conditioning" class="nav-link" data-scroll-target="#conditional-example-b-continuous-radius-conditioning"><span class="header-section-number">13.5.2</span> Conditional Example B — Continuous Radius Conditioning</a></li>
+  </ul></li>
+  <li><a href="#comparing-vaes-to-gans-and-ot-models" id="toc-comparing-vaes-to-gans-and-ot-models" class="nav-link" data-scroll-target="#comparing-vaes-to-gans-and-ot-models"><span class="header-section-number">13.6</span> Comparing VAEs to GANs and OT Models</a>
+  <ul class="collapse">
+  <li><a href="#when-to-use-vaes" id="toc-when-to-use-vaes" class="nav-link" data-scroll-target="#when-to-use-vaes"><span class="header-section-number">13.6.1</span> When to use VAEs:</a></li>
+  <li><a href="#when-to-use-gans-or-ot-models" id="toc-when-to-use-gans-or-ot-models" class="nav-link" data-scroll-target="#when-to-use-gans-or-ot-models"><span class="header-section-number">13.6.2</span> When to use GANs or OT models:</a></li>
+  </ul></li>
+  <li><a href="#summary-and-looking-forward" id="toc-summary-and-looking-forward" class="nav-link" data-scroll-target="#summary-and-looking-forward"><span class="header-section-number">13.7</span> Summary and Looking Forward</a>
+  <ul class="collapse">
+  <li><a href="#key-takeaways" id="toc-key-takeaways" class="nav-link" data-scroll-target="#key-takeaways"><span class="header-section-number">13.7.1</span> Key Takeaways:</a></li>
+  <li><a href="#limitations-and-extensions" id="toc-limitations-and-extensions" class="nav-link" data-scroll-target="#limitations-and-extensions"><span class="header-section-number">13.7.2</span> Limitations and Extensions:</a></li>
+  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps"><span class="header-section-number">13.7.3</span> Next Steps:</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../part2/part2.html">Foundations of Generative Models</a></li><li class="breadcrumb-item"><a href="../../part2/gen_models/VAEs.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Variational Autoencoders (VAEs)</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Variational Autoencoders (VAEs)</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Mark Fuge </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">October 12, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="variational-autoencoders-vaes" class="level1" data-number="13">
+<h1 data-number="13"><span class="header-section-number">13</span> Variational Autoencoders (VAEs)</h1>
+<p>In the previous notebooks, we explored push-forward generative models (GANs) and then moved to optimal transport approaches. These models excel at generating samples by learning a mapping <span class="math inline">\(f(z) \rightarrow x\)</span> from latent space to data space. However, they have a significant limitation: they don’t provide a way to go backwards – to encode a real data point <span class="math inline">\(x\)</span> back into the latent space <span class="math inline">\(z\)</span>.</p>
+<p><strong>Variational Autoencoders (VAEs)</strong> address this limitation by learning both directions simultaneously:</p>
+<ul>
+<li>An <strong>encoder</strong> that maps data to latent space: <span class="math inline">\(q_\phi(z|x)\)</span></li>
+<li>A <strong>decoder</strong> that maps latent space to data: <span class="math inline">\(p_\theta(x|z)\)</span></li>
+</ul>
+<p>We saw this kind of encoder-decoder structure before when we discussed (non-variational) Autoencoders, but only in the context of deterministic mappings for dimension reduction. Now, we will extend this idea to probabilistic mappings that allow us to both generate new data and infer latent representations with explicit likelihoods.</p>
+<section id="learning-objectives" class="level2" data-number="13.1">
+<h2 data-number="13.1" class="anchored" data-anchor-id="learning-objectives"><span class="header-section-number">13.1</span> Learning Objectives</h2>
+<ul>
+<li>Understand the architecture and motivation behind Variational Autoencoders</li>
+<li>Learn about the Evidence Lower Bound (ELBO) and why it’s used for training</li>
+<li>Explore the role of the KL divergence regularization term</li>
+<li>Build and train a simple VAE on 2D data</li>
+<li>Visualize the learned latent space and understand the encoder-decoder relationship</li>
+<li>Compare VAEs to GANs and understand their respective strengths</li>
+</ul>
+<div id="6c54a222" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Show Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Setup and Imports</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.optim <span class="im">as</span> optim</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> dataclasses <span class="im">import</span> dataclass</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> typing <span class="im">import</span> List</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Optional interactive widgets</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>:</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="im">from</span> ipywidgets <span class="im">import</span> interact, FloatSlider, IntSlider</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    widgets_available <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span> <span class="pp">Exception</span>:</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    interact <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    FloatSlider <span class="op">=</span> IntSlider <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    widgets_available <span class="op">=</span> <span class="va">False</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Import shared utilities from the local module</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gen_models_utilities <span class="im">import</span> (</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    device, create_ring_gaussians,</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    make_loader, compute_diversity_metric, plot_model_diagnostics, plot_latent_interpolation,</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    make_conditional_loader_onehot, plot_conditional_samples_discrete</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>plt.style.use(<span class="st">'seaborn-v0_8-muted'</span>)</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>sns.set_context(<span class="st">'talk'</span>)</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Using device: </span><span class="sc">{</span>device<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Using device: cuda</code></pre>
+</div>
+</div>
+</section>
+<section id="what-is-a-variational-autoencoder" class="level2" data-number="13.2">
+<h2 data-number="13.2" class="anchored" data-anchor-id="what-is-a-variational-autoencoder"><span class="header-section-number">13.2</span> What is a Variational Autoencoder?</h2>
+<p>To understand VAEs, let’s start with regular <strong>autoencoders</strong>. An autoencoder is a neural network trained to compress data into a lower-dimensional representation (encoding) and then reconstruct the original data from that compressed form (decoding). The key insight is that if we can successfully compress and reconstruct data, the compressed representation must capture the essential features of the original dataset, in a possibly more interpretable form.</p>
+<p>However, regular autoencoders have a problem: the latent space can be irregular and discontinuous. Two similar data points might end up far apart in latent space, making it hard to generate new samples or interpolate smoothly. This is not a problem as far as a regular Autoencoder is concerned, since its only goal in life is to reconstruct the training data well (it doesn’t care about interpolation or what the latent space might mean).</p>
+<p><strong>Variational Autoencoders</strong> solve this by imposing structure on the latent space. Instead of encoding a data point <span class="math inline">\(x\)</span> to a single point <span class="math inline">\(z\)</span>, a VAE encodes it to a <strong>probability distribution</strong> over <span class="math inline">\(z\)</span>. This is typically a Gaussian distribution with mean <span class="math inline">\(\mu\)</span> and standard deviation <span class="math inline">\(\sigma\)</span>:</p>
+<p><span class="math display">\[
+q_\phi(z|x) = \mathcal{N}(z; \mu_\phi(x), \sigma_\phi^2(x))
+\]</span></p>
+<p>where <span class="math inline">\(\phi\)</span> represents the encoder parameters (typically those of a neural network).</p>
+<p>The decoder then samples from this distribution to reconstruct the data: <span class="math display">\[p_\theta(x|z) = \mathcal{N}(x; \mu_\theta(z), \sigma_\theta^2(z))\]</span></p>
+<p>where <span class="math inline">\(\theta\)</span> represents the decoder parameters.</p>
+<p>With this, we actually have two types of probabilistic models, one that can compute the likelihood of a data point (<span class="math inline">\(x\)</span>) given a latent code (<span class="math inline">\(z\)</span>), and a second that can infer a distribution over latent codes (<span class="math inline">\(z\)</span>) given a data point (<span class="math inline">\(x\)</span>).</p>
+<section id="the-elbo-why-vaes-work" class="level3" data-number="13.2.1">
+<h3 data-number="13.2.1" class="anchored" data-anchor-id="the-elbo-why-vaes-work"><span class="header-section-number">13.2.1</span> The ELBO: Why VAEs Work</h3>
+<p>VAEs are trained by maximizing the <strong>Evidence Lower Bound (ELBO)</strong>, which decomposes into two terms:</p>
+<p><span class="math display">\[
+\text{ELBO} = \underbrace{\mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)]}_\text{Reconstruction term} - \underbrace{D_{KL}(q_\phi(z|x) \| p(z))}_\text{Regularization term}
+\]</span></p>
+<p>Let’s break this down:</p>
+<ol type="1">
+<li><p><strong>Reconstruction term</strong>: This measures how well the decoder can reconstruct the original data from the latent representation. It’s similar to a standard autoencoder loss.</p></li>
+<li><p><strong>KL divergence term</strong>: This regularizes the latent space by encouraging <span class="math inline">\(q_\phi(z|x)\)</span> to be close to a prior distribution <span class="math inline">\(p(z)\)</span> (typically a standard normal <span class="math inline">\(\mathcal{N}(0, I)\)</span>). This ensures the latent space is well-behaved and continuous.</p></li>
+</ol>
+<p>The KL term has a nice closed-form solution when both distributions are Gaussian:</p>
+<p><span class="math display">\[
+D_{KL}(q_\phi(z|x) \| p(z)) = \frac{1}{2}\sum_{i=1}^{d} (\mu_i^2 + \sigma_i^2 - \log(\sigma_i^2) - 1)
+\]</span></p>
+<p>Let’s step back a moment and think about what this term is encouraging. <span class="math inline">\(p(z)\)</span> is fixed, so the only thing we are changing when we optimize the KL divergence is <span class="math inline">\(q_\phi\)</span> (via the Neural Network weights <span class="math inline">\(\phi\)</span>). What is <span class="math inline">\(\phi\)</span> trying to do? Given an <span class="math inline">\(x\)</span> from our training data, <span class="math inline">\(\phi\)</span> will transform it to <span class="math inline">\(z\)</span> using the encoder’s neural network, and this will constitute a distribution over <span class="math inline">\(z\)</span> influenced by <span class="math inline">\(x\)</span>, specifically, <span class="math inline">\(z \sim \mathcal{N}(z; \mu_\phi(x), \sigma_\phi^2(x))\)</span>. So this will produce a tiny little Gaussian blob in <span class="math inline">\(z\)</span> for that given <span class="math inline">\(x\)</span>, and the KL divergence will penalize this <span class="math inline">\(q_\phi(z|x)\)</span> from being “far” (in a KL sense) from <span class="math inline">\(p(z)\)</span>. However, this doesn’t mean that <span class="math inline">\(q_\phi(z|x)\)</span> will look at all like <span class="math inline">\(p(z)\)</span>, rather, <span class="math inline">\(p(z)\)</span> is just sort of gently encouraging <span class="math inline">\(q_\phi(z|x)\)</span> to remaining close by to <span class="math inline">\(p(z)\)</span>. In fact, <span class="math inline">\(q_\phi(z|x)\)</span> can’t look too much like <span class="math inline">\(p(z)\)</span> because then <span class="math inline">\(q_\phi(z|x)\)</span> would be conditionally independent from <span class="math inline">\(x\)</span> and this would make it hard for the decoder (<span class="math inline">\(p_\theta(x|z)\)</span>) to reproduce <span class="math inline">\(x\)</span> well.</p>
+</section>
+<section id="the-reparameterization-trick" class="level3" data-number="13.2.2">
+<h3 data-number="13.2.2" class="anchored" data-anchor-id="the-reparameterization-trick"><span class="header-section-number">13.2.2</span> The Reparameterization Trick</h3>
+<p>To train VAEs with backpropagation, we need gradients to flow through the sampling operation. The <strong>reparameterization trick</strong> achieves this by rewriting the sampling as:</p>
+<p><span class="math display">\[
+z = \mu + \sigma \odot \epsilon, \quad \epsilon \sim \mathcal{N}(0, I)
+\]</span></p>
+<p>Now the randomness is moved to <span class="math inline">\(\epsilon\)</span>, and gradients can flow through <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\sigma\)</span>.</p>
+</section>
+</section>
+<section id="building-a-simple-vae" class="level2" data-number="13.3">
+<h2 data-number="13.3" class="anchored" data-anchor-id="building-a-simple-vae"><span class="header-section-number">13.3</span> Building a Simple VAE</h2>
+<p>Let’s implement a VAE for our familiar 2D ring dataset. We’ll keep the architecture simple so we can visualize and understand what’s happening.</p>
+<div id="4fe38ccb" class="cell" data-execution_count="2">
+<details class="code-fold">
+<summary>Show Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the ring dataset</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>X_ring, y_ring <span class="op">=</span> create_ring_gaussians(n_samples<span class="op">=</span><span class="dv">2000</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">6</span>))</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>sc <span class="op">=</span> ax.scatter(X_ring[:, <span class="dv">0</span>], X_ring[:, <span class="dv">1</span>], c<span class="op">=</span>y_ring, cmap<span class="op">=</span><span class="st">'tab10'</span>, s<span class="op">=</span><span class="dv">15</span>, alpha<span class="op">=</span><span class="fl">0.6</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>plt.colorbar(sc, label<span class="op">=</span><span class="st">'Mode index'</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'Target: Ring of Gaussians'</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'$x_1$'</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'$x_2$'</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>ax.axis(<span class="st">'equal'</span>)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.2</span>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="VAEs_files/figure-html/cell-3-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="vae-architecture" class="level3" data-number="13.3.1">
+<h3 data-number="13.3.1" class="anchored" data-anchor-id="vae-architecture"><span class="header-section-number">13.3.1</span> VAE Architecture</h3>
+<p>Our VAE will consist of two networks:</p>
+<ol type="1">
+<li><strong>Encoder</strong>: Takes 2D data and outputs the parameters (<span class="math inline">\(\mu\)</span>, <span class="math inline">\(\log\sigma^2\)</span>) of a Gaussian distribution in latent space</li>
+<li><strong>Decoder</strong>: Takes a latent code <span class="math inline">\(z\)</span> and reconstructs the 2D data point</li>
+</ol>
+<p>For this simple example, we’ll use 2D latent space so we can visualize it directly.</p>
+<div id="2c0a5dac" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Encoder(nn.Module):</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Encoder network that maps data to latent distribution parameters."""</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, x_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>, hidden_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">128</span>, z_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>):</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.net <span class="op">=</span> nn.Sequential(</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>            nn.Linear(x_dim, hidden_dim),</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>            nn.ReLU(),</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>            nn.Linear(hidden_dim, hidden_dim),</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>            nn.ReLU()</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Output mean and log-variance of the latent distribution</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.mu_layer <span class="op">=</span> nn.Linear(hidden_dim, z_dim)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.logvar_layer <span class="op">=</span> nn.Linear(hidden_dim, z_dim)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x: torch.Tensor):</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>        h <span class="op">=</span> <span class="va">self</span>.net(x)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>        mu <span class="op">=</span> <span class="va">self</span>.mu_layer(h)</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>        logvar <span class="op">=</span> <span class="va">self</span>.logvar_layer(h)</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> mu, logvar</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Decoder(nn.Module):</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Decoder network that maps latent codes back to data space."""</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, z_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>, hidden_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">128</span>, x_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>):</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.net <span class="op">=</span> nn.Sequential(</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>            nn.Linear(z_dim, hidden_dim),</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>            nn.ReLU(),</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>            nn.Linear(hidden_dim, hidden_dim),</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>            nn.ReLU(),</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>            nn.Linear(hidden_dim, x_dim)</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, z: torch.Tensor):</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.net(z)</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> VAE(nn.Module):</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Variational Autoencoder combining encoder and decoder."""</span></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, x_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>, z_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>, hidden_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">128</span>):</span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.encoder <span class="op">=</span> Encoder(x_dim, hidden_dim, z_dim)</span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.decoder <span class="op">=</span> Decoder(z_dim, hidden_dim, x_dim)</span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.z_dim <span class="op">=</span> z_dim</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> reparameterize(<span class="va">self</span>, mu: torch.Tensor, logvar: torch.Tensor):</span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>        <span class="co">"""Reparameterization trick: z = mu + sigma * epsilon"""</span></span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>        std <span class="op">=</span> torch.exp(<span class="fl">0.5</span> <span class="op">*</span> logvar)</span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>        eps <span class="op">=</span> torch.randn_like(std)</span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> mu <span class="op">+</span> eps <span class="op">*</span> std</span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x: torch.Tensor):</span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Encode</span></span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>        mu, logvar <span class="op">=</span> <span class="va">self</span>.encoder(x)</span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Sample from latent distribution</span></span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>        z <span class="op">=</span> <span class="va">self</span>.reparameterize(mu, logvar)</span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Decode</span></span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>        x_recon <span class="op">=</span> <span class="va">self</span>.decoder(z)</span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x_recon, mu, logvar, z</span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> encode(<span class="va">self</span>, x: torch.Tensor):</span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>        <span class="co">"""Encode data to latent space (returns mean of distribution)."""</span></span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>        mu, _ <span class="op">=</span> <span class="va">self</span>.encoder(x)</span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> mu</span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> decode(<span class="va">self</span>, z: torch.Tensor):</span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a>        <span class="co">"""Decode latent codes to data space."""</span></span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.decoder(z)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="the-vae-loss-function" class="level3" data-number="13.3.2">
+<h3 data-number="13.3.2" class="anchored" data-anchor-id="the-vae-loss-function"><span class="header-section-number">13.3.2</span> The VAE Loss Function</h3>
+<p>The VAE loss combines reconstruction error and KL divergence. For reconstruction, we’ll use mean squared error (MSE), which corresponds to assuming a Gaussian likelihood with a mean at the decoder value (<span class="math inline">\(\hat{x} = \mu_\theta(z)\)</span>) and a variance <span class="math inline">\(\sigma_\theta^2\)</span> that could be output by the decoder:</p>
+<p><span class="math display">\[
+\mathcal{L} = \underbrace{\frac{1}{2\sigma_\theta^2}\|x - \hat{x}\|^2}_\text{Reconstruction} + \underbrace{D_{KL}(q_\phi(z|x) \| p(z))}_\text{KL divergence}
+\]</span></p>
+<p>In a simplified case, we could set <span class="math inline">\(\sigma_\theta^2\)</span> to be a constant value (<span class="math inline">\(\sigma^2\)</span>) in which case the only job of the decoder would be to output a single vector (the mean value <span class="math inline">\(\hat{x} = \mu_\theta(z)\)</span>) and then the constant <span class="math inline">\(\sigma^2\)</span> would effectively control the trade-off between reconstruction accuracy and regularization strength.</p>
+<div id="4afd8187" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> vae_loss(x: torch.Tensor, x_recon: torch.Tensor, mu: torch.Tensor, logvar: torch.Tensor, </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>             beta: <span class="bu">float</span> <span class="op">=</span> <span class="fl">1.0</span>, reconstruction_variance: <span class="bu">float</span> <span class="op">=</span> <span class="fl">0.1</span>):</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">    Compute VAE loss = Reconstruction loss + beta * KL divergence.</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">        x: Original data</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">        x_recon: Reconstructed data</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">        mu: Mean of latent distribution</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">        logvar: Log-variance of latent distribution</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">        beta: Weight for KL term (beta=1 is standard VAE, beta&gt;1 is beta-VAE)</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">        reconstruction_variance: Assumed variance of reconstruction distribution</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Reconstruction loss (MSE scaled by assumed variance)</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    recon_loss <span class="op">=</span> torch.<span class="bu">sum</span>((x <span class="op">-</span> x_recon) <span class="op">**</span> <span class="dv">2</span>, dim<span class="op">=</span><span class="dv">1</span>) <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> reconstruction_variance)</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># KL divergence between q(z|x) and p(z) = N(0,I)</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># KL(N(mu, sigma^2) || N(0,1)) = 0.5 * sum(mu^2 + sigma^2 - log(sigma^2) - 1)</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    kl_div <span class="op">=</span> <span class="op">-</span><span class="fl">0.5</span> <span class="op">*</span> torch.<span class="bu">sum</span>(<span class="dv">1</span> <span class="op">+</span> logvar <span class="op">-</span> mu.<span class="bu">pow</span>(<span class="dv">2</span>) <span class="op">-</span> logvar.exp(), dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Total loss (negative ELBO)</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (recon_loss <span class="op">+</span> beta <span class="op">*</span> kl_div).mean(), recon_loss.mean(), kl_div.mean()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="training-the-vae" class="level3" data-number="13.3.3">
+<h3 data-number="13.3.3" class="anchored" data-anchor-id="training-the-vae"><span class="header-section-number">13.3.3</span> Training the VAE</h3>
+<p>Now let’s train our VAE on the ring dataset. We’ll track both the reconstruction loss and KL divergence separately to understand how the model learns.</p>
+<div id="e3a20ffd" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="at">@dataclass</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> VAEHistory:</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Training history for VAE."""</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    loss: List[<span class="bu">float</span>]</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    recon_loss: List[<span class="bu">float</span>]</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    kl_loss: List[<span class="bu">float</span>]</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    diversity: List[<span class="bu">float</span>]</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_vae(</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    data: np.ndarray,</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    x_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>,</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    z_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>,</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    hidden_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">128</span>,</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    batch_size: <span class="bu">int</span> <span class="op">=</span> <span class="dv">256</span>,</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    epochs: <span class="bu">int</span> <span class="op">=</span> <span class="dv">200</span>,</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    lr: <span class="bu">float</span> <span class="op">=</span> <span class="fl">1e-3</span>,</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    beta: <span class="bu">float</span> <span class="op">=</span> <span class="fl">1.0</span>,</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    reconstruction_variance: <span class="bu">float</span> <span class="op">=</span> <span class="fl">0.1</span>,</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    print_every: <span class="bu">int</span> <span class="op">=</span> <span class="dv">50</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="co">    Train a VAE on the provided data.</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a><span class="co">        data: Training data (numpy array)</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a><span class="co">        x_dim: Dimension of data space</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a><span class="co">        z_dim: Dimension of latent space</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a><span class="co">        hidden_dim: Hidden layer dimension</span></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a><span class="co">        batch_size: Batch size for training</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a><span class="co">        epochs: Number of training epochs</span></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a><span class="co">        lr: Learning rate</span></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a><span class="co">        beta: Weight for KL term (beta-VAE parameter)</span></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a><span class="co">        reconstruction_variance: Assumed variance of reconstruction distribution</span></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a><span class="co">        print_every: Print progress every N epochs</span></span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a><span class="co">        Trained VAE model and training history</span></span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Setup data loader</span></span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>    loader <span class="op">=</span> make_loader(data, batch_size)</span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Initialize model and optimizer</span></span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>    vae <span class="op">=</span> VAE(x_dim<span class="op">=</span>x_dim, z_dim<span class="op">=</span>z_dim, hidden_dim<span class="op">=</span>hidden_dim).to(device)</span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>    optimizer <span class="op">=</span> optim.Adam(vae.parameters(), lr<span class="op">=</span>lr)</span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Training history</span></span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>    history <span class="op">=</span> VAEHistory(loss<span class="op">=</span>[], recon_loss<span class="op">=</span>[], kl_loss<span class="op">=</span>[], diversity<span class="op">=</span>[])</span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Training VAE for </span><span class="sc">{</span>epochs<span class="sc">}</span><span class="ss"> epochs..."</span>)</span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Parameters: z_dim=</span><span class="sc">{</span>z_dim<span class="sc">}</span><span class="ss">, beta=</span><span class="sc">{</span>beta<span class="sc">}</span><span class="ss">, recon_var=</span><span class="sc">{</span>reconstruction_variance<span class="sc">}</span><span class="ss">, lr=</span><span class="sc">{</span>lr<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a>    vae.train()</span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(epochs):</span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a>        epoch_losses <span class="op">=</span> []</span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>        epoch_recon <span class="op">=</span> []</span>
+<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a>        epoch_kl <span class="op">=</span> []</span>
+<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> (batch,) <span class="kw">in</span> loader:</span>
+<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a>            batch <span class="op">=</span> batch.to(device)</span>
+<span id="cb6-61"><a href="#cb6-61" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb6-62"><a href="#cb6-62" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Forward pass</span></span>
+<span id="cb6-63"><a href="#cb6-63" aria-hidden="true" tabindex="-1"></a>            x_recon, mu, logvar, z <span class="op">=</span> vae(batch)</span>
+<span id="cb6-64"><a href="#cb6-64" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb6-65"><a href="#cb6-65" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Compute loss</span></span>
+<span id="cb6-66"><a href="#cb6-66" aria-hidden="true" tabindex="-1"></a>            loss, recon, kl <span class="op">=</span> vae_loss(batch, x_recon, mu, logvar, beta, reconstruction_variance)</span>
+<span id="cb6-67"><a href="#cb6-67" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb6-68"><a href="#cb6-68" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Backward pass</span></span>
+<span id="cb6-69"><a href="#cb6-69" aria-hidden="true" tabindex="-1"></a>            optimizer.zero_grad()</span>
+<span id="cb6-70"><a href="#cb6-70" aria-hidden="true" tabindex="-1"></a>            loss.backward()</span>
+<span id="cb6-71"><a href="#cb6-71" aria-hidden="true" tabindex="-1"></a>            optimizer.step()</span>
+<span id="cb6-72"><a href="#cb6-72" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb6-73"><a href="#cb6-73" aria-hidden="true" tabindex="-1"></a>            epoch_losses.append(loss.item())</span>
+<span id="cb6-74"><a href="#cb6-74" aria-hidden="true" tabindex="-1"></a>            epoch_recon.append(recon.item())</span>
+<span id="cb6-75"><a href="#cb6-75" aria-hidden="true" tabindex="-1"></a>            epoch_kl.append(kl.item())</span>
+<span id="cb6-76"><a href="#cb6-76" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb6-77"><a href="#cb6-77" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Record metrics</span></span>
+<span id="cb6-78"><a href="#cb6-78" aria-hidden="true" tabindex="-1"></a>        mean_loss <span class="op">=</span> np.mean(epoch_losses)</span>
+<span id="cb6-79"><a href="#cb6-79" aria-hidden="true" tabindex="-1"></a>        mean_recon <span class="op">=</span> np.mean(epoch_recon)</span>
+<span id="cb6-80"><a href="#cb6-80" aria-hidden="true" tabindex="-1"></a>        mean_kl <span class="op">=</span> np.mean(epoch_kl)</span>
+<span id="cb6-81"><a href="#cb6-81" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb6-82"><a href="#cb6-82" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Compute diversity (sample from prior and decode)</span></span>
+<span id="cb6-83"><a href="#cb6-83" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb6-84"><a href="#cb6-84" aria-hidden="true" tabindex="-1"></a>            z_samples <span class="op">=</span> torch.randn(<span class="dv">2048</span>, z_dim, device<span class="op">=</span>device)</span>
+<span id="cb6-85"><a href="#cb6-85" aria-hidden="true" tabindex="-1"></a>            x_samples <span class="op">=</span> vae.decode(z_samples)</span>
+<span id="cb6-86"><a href="#cb6-86" aria-hidden="true" tabindex="-1"></a>            diversity <span class="op">=</span> compute_diversity_metric(x_samples)</span>
+<span id="cb6-87"><a href="#cb6-87" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb6-88"><a href="#cb6-88" aria-hidden="true" tabindex="-1"></a>        history.loss.append(mean_loss)</span>
+<span id="cb6-89"><a href="#cb6-89" aria-hidden="true" tabindex="-1"></a>        history.recon_loss.append(mean_recon)</span>
+<span id="cb6-90"><a href="#cb6-90" aria-hidden="true" tabindex="-1"></a>        history.kl_loss.append(mean_kl)</span>
+<span id="cb6-91"><a href="#cb6-91" aria-hidden="true" tabindex="-1"></a>        history.diversity.append(diversity)</span>
+<span id="cb6-92"><a href="#cb6-92" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb6-93"><a href="#cb6-93" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (epoch <span class="op">+</span> <span class="dv">1</span>) <span class="op">%</span> print_every <span class="op">==</span> <span class="dv">0</span> <span class="kw">or</span> epoch <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb6-94"><a href="#cb6-94" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"Epoch </span><span class="sc">{</span>epoch<span class="op">+</span><span class="dv">1</span><span class="sc">:03d}</span><span class="ss">/</span><span class="sc">{</span>epochs<span class="sc">}</span><span class="ss"> | Loss: </span><span class="sc">{</span>mean_loss<span class="sc">:.3f}</span><span class="ss"> | "</span></span>
+<span id="cb6-95"><a href="#cb6-95" aria-hidden="true" tabindex="-1"></a>                  <span class="ss">f"Recon: </span><span class="sc">{</span>mean_recon<span class="sc">:.3f}</span><span class="ss"> | KL: </span><span class="sc">{</span>mean_kl<span class="sc">:.3f}</span><span class="ss"> | Div: </span><span class="sc">{</span>diversity<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb6-96"><a href="#cb6-96" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> vae, history</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="d825a9df" class="cell" data-execution_count="6">
+<details class="code-fold">
+<summary>Show Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Train the VAE</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>vae, history <span class="op">=</span> train_vae(</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    X_ring,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    x_dim<span class="op">=</span><span class="dv">2</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    z_dim<span class="op">=</span><span class="dv">2</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    hidden_dim<span class="op">=</span><span class="dv">128</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    epochs<span class="op">=</span><span class="dv">400</span>,</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    batch_size<span class="op">=</span><span class="dv">256</span>,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    lr<span class="op">=</span><span class="fl">1e-3</span>,</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    beta<span class="op">=</span><span class="fl">1.0</span>,</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    reconstruction_variance<span class="op">=</span><span class="fl">0.1</span>,</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    print_every<span class="op">=</span><span class="dv">50</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Training VAE for 400 epochs...
+Parameters: z_dim=2, beta=1.0, recon_var=0.1, lr=0.001
+Epoch 001/400 | Loss: 43.550 | Recon: 43.310 | KL: 0.240 | Div: 0.074
+Epoch 001/400 | Loss: 43.550 | Recon: 43.310 | KL: 0.240 | Div: 0.074
+Epoch 050/400 | Loss: 4.296 | Recon: 0.964 | KL: 3.332 | Div: 3.860
+Epoch 050/400 | Loss: 4.296 | Recon: 0.964 | KL: 3.332 | Div: 3.860
+Epoch 100/400 | Loss: 3.996 | Recon: 0.917 | KL: 3.079 | Div: 3.879
+Epoch 100/400 | Loss: 3.996 | Recon: 0.917 | KL: 3.079 | Div: 3.879
+Epoch 150/400 | Loss: 3.904 | Recon: 0.842 | KL: 3.062 | Div: 3.965
+Epoch 150/400 | Loss: 3.904 | Recon: 0.842 | KL: 3.062 | Div: 3.965
+Epoch 200/400 | Loss: 3.813 | Recon: 0.813 | KL: 3.001 | Div: 4.029
+Epoch 200/400 | Loss: 3.813 | Recon: 0.813 | KL: 3.001 | Div: 4.029
+Epoch 250/400 | Loss: 3.797 | Recon: 0.986 | KL: 2.810 | Div: 4.013
+Epoch 250/400 | Loss: 3.797 | Recon: 0.986 | KL: 2.810 | Div: 4.013
+Epoch 300/400 | Loss: 3.734 | Recon: 0.822 | KL: 2.912 | Div: 4.059
+Epoch 300/400 | Loss: 3.734 | Recon: 0.822 | KL: 2.912 | Div: 4.059
+Epoch 350/400 | Loss: 3.773 | Recon: 0.873 | KL: 2.900 | Div: 4.172
+Epoch 350/400 | Loss: 3.773 | Recon: 0.873 | KL: 2.900 | Div: 4.172
+Epoch 400/400 | Loss: 3.758 | Recon: 0.824 | KL: 2.935 | Div: 4.051
+Epoch 400/400 | Loss: 3.758 | Recon: 0.824 | KL: 2.935 | Div: 4.051</code></pre>
+</div>
+</div>
+</section>
+<section id="visualizing-training-progress" class="level3" data-number="13.3.4">
+<h3 data-number="13.3.4" class="anchored" data-anchor-id="visualizing-training-progress"><span class="header-section-number">13.3.4</span> Visualizing Training Progress</h3>
+<p>Let’s look at how the different loss components evolved during training:</p>
+<div id="79388468" class="cell" data-execution_count="7">
+<details class="code-fold">
+<summary>Show Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">15</span>, <span class="dv">4</span>))</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>epochs <span class="op">=</span> np.arange(<span class="dv">1</span>, <span class="bu">len</span>(history.loss) <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Total loss</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].plot(epochs, history.loss, color<span class="op">=</span><span class="st">'tab:blue'</span>, linewidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_xlabel(<span class="st">'Epoch'</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_ylabel(<span class="st">'Total Loss (Negative ELBO)'</span>)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_title(<span class="st">'Total VAE Loss'</span>)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_yscale(<span class="st">'log'</span>)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Reconstruction vs KL</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].plot(epochs, history.recon_loss, label<span class="op">=</span><span class="st">'Reconstruction'</span>, linewidth<span class="op">=</span><span class="dv">2</span>, color<span class="op">=</span><span class="st">'tab:orange'</span>)</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].plot(epochs, history.kl_loss, label<span class="op">=</span><span class="st">'KL Divergence'</span>, linewidth<span class="op">=</span><span class="dv">2</span>, color<span class="op">=</span><span class="st">'tab:green'</span>)</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_xlabel(<span class="st">'Epoch'</span>)</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_ylabel(<span class="st">'Loss'</span>)</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_title(<span class="st">'Loss Components'</span>)</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_yscale(<span class="st">'log'</span>)</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].legend()</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Diversity</span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">2</span>].plot(epochs, history.diversity, color<span class="op">=</span><span class="st">'teal'</span>, linewidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">2</span>].set_xlabel(<span class="st">'Epoch'</span>)</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">2</span>].set_ylabel(<span class="st">'Sample Variance'</span>)</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">2</span>].set_title(<span class="st">'Sample Diversity'</span>)</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">2</span>].grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="VAEs_files/figure-html/cell-8-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="exploring-the-learned-latent-space" class="level2" data-number="13.4">
+<h2 data-number="13.4" class="anchored" data-anchor-id="exploring-the-learned-latent-space"><span class="header-section-number">13.4</span> Exploring the Learned Latent Space</h2>
+<p>One of the most powerful aspects of VAEs is that we can visualize the latent space directly (since we’re using 2D latent codes). Let’s see how the VAE has organized the ring data in latent space.</p>
+<div id="8cf86d2a" class="cell" data-execution_count="8">
+<details class="code-fold">
+<summary>Show Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Encode all data points to latent space</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>vae.<span class="bu">eval</span>()</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    X_tensor <span class="op">=</span> torch.from_numpy(X_ring).<span class="bu">float</span>().to(device)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    z_encoded <span class="op">=</span> vae.encode(X_tensor).cpu().numpy()</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Generate samples from prior</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    z_prior <span class="op">=</span> torch.randn(<span class="dv">2000</span>, <span class="dv">2</span>, device<span class="op">=</span>device)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    x_generated <span class="op">=</span> vae.decode(z_prior).cpu().numpy()</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">16</span>, <span class="dv">5</span>))</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Original data space</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>sc0 <span class="op">=</span> axes[<span class="dv">0</span>].scatter(X_ring[:, <span class="dv">0</span>], X_ring[:, <span class="dv">1</span>], c<span class="op">=</span>y_ring, cmap<span class="op">=</span><span class="st">'tab10'</span>, s<span class="op">=</span><span class="dv">15</span>, alpha<span class="op">=</span><span class="fl">0.6</span>)</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_title(<span class="st">'Original Data Space'</span>)</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_xlabel(<span class="st">'$x_1$'</span>)</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_ylabel(<span class="st">'$x_2$'</span>)</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].axis(<span class="st">'equal'</span>)</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.2</span>)</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Latent space (colored by original mode)</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>sc1 <span class="op">=</span> axes[<span class="dv">1</span>].scatter(z_encoded[:, <span class="dv">0</span>], z_encoded[:, <span class="dv">1</span>], c<span class="op">=</span>y_ring, cmap<span class="op">=</span><span class="st">'tab10'</span>, s<span class="op">=</span><span class="dv">15</span>, alpha<span class="op">=</span><span class="fl">0.6</span>)</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_title(<span class="st">'Learned Latent Space'</span>)</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_xlabel(<span class="st">'$z_1$'</span>)</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_ylabel(<span class="st">'$z_2$'</span>)</span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].axis(<span class="st">'equal'</span>)</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.2</span>)</span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Generated samples</span></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">2</span>].scatter(X_ring[:, <span class="dv">0</span>], X_ring[:, <span class="dv">1</span>], c<span class="op">=</span><span class="st">'lightgray'</span>, s<span class="op">=</span><span class="dv">8</span>, alpha<span class="op">=</span><span class="fl">0.3</span>, label<span class="op">=</span><span class="st">'Real'</span>)</span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">2</span>].scatter(x_generated[:, <span class="dv">0</span>], x_generated[:, <span class="dv">1</span>], c<span class="op">=</span><span class="st">'tab:red'</span>, s<span class="op">=</span><span class="dv">12</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, label<span class="op">=</span><span class="st">'Generated'</span>)</span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">2</span>].set_title(<span class="st">'Generated Samples'</span>)</span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">2</span>].set_xlabel(<span class="st">'$x_1$'</span>)</span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">2</span>].set_ylabel(<span class="st">'$x_2$'</span>)</span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">2</span>].axis(<span class="st">'equal'</span>)</span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">2</span>].grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.2</span>)</span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">2</span>].legend()</span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="VAEs_files/figure-html/cell-9-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="visualizing-q_phizx" class="level3" data-number="13.4.1">
+<h3 data-number="13.4.1" class="anchored" data-anchor-id="visualizing-q_phizx"><span class="header-section-number">13.4.1</span> Visualizing <span class="math inline">\(q_\phi(z|x)\)</span></h3>
+<p>The encoder learns to map each input data point <span class="math inline">\(x\)</span> to a <em>distribution</em> in the latent space, not just a single point. Let’s pick two points from our dataset and visualize the corresponding Gaussian distributions <span class="math inline">\(q_\phi(z|x)\)</span> that the encoder has learned for them.</p>
+<div id="d20b01df" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select two points from the dataset</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>point_1_idx, point_2_idx <span class="op">=</span> <span class="dv">150</span>, <span class="dv">1050</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>x_1 <span class="op">=</span> torch.from_numpy(X_ring[point_1_idx]).<span class="bu">float</span>().to(device)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>x_2 <span class="op">=</span> torch.from_numpy(X_ring[point_2_idx]).<span class="bu">float</span>().to(device)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the parameters of q(z|x) for these two points</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>vae.<span class="bu">eval</span>()</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    mu_1, logvar_1 <span class="op">=</span> vae.encoder(x_1.unsqueeze(<span class="dv">0</span>))</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    mu_2, logvar_2 <span class="op">=</span> vae.encoder(x_2.unsqueeze(<span class="dv">0</span>))</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Create distributions</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>std_1 <span class="op">=</span> torch.exp(<span class="fl">0.5</span> <span class="op">*</span> logvar_1)</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>dist_1 <span class="op">=</span> torch.distributions.MultivariateNormal(mu_1.squeeze(), torch.diag(std_1.squeeze().<span class="bu">pow</span>(<span class="dv">2</span>)))</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>std_2 <span class="op">=</span> torch.exp(<span class="fl">0.5</span> <span class="op">*</span> logvar_2)</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>dist_2 <span class="op">=</span> torch.distributions.MultivariateNormal(mu_2.squeeze(), torch.diag(std_2.squeeze().<span class="bu">pow</span>(<span class="dv">2</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="d9c575e8" class="cell" data-execution_count="10">
+<details class="code-fold">
+<summary>Show Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a grid for the latent space plot</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>z_range <span class="op">=</span> <span class="fl">3.0</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>z_grid_pts <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>z1_grid <span class="op">=</span> torch.linspace(<span class="op">-</span>z_range, z_range, z_grid_pts, device<span class="op">=</span>device)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>z2_grid <span class="op">=</span> torch.linspace(<span class="op">-</span>z_range, z_range, z_grid_pts, device<span class="op">=</span>device)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>Z1, Z2 <span class="op">=</span> torch.meshgrid(z1_grid, z2_grid, indexing<span class="op">=</span><span class="st">'xy'</span>)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>z_grid_tensor <span class="op">=</span> torch.stack([Z1.flatten(), Z2.flatten()], dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate densities on the grid</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>log_prob_1 <span class="op">=</span> dist_1.log_prob(z_grid_tensor)</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>log_prob_2 <span class="op">=</span> dist_2.log_prob(z_grid_tensor)</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>prob_1 <span class="op">=</span> log_prob_1.exp().reshape(z_grid_pts, z_grid_pts).cpu().numpy()</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>prob_2 <span class="op">=</span> log_prob_2.exp().reshape(z_grid_pts, z_grid_pts).cpu().numpy()</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">13</span>, <span class="dv">6</span>))</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>color1, color2 <span class="op">=</span> <span class="st">'tab:red'</span>, <span class="st">'tab:purple'</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Left plot: Original data space</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].scatter(X_ring[:, <span class="dv">0</span>], X_ring[:, <span class="dv">1</span>], c<span class="op">=</span><span class="st">'lightgray'</span>, s<span class="op">=</span><span class="dv">10</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, label<span class="op">=</span><span class="st">'Dataset'</span>)</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].scatter(x_1[<span class="dv">0</span>].cpu(), x_1[<span class="dv">1</span>].cpu(), color<span class="op">=</span>color1, s<span class="op">=</span><span class="dv">100</span>, ec<span class="op">=</span><span class="st">'black'</span>, label<span class="op">=</span><span class="ss">f'Point 1 (idx </span><span class="sc">{</span>point_1_idx<span class="sc">}</span><span class="ss">)'</span>)</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].scatter(x_2[<span class="dv">0</span>].cpu(), x_2[<span class="dv">1</span>].cpu(), color<span class="op">=</span>color2, s<span class="op">=</span><span class="dv">100</span>, ec<span class="op">=</span><span class="st">'black'</span>, label<span class="op">=</span><span class="ss">f'Point 2 (idx </span><span class="sc">{</span>point_2_idx<span class="sc">}</span><span class="ss">)'</span>)</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_title(<span class="st">'Selected Points in Data Space'</span>)</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_xlabel(<span class="st">'$x_1$'</span>)</span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_ylabel(<span class="st">'$x_2$'</span>)</span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].axis(<span class="st">'equal'</span>)</span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.2</span>)</span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].legend()</span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Right plot: Latent space distributions</span></span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].contour(Z1.cpu().numpy(), Z2.cpu().numpy(), prob_1, colors<span class="op">=</span>color1, linewidths<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].contour(Z2.cpu().numpy(), Z1.cpu().numpy(), prob_2, colors<span class="op">=</span>color2, linewidths<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Also plot the full latent space encoding for context</span></span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].scatter(z_encoded[:, <span class="dv">0</span>], z_encoded[:, <span class="dv">1</span>], c<span class="op">=</span>y_ring, cmap<span class="op">=</span><span class="st">'tab10'</span>, s<span class="op">=</span><span class="dv">5</span>, alpha<span class="op">=</span><span class="fl">0.2</span>)</span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_title(<span class="st">'Learned $q(z|x)$ for Selected Points'</span>)</span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_xlabel(<span class="st">'$z_1$'</span>)</span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_ylabel(<span class="st">'$z_2$'</span>)</span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].axis(<span class="st">'equal'</span>)</span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.2</span>)</span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="VAEs_files/figure-html/cell-11-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="visualizing-the-latent-space-manifold" class="level3" data-number="13.4.2">
+<h3 data-number="13.4.2" class="anchored" data-anchor-id="visualizing-the-latent-space-manifold"><span class="header-section-number">13.4.2</span> Visualizing the Latent Space Manifold</h3>
+<p>Since both our data and latent space are 2D, we can create a grid in latent space and see what the decoder produces at each point. This helps us understand how the VAE has organized the latent space.</p>
+<div id="b42ea1ab" class="cell" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a grid in latent space</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>n_points <span class="op">=</span> <span class="dv">20</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>z_range <span class="op">=</span> <span class="fl">2.0</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>z1 <span class="op">=</span> np.linspace(<span class="op">-</span>z_range, z_range, n_points)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>z2 <span class="op">=</span> np.linspace(<span class="op">-</span>z_range, z_range, n_points)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>Z1, Z2 <span class="op">=</span> np.meshgrid(z1, z2)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>z_grid <span class="op">=</span> np.stack([Z1.flatten(), Z2.flatten()], axis<span class="op">=</span><span class="dv">1</span>).astype(np.float32)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Decode the grid</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    z_grid_tensor <span class="op">=</span> torch.from_numpy(z_grid).to(device)</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    x_grid <span class="op">=</span> vae.decode(z_grid_tensor).cpu().numpy()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="3b76564f" class="cell" data-execution_count="12">
+<details class="code-fold">
+<summary>Show Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">13</span>, <span class="dv">6</span>))</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Latent space grid</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].scatter(z_grid[:, <span class="dv">0</span>], z_grid[:, <span class="dv">1</span>], c<span class="op">=</span><span class="st">'tab:blue'</span>, s<span class="op">=</span><span class="dv">20</span>, alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].scatter(z_encoded[:, <span class="dv">0</span>], z_encoded[:, <span class="dv">1</span>], c<span class="op">=</span><span class="st">'lightgray'</span>, s<span class="op">=</span><span class="dv">3</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_title(<span class="st">'Grid in Latent Space'</span>)</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_xlabel(<span class="st">'$z_1$'</span>)</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_ylabel(<span class="st">'$z_2$'</span>)</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].axis(<span class="st">'equal'</span>)</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.2</span>)</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Corresponding points in data space</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].scatter(X_ring[:, <span class="dv">0</span>], X_ring[:, <span class="dv">1</span>], c<span class="op">=</span><span class="st">'lightgray'</span>, s<span class="op">=</span><span class="dv">8</span>, alpha<span class="op">=</span><span class="fl">0.2</span>, label<span class="op">=</span><span class="st">'Real data'</span>)</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>sc <span class="op">=</span> axes[<span class="dv">1</span>].scatter(x_grid[:, <span class="dv">0</span>], x_grid[:, <span class="dv">1</span>], c<span class="op">=</span>z_grid[:, <span class="dv">0</span>], cmap<span class="op">=</span><span class="st">'viridis'</span>, s<span class="op">=</span><span class="dv">30</span>, alpha<span class="op">=</span><span class="fl">0.7</span>, </span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>                     edgecolors<span class="op">=</span><span class="st">'black'</span>, linewidths<span class="op">=</span><span class="fl">0.5</span>, label<span class="op">=</span><span class="st">'Decoded grid'</span>)</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>plt.colorbar(sc, ax<span class="op">=</span>axes[<span class="dv">1</span>], label<span class="op">=</span><span class="st">'$z_1$ coordinate'</span>)</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_title(<span class="st">'Decoded Grid in Data Space'</span>)</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_xlabel(<span class="st">'$x_1$'</span>)</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_ylabel(<span class="st">'$x_2$'</span>)</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].axis(<span class="st">'equal'</span>)</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.2</span>)</span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].legend()</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="VAEs_files/figure-html/cell-13-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Experiment: Effect of re-weighting the KL Divergence term
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>We can see above that <code>reconstruction_variance</code> essentially sets the variances of the Gaussian outputs for the reconstructed data points. - Mathematically, what does setting this to a small variance imply for the loss function? What about a big variance? - Try modifying the <code>reconstruction_variance</code> above from a small number to a large one, e.g., 0.01 to 5.0. What happens to the output of the VAE? Why is this? (Note: if you go below about 0.1 then you may have to increase the learning rate of number of epochs unless it converges.)</p>
+</div>
+</div>
+</section>
+</section>
+<section id="conditional-generation-examples" class="level2" data-number="13.5">
+<h2 data-number="13.5" class="anchored" data-anchor-id="conditional-generation-examples"><span class="header-section-number">13.5</span> Conditional Generation Examples</h2>
+<p>Just like with GANs, we can extend VAEs to conditional generation by providing additional information to both the encoder and decoder. This allows us to control what we generate based on labels or continuous attributes.</p>
+<p>In conditional VAEs (CVAEs), we modify both the encoder and decoder to accept conditioning information:</p>
+<ul>
+<li>The <strong>encoder</strong> receives both the data <span class="math inline">\(x\)</span> and condition <span class="math inline">\(y\)</span>, producing <span class="math inline">\(q_\phi(z|x,y)\)</span></li>
+<li>The <strong>decoder</strong> receives both the latent code <span class="math inline">\(z\)</span> and condition <span class="math inline">\(y\)</span>, producing <span class="math inline">\(p_\theta(x|z,y)\)</span></li>
+</ul>
+<p>This conditioning allows us to: 1. Generate samples with specific properties (e.g., from a particular mode) 2. Learn more structured latent representations that disentangle the conditioning variable from other factors of variation</p>
+<p>Let’s explore both discrete (one-hot mode index) and continuous (radius) conditioning for VAEs.</p>
+<section id="conditional-example-a-one-hot-mode-conditioning" class="level3" data-number="13.5.1">
+<h3 data-number="13.5.1" class="anchored" data-anchor-id="conditional-example-a-one-hot-mode-conditioning"><span class="header-section-number">13.5.1</span> Conditional Example A — One-Hot Mode Conditioning</h3>
+<p>We’ll first condition the VAE on the discrete mode index using one-hot encoding. The conditioning vector is concatenated to the inputs of both the encoder and decoder networks.</p>
+<div id="278e083d" class="cell" data-execution_count="13">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Conditional Encoder</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ConditionalEncoder(nn.Module):</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, x_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>, label_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">8</span>, hidden_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">128</span>, z_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>):</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.net <span class="op">=</span> nn.Sequential(</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>            nn.Linear(x_dim <span class="op">+</span> label_dim, hidden_dim),</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>            nn.ReLU(),</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>            nn.Linear(hidden_dim, hidden_dim),</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>            nn.ReLU()</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.mu_layer <span class="op">=</span> nn.Linear(hidden_dim, z_dim)</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.logvar_layer <span class="op">=</span> nn.Linear(hidden_dim, z_dim)</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x: torch.Tensor, y: torch.Tensor):</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>        xy <span class="op">=</span> torch.cat([x, y], dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>        h <span class="op">=</span> <span class="va">self</span>.net(xy)</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>        mu <span class="op">=</span> <span class="va">self</span>.mu_layer(h)</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>        logvar <span class="op">=</span> <span class="va">self</span>.logvar_layer(h)</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> mu, logvar</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Conditional Decoder</span></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ConditionalDecoder(nn.Module):</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, z_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>, label_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">8</span>, hidden_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">128</span>, x_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>):</span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.net <span class="op">=</span> nn.Sequential(</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>            nn.Linear(z_dim <span class="op">+</span> label_dim, hidden_dim),</span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>            nn.ReLU(),</span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>            nn.Linear(hidden_dim, hidden_dim),</span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>            nn.ReLU(),</span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>            nn.Linear(hidden_dim, x_dim)</span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, z: torch.Tensor, y: torch.Tensor):</span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>        zy <span class="op">=</span> torch.cat([z, y], dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.net(zy)</span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Conditional VAE</span></span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ConditionalVAE(nn.Module):</span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, x_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>, z_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>, label_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">8</span>, hidden_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">128</span>):</span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.encoder <span class="op">=</span> ConditionalEncoder(x_dim, label_dim, hidden_dim, z_dim)</span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.decoder <span class="op">=</span> ConditionalDecoder(z_dim, label_dim, hidden_dim, x_dim)</span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.z_dim <span class="op">=</span> z_dim</span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> reparameterize(<span class="va">self</span>, mu: torch.Tensor, logvar: torch.Tensor):</span>
+<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a>        std <span class="op">=</span> torch.exp(<span class="fl">0.5</span> <span class="op">*</span> logvar)</span>
+<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a>        eps <span class="op">=</span> torch.randn_like(std)</span>
+<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> mu <span class="op">+</span> eps <span class="op">*</span> std</span>
+<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x: torch.Tensor, y: torch.Tensor):</span>
+<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a>        mu, logvar <span class="op">=</span> <span class="va">self</span>.encoder(x, y)</span>
+<span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a>        z <span class="op">=</span> <span class="va">self</span>.reparameterize(mu, logvar)</span>
+<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a>        x_recon <span class="op">=</span> <span class="va">self</span>.decoder(z, y)</span>
+<span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x_recon, mu, logvar, z</span>
+<span id="cb15-55"><a href="#cb15-55" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb15-56"><a href="#cb15-56" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> decode(<span class="va">self</span>, z: torch.Tensor, y: torch.Tensor):</span>
+<span id="cb15-57"><a href="#cb15-57" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.decoder(z, y)</span>
+<span id="cb15-58"><a href="#cb15-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-59"><a href="#cb15-59" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_conditional_vae_onehot(</span>
+<span id="cb15-60"><a href="#cb15-60" aria-hidden="true" tabindex="-1"></a>    data: np.ndarray, labels: np.ndarray, n_classes: <span class="bu">int</span> <span class="op">=</span> <span class="dv">8</span>,</span>
+<span id="cb15-61"><a href="#cb15-61" aria-hidden="true" tabindex="-1"></a>    x_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>, z_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>, hidden_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">128</span>,</span>
+<span id="cb15-62"><a href="#cb15-62" aria-hidden="true" tabindex="-1"></a>    batch_size: <span class="bu">int</span> <span class="op">=</span> <span class="dv">256</span>, epochs: <span class="bu">int</span> <span class="op">=</span> <span class="dv">200</span>, lr: <span class="bu">float</span> <span class="op">=</span> <span class="fl">1e-3</span>,</span>
+<span id="cb15-63"><a href="#cb15-63" aria-hidden="true" tabindex="-1"></a>    beta: <span class="bu">float</span> <span class="op">=</span> <span class="fl">1.0</span>, reconstruction_variance: <span class="bu">float</span> <span class="op">=</span> <span class="fl">0.1</span>, print_every: <span class="bu">int</span> <span class="op">=</span> <span class="dv">50</span></span>
+<span id="cb15-64"><a href="#cb15-64" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb15-65"><a href="#cb15-65" aria-hidden="true" tabindex="-1"></a>    loader <span class="op">=</span> make_conditional_loader_onehot(data, labels, batch_size, n_classes)</span>
+<span id="cb15-66"><a href="#cb15-66" aria-hidden="true" tabindex="-1"></a>    vae <span class="op">=</span> ConditionalVAE(x_dim<span class="op">=</span>x_dim, z_dim<span class="op">=</span>z_dim, label_dim<span class="op">=</span>n_classes, hidden_dim<span class="op">=</span>hidden_dim).to(device)</span>
+<span id="cb15-67"><a href="#cb15-67" aria-hidden="true" tabindex="-1"></a>    optimizer <span class="op">=</span> optim.Adam(vae.parameters(), lr<span class="op">=</span>lr)</span>
+<span id="cb15-68"><a href="#cb15-68" aria-hidden="true" tabindex="-1"></a>    history <span class="op">=</span> VAEHistory([], [], [], [])</span>
+<span id="cb15-69"><a href="#cb15-69" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb15-70"><a href="#cb15-70" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(epochs):</span>
+<span id="cb15-71"><a href="#cb15-71" aria-hidden="true" tabindex="-1"></a>        total_loss, total_recon, total_kl <span class="op">=</span> <span class="fl">0.0</span>, <span class="fl">0.0</span>, <span class="fl">0.0</span></span>
+<span id="cb15-72"><a href="#cb15-72" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> xb, yb <span class="kw">in</span> loader:</span>
+<span id="cb15-73"><a href="#cb15-73" aria-hidden="true" tabindex="-1"></a>            xb, yb <span class="op">=</span> xb.to(device), yb.to(device)</span>
+<span id="cb15-74"><a href="#cb15-74" aria-hidden="true" tabindex="-1"></a>            x_recon, mu, logvar, z <span class="op">=</span> vae(xb, yb)</span>
+<span id="cb15-75"><a href="#cb15-75" aria-hidden="true" tabindex="-1"></a>            loss, recon_loss, kl_loss <span class="op">=</span> vae_loss(xb, x_recon, mu, logvar, beta, reconstruction_variance)</span>
+<span id="cb15-76"><a href="#cb15-76" aria-hidden="true" tabindex="-1"></a>            optimizer.zero_grad()</span>
+<span id="cb15-77"><a href="#cb15-77" aria-hidden="true" tabindex="-1"></a>            loss.backward()</span>
+<span id="cb15-78"><a href="#cb15-78" aria-hidden="true" tabindex="-1"></a>            optimizer.step()</span>
+<span id="cb15-79"><a href="#cb15-79" aria-hidden="true" tabindex="-1"></a>            total_loss <span class="op">+=</span> loss.item()</span>
+<span id="cb15-80"><a href="#cb15-80" aria-hidden="true" tabindex="-1"></a>            total_recon <span class="op">+=</span> recon_loss.item()</span>
+<span id="cb15-81"><a href="#cb15-81" aria-hidden="true" tabindex="-1"></a>            total_kl <span class="op">+=</span> kl_loss.item()</span>
+<span id="cb15-82"><a href="#cb15-82" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb15-83"><a href="#cb15-83" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Compute diversity on generated samples</span></span>
+<span id="cb15-84"><a href="#cb15-84" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb15-85"><a href="#cb15-85" aria-hidden="true" tabindex="-1"></a>            z_sample <span class="op">=</span> torch.randn(<span class="dv">2048</span>, z_dim, device<span class="op">=</span>device)</span>
+<span id="cb15-86"><a href="#cb15-86" aria-hidden="true" tabindex="-1"></a>            y_sample <span class="op">=</span> torch.nn.functional.one_hot(</span>
+<span id="cb15-87"><a href="#cb15-87" aria-hidden="true" tabindex="-1"></a>                torch.randint(<span class="dv">0</span>, n_classes, (<span class="dv">2048</span>,), device<span class="op">=</span>device), num_classes<span class="op">=</span>n_classes</span>
+<span id="cb15-88"><a href="#cb15-88" aria-hidden="true" tabindex="-1"></a>            ).to(torch.float32)</span>
+<span id="cb15-89"><a href="#cb15-89" aria-hidden="true" tabindex="-1"></a>            samples <span class="op">=</span> vae.decode(z_sample, y_sample)</span>
+<span id="cb15-90"><a href="#cb15-90" aria-hidden="true" tabindex="-1"></a>            div <span class="op">=</span> compute_diversity_metric(samples)</span>
+<span id="cb15-91"><a href="#cb15-91" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb15-92"><a href="#cb15-92" aria-hidden="true" tabindex="-1"></a>        n_batches <span class="op">=</span> <span class="bu">len</span>(loader)</span>
+<span id="cb15-93"><a href="#cb15-93" aria-hidden="true" tabindex="-1"></a>        history.loss.append(total_loss <span class="op">/</span> n_batches)</span>
+<span id="cb15-94"><a href="#cb15-94" aria-hidden="true" tabindex="-1"></a>        history.recon_loss.append(total_recon <span class="op">/</span> n_batches)</span>
+<span id="cb15-95"><a href="#cb15-95" aria-hidden="true" tabindex="-1"></a>        history.kl_loss.append(total_kl <span class="op">/</span> n_batches)</span>
+<span id="cb15-96"><a href="#cb15-96" aria-hidden="true" tabindex="-1"></a>        history.diversity.append(div)</span>
+<span id="cb15-97"><a href="#cb15-97" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb15-98"><a href="#cb15-98" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (epoch <span class="op">+</span> <span class="dv">1</span>) <span class="op">%</span> print_every <span class="op">==</span> <span class="dv">0</span> <span class="kw">or</span> epoch <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb15-99"><a href="#cb15-99" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"Epoch </span><span class="sc">{</span>epoch<span class="op">+</span><span class="dv">1</span><span class="sc">:03d}</span><span class="ss">/</span><span class="sc">{</span>epochs<span class="sc">}</span><span class="ss"> | Loss: </span><span class="sc">{</span>history<span class="sc">.</span>loss[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:.3f}</span><span class="ss"> | "</span></span>
+<span id="cb15-100"><a href="#cb15-100" aria-hidden="true" tabindex="-1"></a>                  <span class="ss">f"Recon: </span><span class="sc">{</span>history<span class="sc">.</span>recon_loss[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:.3f}</span><span class="ss"> | KL: </span><span class="sc">{</span>history<span class="sc">.</span>kl_loss[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:.3f}</span><span class="ss"> | Div: </span><span class="sc">{</span>div<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb15-101"><a href="#cb15-101" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb15-102"><a href="#cb15-102" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> vae, history</span>
+<span id="cb15-103"><a href="#cb15-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-104"><a href="#cb15-104" aria-hidden="true" tabindex="-1"></a><span class="co"># Train conditional VAE</span></span>
+<span id="cb15-105"><a href="#cb15-105" aria-hidden="true" tabindex="-1"></a>cvae_onehot, hist_cvae_onehot <span class="op">=</span> train_conditional_vae_onehot(</span>
+<span id="cb15-106"><a href="#cb15-106" aria-hidden="true" tabindex="-1"></a>    X_ring, y_ring, n_classes<span class="op">=</span><span class="dv">8</span>, epochs<span class="op">=</span><span class="dv">500</span>, batch_size<span class="op">=</span><span class="dv">256</span>, </span>
+<span id="cb15-107"><a href="#cb15-107" aria-hidden="true" tabindex="-1"></a>    lr<span class="op">=</span><span class="fl">1e-3</span>, beta<span class="op">=</span><span class="fl">1.0</span>, hidden_dim<span class="op">=</span><span class="dv">128</span>, z_dim<span class="op">=</span><span class="dv">2</span>, print_every<span class="op">=</span><span class="dv">50</span></span>
+<span id="cb15-108"><a href="#cb15-108" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch 001/500 | Loss: 43.496 | Recon: 43.452 | KL: 0.045 | Div: 0.012
+Epoch 050/500 | Loss: 0.638 | Recon: 0.633 | KL: 0.004 | Div: 4.465
+Epoch 050/500 | Loss: 0.638 | Recon: 0.633 | KL: 0.004 | Div: 4.465
+Epoch 100/500 | Loss: 0.636 | Recon: 0.635 | KL: 0.001 | Div: 4.463
+Epoch 100/500 | Loss: 0.636 | Recon: 0.635 | KL: 0.001 | Div: 4.463
+Epoch 150/500 | Loss: 0.639 | Recon: 0.638 | KL: 0.000 | Div: 4.465
+Epoch 150/500 | Loss: 0.639 | Recon: 0.638 | KL: 0.000 | Div: 4.465
+Epoch 200/500 | Loss: 0.624 | Recon: 0.624 | KL: 0.000 | Div: 4.438
+Epoch 200/500 | Loss: 0.624 | Recon: 0.624 | KL: 0.000 | Div: 4.438
+Epoch 250/500 | Loss: 0.640 | Recon: 0.639 | KL: 0.000 | Div: 4.479
+Epoch 250/500 | Loss: 0.640 | Recon: 0.639 | KL: 0.000 | Div: 4.479
+Epoch 300/500 | Loss: 0.628 | Recon: 0.628 | KL: 0.001 | Div: 4.398
+Epoch 300/500 | Loss: 0.628 | Recon: 0.628 | KL: 0.001 | Div: 4.398
+Epoch 350/500 | Loss: 0.626 | Recon: 0.625 | KL: 0.000 | Div: 4.434
+Epoch 350/500 | Loss: 0.626 | Recon: 0.625 | KL: 0.000 | Div: 4.434
+Epoch 400/500 | Loss: 0.632 | Recon: 0.632 | KL: 0.000 | Div: 4.438
+Epoch 400/500 | Loss: 0.632 | Recon: 0.632 | KL: 0.000 | Div: 4.438
+Epoch 450/500 | Loss: 0.629 | Recon: 0.628 | KL: 0.000 | Div: 4.492
+Epoch 450/500 | Loss: 0.629 | Recon: 0.628 | KL: 0.000 | Div: 4.492
+Epoch 500/500 | Loss: 0.625 | Recon: 0.625 | KL: 0.000 | Div: 4.452
+Epoch 500/500 | Loss: 0.625 | Recon: 0.625 | KL: 0.000 | Div: 4.452</code></pre>
+</div>
+</div>
+<p>Let’s visualize the conditional samples generated by the CVAE for each mode:</p>
+<div id="4e2291ed" class="cell" data-execution_count="14">
+<details class="code-fold">
+<summary>Show Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate conditional samples for each mode</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>cvae_onehot.<span class="bu">eval</span>()</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>samples_by_label <span class="op">=</span> {}</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>n_samples_per_mode <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> label <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">8</span>):</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    z <span class="op">=</span> torch.randn(n_samples_per_mode, <span class="dv">2</span>, device<span class="op">=</span>device)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> torch.nn.functional.one_hot(</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>        torch.full((n_samples_per_mode,), label, device<span class="op">=</span>device), num_classes<span class="op">=</span><span class="dv">8</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    ).to(torch.float32)</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>        samples <span class="op">=</span> cvae_onehot.decode(z, y).cpu().numpy()</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>    samples_by_label[label] <span class="op">=</span> samples</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>plot_conditional_samples_discrete(</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>    samples_by_label, X_ring, y_ring, title<span class="op">=</span><span class="st">"Conditional VAE: One-Hot Mode Conditioning"</span></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="VAEs_files/figure-html/cell-15-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="conditional-example-b-continuous-radius-conditioning" class="level3" data-number="13.5.2">
+<h3 data-number="13.5.2" class="anchored" data-anchor-id="conditional-example-b-continuous-radius-conditioning"><span class="header-section-number">13.5.2</span> Conditional Example B — Continuous Radius Conditioning</h3>
+<p>Now let’s condition the VAE on a continuous scalar—the radius. We’ll embed the radius through a small MLP before concatenating with the encoder and decoder inputs.</p>
+<div id="16d15c88" class="cell" data-execution_count="15">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gen_models_utilities <span class="im">import</span> make_conditional_loader_radius, plot_conditional_samples_continuous</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Conditional Encoder with radius embedding</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ConditionalEncoderRadius(nn.Module):</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, x_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>, cond_emb_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">16</span>, hidden_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">128</span>, z_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>):</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.cond_embed <span class="op">=</span> nn.Sequential(</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>            nn.Linear(<span class="dv">1</span>, cond_emb_dim),</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>            nn.ReLU(),</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>            nn.Linear(cond_emb_dim, cond_emb_dim),</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.net <span class="op">=</span> nn.Sequential(</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>            nn.Linear(x_dim <span class="op">+</span> cond_emb_dim, hidden_dim),</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>            nn.ReLU(),</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>            nn.Linear(hidden_dim, hidden_dim),</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>            nn.ReLU()</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.mu_layer <span class="op">=</span> nn.Linear(hidden_dim, z_dim)</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.logvar_layer <span class="op">=</span> nn.Linear(hidden_dim, z_dim)</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x: torch.Tensor, r: torch.Tensor):</span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>        r_emb <span class="op">=</span> <span class="va">self</span>.cond_embed(r)</span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>        xr <span class="op">=</span> torch.cat([x, r_emb], dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>        h <span class="op">=</span> <span class="va">self</span>.net(xr)</span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>        mu <span class="op">=</span> <span class="va">self</span>.mu_layer(h)</span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>        logvar <span class="op">=</span> <span class="va">self</span>.logvar_layer(h)</span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> mu, logvar</span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Conditional Decoder with radius embedding</span></span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ConditionalDecoderRadius(nn.Module):</span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, z_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>, cond_emb_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">16</span>, hidden_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">128</span>, x_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>):</span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.cond_embed <span class="op">=</span> nn.Sequential(</span>
+<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a>            nn.Linear(<span class="dv">1</span>, cond_emb_dim),</span>
+<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a>            nn.ReLU(),</span>
+<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a>            nn.Linear(cond_emb_dim, cond_emb_dim),</span>
+<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.net <span class="op">=</span> nn.Sequential(</span>
+<span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a>            nn.Linear(z_dim <span class="op">+</span> cond_emb_dim, hidden_dim),</span>
+<span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a>            nn.ReLU(),</span>
+<span id="cb18-41"><a href="#cb18-41" aria-hidden="true" tabindex="-1"></a>            nn.Linear(hidden_dim, hidden_dim),</span>
+<span id="cb18-42"><a href="#cb18-42" aria-hidden="true" tabindex="-1"></a>            nn.ReLU(),</span>
+<span id="cb18-43"><a href="#cb18-43" aria-hidden="true" tabindex="-1"></a>            nn.Linear(hidden_dim, x_dim)</span>
+<span id="cb18-44"><a href="#cb18-44" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb18-45"><a href="#cb18-45" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb18-46"><a href="#cb18-46" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, z: torch.Tensor, r: torch.Tensor):</span>
+<span id="cb18-47"><a href="#cb18-47" aria-hidden="true" tabindex="-1"></a>        r_emb <span class="op">=</span> <span class="va">self</span>.cond_embed(r)</span>
+<span id="cb18-48"><a href="#cb18-48" aria-hidden="true" tabindex="-1"></a>        zr <span class="op">=</span> torch.cat([z, r_emb], dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb18-49"><a href="#cb18-49" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.net(zr)</span>
+<span id="cb18-50"><a href="#cb18-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-51"><a href="#cb18-51" aria-hidden="true" tabindex="-1"></a><span class="co"># Conditional VAE with radius</span></span>
+<span id="cb18-52"><a href="#cb18-52" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ConditionalVAERadius(nn.Module):</span>
+<span id="cb18-53"><a href="#cb18-53" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, x_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>, z_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>, cond_emb_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">16</span>, hidden_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">128</span>):</span>
+<span id="cb18-54"><a href="#cb18-54" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb18-55"><a href="#cb18-55" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.encoder <span class="op">=</span> ConditionalEncoderRadius(x_dim, cond_emb_dim, hidden_dim, z_dim)</span>
+<span id="cb18-56"><a href="#cb18-56" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.decoder <span class="op">=</span> ConditionalDecoderRadius(z_dim, cond_emb_dim, hidden_dim, x_dim)</span>
+<span id="cb18-57"><a href="#cb18-57" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.z_dim <span class="op">=</span> z_dim</span>
+<span id="cb18-58"><a href="#cb18-58" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb18-59"><a href="#cb18-59" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> reparameterize(<span class="va">self</span>, mu: torch.Tensor, logvar: torch.Tensor):</span>
+<span id="cb18-60"><a href="#cb18-60" aria-hidden="true" tabindex="-1"></a>        std <span class="op">=</span> torch.exp(<span class="fl">0.5</span> <span class="op">*</span> logvar)</span>
+<span id="cb18-61"><a href="#cb18-61" aria-hidden="true" tabindex="-1"></a>        eps <span class="op">=</span> torch.randn_like(std)</span>
+<span id="cb18-62"><a href="#cb18-62" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> mu <span class="op">+</span> eps <span class="op">*</span> std</span>
+<span id="cb18-63"><a href="#cb18-63" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb18-64"><a href="#cb18-64" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x: torch.Tensor, r: torch.Tensor):</span>
+<span id="cb18-65"><a href="#cb18-65" aria-hidden="true" tabindex="-1"></a>        mu, logvar <span class="op">=</span> <span class="va">self</span>.encoder(x, r)</span>
+<span id="cb18-66"><a href="#cb18-66" aria-hidden="true" tabindex="-1"></a>        z <span class="op">=</span> <span class="va">self</span>.reparameterize(mu, logvar)</span>
+<span id="cb18-67"><a href="#cb18-67" aria-hidden="true" tabindex="-1"></a>        x_recon <span class="op">=</span> <span class="va">self</span>.decoder(z, r)</span>
+<span id="cb18-68"><a href="#cb18-68" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x_recon, mu, logvar, z</span>
+<span id="cb18-69"><a href="#cb18-69" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb18-70"><a href="#cb18-70" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> decode(<span class="va">self</span>, z: torch.Tensor, r: torch.Tensor):</span>
+<span id="cb18-71"><a href="#cb18-71" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.decoder(z, r)</span>
+<span id="cb18-72"><a href="#cb18-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-73"><a href="#cb18-73" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_conditional_vae_radius(</span>
+<span id="cb18-74"><a href="#cb18-74" aria-hidden="true" tabindex="-1"></a>    data: np.ndarray,</span>
+<span id="cb18-75"><a href="#cb18-75" aria-hidden="true" tabindex="-1"></a>    x_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>, z_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>, hidden_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">128</span>,</span>
+<span id="cb18-76"><a href="#cb18-76" aria-hidden="true" tabindex="-1"></a>    batch_size: <span class="bu">int</span> <span class="op">=</span> <span class="dv">256</span>, epochs: <span class="bu">int</span> <span class="op">=</span> <span class="dv">200</span>, lr: <span class="bu">float</span> <span class="op">=</span> <span class="fl">1e-3</span>,</span>
+<span id="cb18-77"><a href="#cb18-77" aria-hidden="true" tabindex="-1"></a>    beta: <span class="bu">float</span> <span class="op">=</span> <span class="fl">1.0</span>, reconstruction_variance: <span class="bu">float</span> <span class="op">=</span> <span class="fl">0.1</span>, print_every: <span class="bu">int</span> <span class="op">=</span> <span class="dv">50</span></span>
+<span id="cb18-78"><a href="#cb18-78" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb18-79"><a href="#cb18-79" aria-hidden="true" tabindex="-1"></a>    loader <span class="op">=</span> make_conditional_loader_radius(data, batch_size)</span>
+<span id="cb18-80"><a href="#cb18-80" aria-hidden="true" tabindex="-1"></a>    vae <span class="op">=</span> ConditionalVAERadius(x_dim<span class="op">=</span>x_dim, z_dim<span class="op">=</span>z_dim, hidden_dim<span class="op">=</span>hidden_dim).to(device)</span>
+<span id="cb18-81"><a href="#cb18-81" aria-hidden="true" tabindex="-1"></a>    optimizer <span class="op">=</span> optim.Adam(vae.parameters(), lr<span class="op">=</span>lr)</span>
+<span id="cb18-82"><a href="#cb18-82" aria-hidden="true" tabindex="-1"></a>    history <span class="op">=</span> VAEHistory([], [], [], [])</span>
+<span id="cb18-83"><a href="#cb18-83" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb18-84"><a href="#cb18-84" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(epochs):</span>
+<span id="cb18-85"><a href="#cb18-85" aria-hidden="true" tabindex="-1"></a>        total_loss, total_recon, total_kl <span class="op">=</span> <span class="fl">0.0</span>, <span class="fl">0.0</span>, <span class="fl">0.0</span></span>
+<span id="cb18-86"><a href="#cb18-86" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> xb, rb <span class="kw">in</span> loader:</span>
+<span id="cb18-87"><a href="#cb18-87" aria-hidden="true" tabindex="-1"></a>            xb, rb <span class="op">=</span> xb.to(device), rb.to(device)</span>
+<span id="cb18-88"><a href="#cb18-88" aria-hidden="true" tabindex="-1"></a>            x_recon, mu, logvar, z <span class="op">=</span> vae(xb, rb)</span>
+<span id="cb18-89"><a href="#cb18-89" aria-hidden="true" tabindex="-1"></a>            loss, recon_loss, kl_loss <span class="op">=</span> vae_loss(xb, x_recon, mu, logvar, beta, reconstruction_variance)</span>
+<span id="cb18-90"><a href="#cb18-90" aria-hidden="true" tabindex="-1"></a>            optimizer.zero_grad()</span>
+<span id="cb18-91"><a href="#cb18-91" aria-hidden="true" tabindex="-1"></a>            loss.backward()</span>
+<span id="cb18-92"><a href="#cb18-92" aria-hidden="true" tabindex="-1"></a>            optimizer.step()</span>
+<span id="cb18-93"><a href="#cb18-93" aria-hidden="true" tabindex="-1"></a>            total_loss <span class="op">+=</span> loss.item()</span>
+<span id="cb18-94"><a href="#cb18-94" aria-hidden="true" tabindex="-1"></a>            total_recon <span class="op">+=</span> recon_loss.item()</span>
+<span id="cb18-95"><a href="#cb18-95" aria-hidden="true" tabindex="-1"></a>            total_kl <span class="op">+=</span> kl_loss.item()</span>
+<span id="cb18-96"><a href="#cb18-96" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb18-97"><a href="#cb18-97" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb18-98"><a href="#cb18-98" aria-hidden="true" tabindex="-1"></a>            z_sample <span class="op">=</span> torch.randn(<span class="dv">2048</span>, z_dim, device<span class="op">=</span>device)</span>
+<span id="cb18-99"><a href="#cb18-99" aria-hidden="true" tabindex="-1"></a>            r_sample <span class="op">=</span> torch.norm(torch.randn(<span class="dv">2048</span>, <span class="dv">2</span>), dim<span class="op">=</span><span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>).to(device)</span>
+<span id="cb18-100"><a href="#cb18-100" aria-hidden="true" tabindex="-1"></a>            samples <span class="op">=</span> vae.decode(z_sample, r_sample)</span>
+<span id="cb18-101"><a href="#cb18-101" aria-hidden="true" tabindex="-1"></a>            div <span class="op">=</span> compute_diversity_metric(samples)</span>
+<span id="cb18-102"><a href="#cb18-102" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb18-103"><a href="#cb18-103" aria-hidden="true" tabindex="-1"></a>        n_batches <span class="op">=</span> <span class="bu">len</span>(loader)</span>
+<span id="cb18-104"><a href="#cb18-104" aria-hidden="true" tabindex="-1"></a>        history.loss.append(total_loss <span class="op">/</span> n_batches)</span>
+<span id="cb18-105"><a href="#cb18-105" aria-hidden="true" tabindex="-1"></a>        history.recon_loss.append(total_recon <span class="op">/</span> n_batches)</span>
+<span id="cb18-106"><a href="#cb18-106" aria-hidden="true" tabindex="-1"></a>        history.kl_loss.append(total_kl <span class="op">/</span> n_batches)</span>
+<span id="cb18-107"><a href="#cb18-107" aria-hidden="true" tabindex="-1"></a>        history.diversity.append(div)</span>
+<span id="cb18-108"><a href="#cb18-108" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb18-109"><a href="#cb18-109" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (epoch <span class="op">+</span> <span class="dv">1</span>) <span class="op">%</span> print_every <span class="op">==</span> <span class="dv">0</span> <span class="kw">or</span> epoch <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb18-110"><a href="#cb18-110" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"Epoch </span><span class="sc">{</span>epoch<span class="op">+</span><span class="dv">1</span><span class="sc">:03d}</span><span class="ss">/</span><span class="sc">{</span>epochs<span class="sc">}</span><span class="ss"> | Loss: </span><span class="sc">{</span>history<span class="sc">.</span>loss[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:.3f}</span><span class="ss"> | "</span></span>
+<span id="cb18-111"><a href="#cb18-111" aria-hidden="true" tabindex="-1"></a>                  <span class="ss">f"Recon: </span><span class="sc">{</span>history<span class="sc">.</span>recon_loss[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:.3f}</span><span class="ss"> | KL: </span><span class="sc">{</span>history<span class="sc">.</span>kl_loss[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:.3f}</span><span class="ss"> | Div: </span><span class="sc">{</span>div<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb18-112"><a href="#cb18-112" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb18-113"><a href="#cb18-113" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> vae, history</span>
+<span id="cb18-114"><a href="#cb18-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-115"><a href="#cb18-115" aria-hidden="true" tabindex="-1"></a><span class="co"># Train conditional VAE with radius</span></span>
+<span id="cb18-116"><a href="#cb18-116" aria-hidden="true" tabindex="-1"></a>cvae_radius, hist_cvae_radius <span class="op">=</span> train_conditional_vae_radius(</span>
+<span id="cb18-117"><a href="#cb18-117" aria-hidden="true" tabindex="-1"></a>    X_ring, epochs<span class="op">=</span><span class="dv">500</span>, batch_size<span class="op">=</span><span class="dv">256</span>, lr<span class="op">=</span><span class="fl">1e-3</span>, beta<span class="op">=</span><span class="fl">1.0</span>, hidden_dim<span class="op">=</span><span class="dv">128</span>, z_dim<span class="op">=</span><span class="dv">2</span>, print_every<span class="op">=</span><span class="dv">50</span></span>
+<span id="cb18-118"><a href="#cb18-118" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch 001/500 | Loss: 45.153 | Recon: 45.136 | KL: 0.017 | Div: 0.003
+Epoch 050/500 | Loss: 4.302 | Recon: 0.906 | KL: 3.396 | Div: 1.842
+Epoch 050/500 | Loss: 4.302 | Recon: 0.906 | KL: 3.396 | Div: 1.842
+Epoch 100/500 | Loss: 3.996 | Recon: 0.843 | KL: 3.152 | Div: 1.444
+Epoch 100/500 | Loss: 3.996 | Recon: 0.843 | KL: 3.152 | Div: 1.444
+Epoch 150/500 | Loss: 3.829 | Recon: 0.673 | KL: 3.156 | Div: 1.113
+Epoch 150/500 | Loss: 3.829 | Recon: 0.673 | KL: 3.156 | Div: 1.113
+Epoch 200/500 | Loss: 3.773 | Recon: 0.634 | KL: 3.139 | Div: 1.073
+Epoch 200/500 | Loss: 3.773 | Recon: 0.634 | KL: 3.139 | Div: 1.073
+Epoch 250/500 | Loss: 3.681 | Recon: 0.624 | KL: 3.057 | Div: 1.158
+Epoch 250/500 | Loss: 3.681 | Recon: 0.624 | KL: 3.057 | Div: 1.158
+Epoch 300/500 | Loss: 3.606 | Recon: 0.604 | KL: 3.002 | Div: 1.216
+Epoch 300/500 | Loss: 3.606 | Recon: 0.604 | KL: 3.002 | Div: 1.216
+Epoch 350/500 | Loss: 3.643 | Recon: 0.656 | KL: 2.987 | Div: 1.280
+Epoch 350/500 | Loss: 3.643 | Recon: 0.656 | KL: 2.987 | Div: 1.280
+Epoch 400/500 | Loss: 3.640 | Recon: 0.563 | KL: 3.077 | Div: 1.373
+Epoch 400/500 | Loss: 3.640 | Recon: 0.563 | KL: 3.077 | Div: 1.373
+Epoch 450/500 | Loss: 3.597 | Recon: 0.636 | KL: 2.961 | Div: 1.344
+Epoch 450/500 | Loss: 3.597 | Recon: 0.636 | KL: 2.961 | Div: 1.344
+Epoch 500/500 | Loss: 3.594 | Recon: 0.542 | KL: 3.051 | Div: 1.392
+Epoch 500/500 | Loss: 3.594 | Recon: 0.542 | KL: 3.051 | Div: 1.392</code></pre>
+</div>
+</div>
+<p>Let’s generate samples at different radius values and visualize how the CVAE responds to continuous conditioning:</p>
+<div id="a8ee5341" class="cell" data-execution_count="16">
+<details class="code-fold">
+<summary>Show Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate conditional samples for different radius values</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>cvae_radius.<span class="bu">eval</span>()</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>samples_by_radius <span class="op">=</span> {}</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>n_samples_per_radius <span class="op">=</span> <span class="dv">800</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>radius_values <span class="op">=</span> [<span class="fl">1.5</span>, <span class="fl">2.0</span>, <span class="fl">2.5</span>, <span class="fl">3.0</span>, <span class="fl">3.5</span>, <span class="fl">4.0</span>]</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> r_val <span class="kw">in</span> radius_values:</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    z <span class="op">=</span> torch.randn(n_samples_per_radius, <span class="dv">2</span>, device<span class="op">=</span>device)</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> torch.full((n_samples_per_radius, <span class="dv">1</span>), r_val, device<span class="op">=</span>device)</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>        samples <span class="op">=</span> cvae_radius.decode(z, r).cpu().numpy()</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>    samples_by_radius[r_val] <span class="op">=</span> samples</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>plot_conditional_samples_continuous(</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>    samples_by_radius, X_ring, title<span class="op">=</span><span class="st">"Conditional VAE: Radius Conditioning"</span>, value_name<span class="op">=</span><span class="st">"radius"</span></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="VAEs_files/figure-html/cell-17-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="comparing-vaes-to-gans-and-ot-models" class="level2" data-number="13.6">
+<h2 data-number="13.6" class="anchored" data-anchor-id="comparing-vaes-to-gans-and-ot-models"><span class="header-section-number">13.6</span> Comparing VAEs to GANs and OT Models</h2>
+<p>Now that we understand VAEs, let’s compare them to the other generative models we’ve studied:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 19%">
+<col style="width: 30%">
+<col style="width: 19%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Aspect</th>
+<th>GAN</th>
+<th>OT GAN</th>
+<th>VAE</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Architecture</strong></td>
+<td>Generator + Discriminator</td>
+<td>Generator only</td>
+<td>Encoder + Decoder</td>
+</tr>
+<tr class="even">
+<td><strong>Training</strong></td>
+<td>Adversarial (minimax)</td>
+<td>Direct divergence minimization</td>
+<td>Maximize ELBO</td>
+</tr>
+<tr class="odd">
+<td><strong>Stability</strong></td>
+<td>Can be unstable</td>
+<td>More stable</td>
+<td>Generally stable</td>
+</tr>
+<tr class="even">
+<td><strong>Forward map</strong></td>
+<td>Yes (<span class="math inline">\(z \rightarrow x\)</span>)</td>
+<td>Yes (<span class="math inline">\(z \rightarrow x\)</span>)</td>
+<td>Yes (<span class="math inline">\(z \rightarrow x\)</span>)</td>
+</tr>
+<tr class="odd">
+<td><strong>Inverse map</strong></td>
+<td>No</td>
+<td>No</td>
+<td>Yes (<span class="math inline">\(x \rightarrow z\)</span>)</td>
+</tr>
+<tr class="even">
+<td><strong>Mode coverage</strong></td>
+<td>Prone to mode collapse</td>
+<td>Good coverage</td>
+<td>Good coverage</td>
+</tr>
+<tr class="odd">
+<td><strong>Interpretability</strong></td>
+<td>Limited</td>
+<td>Limited</td>
+<td>Good (latent space mirrors <span class="math inline">\(p(z)\)</span>)</td>
+</tr>
+</tbody>
+</table>
+<section id="when-to-use-vaes" class="level3" data-number="13.6.1">
+<h3 data-number="13.6.1" class="anchored" data-anchor-id="when-to-use-vaes"><span class="header-section-number">13.6.1</span> When to use VAEs:</h3>
+<ol type="1">
+<li><strong>When you need an encoder</strong>: If you want to map real data to latent codes (for analysis, interpolation, or compression)</li>
+<li><strong>For smooth interpolation</strong>: The regularized latent space makes interpolation meaningful</li>
+<li><strong>When interpretability matters</strong>: VAEs often learn more interpretable latent representations</li>
+<li><strong>When training stability is important</strong>: VAEs are generally easier to train than GANs</li>
+</ol>
+</section>
+<section id="when-to-use-gans-or-ot-models" class="level3" data-number="13.6.2">
+<h3 data-number="13.6.2" class="anchored" data-anchor-id="when-to-use-gans-or-ot-models"><span class="header-section-number">13.6.2</span> When to use GANs or OT models:</h3>
+<ol type="1">
+<li><strong>When sample quality is paramount</strong>: GANs often produce sharper, more realistic samples</li>
+<li><strong>When you only need generation</strong>: If you don’t need to encode real data</li>
+<li><strong>For specific domains</strong>: GANs can excel at images, videos, and other perceptual data compared to VAEs (at least historically)</li>
+</ol>
+</section>
+</section>
+<section id="summary-and-looking-forward" class="level2" data-number="13.7">
+<h2 data-number="13.7" class="anchored" data-anchor-id="summary-and-looking-forward"><span class="header-section-number">13.7</span> Summary and Looking Forward</h2>
+<p>In this notebook, we explored Variational Autoencoders (VAEs), which provide a principled approach to learning bidirectional mappings between data and latent space:</p>
+<section id="key-takeaways" class="level3" data-number="13.7.1">
+<h3 data-number="13.7.1" class="anchored" data-anchor-id="key-takeaways"><span class="header-section-number">13.7.1</span> Key Takeaways:</h3>
+<ol type="1">
+<li><p><strong>VAEs learn distributions</strong>: Unlike deterministic autoencoders, VAEs encode data as distributions in latent space, enabling smooth interpolation and principled sampling.</p></li>
+<li><p><strong>The ELBO objective</strong>: VAEs maximize a lower bound on the data likelihood, balancing reconstruction accuracy with latent space regularization.</p></li>
+<li><p><strong>KL divergence regularization</strong>: This term ensures the latent space is well-behaved (close to a standard normal), making sampling and interpolation meaningful.</p></li>
+<li><p><strong>Bidirectional mapping</strong>: VAEs provide both encoding (<span class="math inline">\(x \rightarrow z\)</span>) and decoding (<span class="math inline">\(z \rightarrow x\)</span>), enabling applications like representation learning and data analysis.</p></li>
+</ol>
+</section>
+<section id="limitations-and-extensions" class="level3" data-number="13.7.2">
+<h3 data-number="13.7.2" class="anchored" data-anchor-id="limitations-and-extensions"><span class="header-section-number">13.7.2</span> Limitations and Extensions:</h3>
+<p>While VAEs are powerful, they have some limitations: - <strong>Blurry samples</strong>: The MSE reconstruction loss can lead to averaged, blurry outputs - <strong>Posterior collapse</strong>: In high dimensions, the KL term can dominate, causing the model to ignore the encoder - <strong>Limited expressiveness</strong>: The Gaussian assumption may be too restrictive for complex distributions</p>
+<p>Modern extensions address these issues (not covered here): - <strong>β-VAE</strong>: Adjustable β for better disentanglement - <strong>Normalizing Flow VAEs</strong>: Use more expressive posterior distributions - <strong>Vector Quantized VAEs (VQ-VAE)</strong>: Discrete latent codes for sharper reconstructions - <strong>Hierarchical VAEs</strong>: Multiple layers of latent variables for richer representations</p>
+</section>
+<section id="next-steps" class="level3" data-number="13.7.3">
+<h3 data-number="13.7.3" class="anchored" data-anchor-id="next-steps"><span class="header-section-number">13.7.3</span> Next Steps:</h3>
+<p>VAEs created an important step beyond GAN models in that they allowed us to model probability distributions over both the output data samples from the generator <span class="math inline">\(p_\theta(z|x)\)</span> but also the possible latent codes via an encoder <span class="math inline">\(q_\phi(z|x)\)</span>. However, the VAE was only able to predict the latent codes using an approximation method (variational inference) by assuming a <span class="math inline">\(q\)</span> and minimizing the ELBO.</p>
+<p>What if it were possible to learn both <span class="math inline">\(p(x|z)\)</span> and <span class="math inline">\(q(z|x)\)</span> exactly? In the next notebook, we’ll explore <strong>Normalizing Flows</strong>, which provide another way to learn bidirectional mappings with <em>exact</em> likelihood computation. Unlike VAEs, flows are deterministic and invertible, allowing for exact inference without variational approximations. This makes them particularly useful when we need precise likelihood estimates or want to avoid the approximation errors inherent in VAEs.</p>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../part2/gen_models/OT.html" class="pagination-link" aria-label="Optimal Transport for Generative Models">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Optimal Transport for Generative Models</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../part2/gen_models/normalizing_flows.html" class="pagination-link" aria-label="Normalizing Flows">
+        <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Normalizing Flows</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Machine Learning for Mechanical Engineers © 2025 by <a href="./index.qmd#sec-contributors">Mark Fuge and IDEAL Lab Contributors</a> is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

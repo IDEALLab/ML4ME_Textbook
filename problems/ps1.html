@@ -1,0 +1,1548 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>20&nbsp; Problem Set 1 – Machine Learning for Mechanical Engineering</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../problems/ps2.html" rel="next">
+<link href="../problems/problems.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-0dd2bd5de344125cf763a379ddc3eb04.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../problems/problems.html">Problems</a></li><li class="breadcrumb-item"><a href="../problems/ps1.html"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Problem Set 1</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Machine Learning for Mechanical Engineering</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../part1/part1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Foundational Skills</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../part1/reviewing_supervised_linear_models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Reviewing Supervised Linear Models</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/cross_validation_linear_regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Evaluating Machine Learning Models</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/supervised_linear_models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Introduction to Gradient Descent</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../part1/linear_decompositions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Review of Linear Unsupervised Learning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../part1/taking_derivatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Taking Derivatives with Automatic Differentiation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../part1/distribution_distance.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Measuring Distribution Distances</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../part1/introduction_to_inference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Introduction to Inference</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../part2/part2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Foundations of Generative Models</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../part2/review_neural_networks.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Review of Neural Networks</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../part2/gen_models/intro_to_GANS.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Introduction to Push-Forward Generative Models – Generative Adversarial Networks (GANs)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../part2/gen_models/GAN_pitfalls.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">GAN Training Pitfalls</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../part2/gen_models/OT.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Optimal Transport for Generative Models</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../part2/gen_models/VAEs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Variational Autoencoders (VAEs)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../part2/gen_models/normalizing_flows.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Normalizing Flows</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../part2/gen_models/continuous_flows.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">From Discrete Transformations to Continuous Flows</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../part2/gen_models/score_matching.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">From Continuous Flows to Score Matching</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../part2/gen_models/diffusion_models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">From Score Matching to Diffusion Models</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../part2/gen_models/flow_matching.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Flow Matching</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../part2/gen_models/latent_generative_models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Latent Generative Models</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../part2/introduction_to_reinforcement_learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Introduction to Deep Reinforcement Learning</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../problems/problems.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Problems</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../problems/ps1.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Problem Set 1</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../problems/ps2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Problem Set 2</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../notebooks/notebooks.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">In-Class Notebooks</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/california_housing_visualization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Housing Price Data Visualization In-Class Exercise</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/helpful_tooling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Helpful Tooling for Working with and Debugging Machine Learning Models</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/course_progression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Course Lecture Progression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/review_of_singular_value_decomposition.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Review of Matrices and the Singular Value Decomposition</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/review_of_math_and_computing_foundations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Reviewing Mathematical and Computational Foundations for Machine Learning</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#ps1-part-1-linear-models-and-validation" id="toc-ps1-part-1-linear-models-and-validation" class="nav-link active" data-scroll-target="#ps1-part-1-linear-models-and-validation"><span class="header-section-number">20.1</span> PS1 Part 1: Linear Models and Validation</a>
+  <ul class="collapse">
+  <li><a href="#preamble" id="toc-preamble" class="nav-link" data-scroll-target="#preamble"><span class="header-section-number">20.1.1</span> Preamble</a></li>
+  <li><a href="#linear-models" id="toc-linear-models" class="nav-link" data-scroll-target="#linear-models"><span class="header-section-number">20.1.2</span> Linear Models</a></li>
+  </ul></li>
+  <li><a href="#ps1-part-2-unsupervised-linear-models" id="toc-ps1-part-2-unsupervised-linear-models" class="nav-link" data-scroll-target="#ps1-part-2-unsupervised-linear-models"><span class="header-section-number">20.2</span> PS1 Part 2: Unsupervised Linear Models</a>
+  <ul class="collapse">
+  <li><a href="#toy-dataset" id="toc-toy-dataset" class="nav-link" data-scroll-target="#toy-dataset"><span class="header-section-number">20.2.1</span> Toy Dataset</a></li>
+  <li><a href="#task-1" id="toc-task-1" class="nav-link" data-scroll-target="#task-1"><span class="header-section-number">20.2.2</span> Task 1</a></li>
+  <li><a href="#topology-optimization-dataset" id="toc-topology-optimization-dataset" class="nav-link" data-scroll-target="#topology-optimization-dataset"><span class="header-section-number">20.2.3</span> Topology Optimization Dataset</a></li>
+  <li><a href="#task-1-screesingular-value-plot" id="toc-task-1-screesingular-value-plot" class="nav-link" data-scroll-target="#task-1-screesingular-value-plot"><span class="header-section-number">20.2.4</span> Task 1: Scree/Singular Value Plot</a></li>
+  <li><a href="#task-2-principal-components" id="toc-task-2-principal-components" class="nav-link" data-scroll-target="#task-2-principal-components"><span class="header-section-number">20.2.5</span> Task 2: Principal Components</a></li>
+  </ul></li>
+  <li><a href="#ps1-part-3-bi-linear-models-and-sgd" id="toc-ps1-part-3-bi-linear-models-and-sgd" class="nav-link" data-scroll-target="#ps1-part-3-bi-linear-models-and-sgd"><span class="header-section-number">20.3</span> PS1 Part 3: Bi-Linear Models and SGD</a>
+  <ul class="collapse">
+  <li><a href="#bilinear-models-for-recommendation" id="toc-bilinear-models-for-recommendation" class="nav-link" data-scroll-target="#bilinear-models-for-recommendation"><span class="header-section-number">20.3.1</span> Bilinear Models for Recommendation</a></li>
+  <li><a href="#task-1-analytical-gradients" id="toc-task-1-analytical-gradients" class="nav-link" data-scroll-target="#task-1-analytical-gradients"><span class="header-section-number">20.3.2</span> Task 1: Analytical Gradients</a></li>
+  <li><a href="#task-2-stochastic-gradient-descent" id="toc-task-2-stochastic-gradient-descent" class="nav-link" data-scroll-target="#task-2-stochastic-gradient-descent"><span class="header-section-number">20.3.3</span> Task 2: Stochastic Gradient Descent</a></li>
+  <li><a href="#train-your-bilinear-model-using-sgd" id="toc-train-your-bilinear-model-using-sgd" class="nav-link" data-scroll-target="#train-your-bilinear-model-using-sgd"><span class="header-section-number">20.3.4</span> Train your Bilinear Model using SGD</a></li>
+  <li><a href="#assessing-your-accuracy" id="toc-assessing-your-accuracy" class="nav-link" data-scroll-target="#assessing-your-accuracy"><span class="header-section-number">20.3.5</span> Assessing your accuracy</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../problems/problems.html">Problems</a></li><li class="breadcrumb-item"><a href="../problems/ps1.html"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Problem Set 1</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Problem Set 1</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="ps1-part-1-linear-models-and-validation" class="level2 quarto-embed-nb-cell" data-notebook="/home/runner/work/ML4ME_Textbook/ML4ME_Textbook/problems/ps1_part1.ipynb" data-notebook-title="PS1 Part 1: Linear Models and Validation" data-notebook-cellid="cell-0" data-number="20.1">
+<h2 data-number="20.1" class="anchored" data-anchor-id="ps1-part-1-linear-models-and-validation"><span class="header-section-number">20.1</span> PS1 Part 1: Linear Models and Validation</h2>
+<section id="preamble" class="level3" data-number="20.1.1">
+<h3 data-number="20.1.1" class="anchored" data-anchor-id="preamble"><span class="header-section-number">20.1.1</span> Preamble</h3>
+<p>We’ll be loading some CO2 concentration data that is a commonly used dataset for model building of time series prediction. You will build a few baseline linear models and assess them using some of the tools we discussed in class. Which model is best? Let’s find out.</p>
+<p>First let’s just load the data and take a look at it:</p>
+<div id="cell-2" class="cell" data-outputid="01fb91e3-d0b6-4572-b3e4-2fa1bc662fa1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot <span class="im">as</span> plt</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> fetch_openml</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> datetime, timedelta</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pandas.plotting <span class="im">import</span> register_matplotlib_converters</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>register_matplotlib_converters()</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>sns.set_context(<span class="st">'notebook'</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch the data</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>mauna_lao <span class="op">=</span> fetch_openml(<span class="st">'mauna-loa-atmospheric-co2'</span>, as_frame <span class="op">=</span> <span class="va">False</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(mauna_lao.DESCR)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> mauna_lao.data</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Assemble the day/time from the data columns so we can plot it</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>d1958 <span class="op">=</span> datetime(year<span class="op">=</span><span class="dv">1958</span>,month<span class="op">=</span><span class="dv">1</span>,day<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>time <span class="op">=</span> [datetime(<span class="bu">int</span>(d[<span class="dv">0</span>]),<span class="bu">int</span>(d[<span class="dv">1</span>]),<span class="bu">int</span>(d[<span class="dv">2</span>])) <span class="cf">for</span> d <span class="kw">in</span> data]</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.array([<span class="dv">1958</span><span class="op">+</span>(t<span class="op">-</span>d1958)<span class="op">/</span>timedelta(days<span class="op">=</span><span class="fl">365.2425</span>) <span class="cf">for</span> t <span class="kw">in</span> time]).T</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> X.reshape(<span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>)  <span class="co"># Make it a column to make scikit happy</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.array(mauna_lao.target)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>**Weekly carbon-dioxide concentration averages derived from continuous air samples for the Mauna Loa Observatory, Hawaii, U.S.A.**&lt;br&gt;&lt;br&gt;
+These weekly averages are ultimately based on measurements of 4 air samples per hour taken atop intake lines on several towers during steady periods of CO2 concentration of not less than 6 hours per day; if no such periods are available on a given day, then no data are used for that day. The _Weight_ column gives the number of days used in each weekly average. _Flag_ codes are explained in the NDP writeup, available electronically from the [home page](http://cdiac.ess-dive.lbl.gov/ftp/trends/co2/sio-keel-flask/maunaloa_c.dat) of this data set. CO2 concentrations are in terms of the 1999 calibration scale (Keeling et al., 2002) available electronically from the references in the NDP writeup which can be accessed from the home page of this data set.
+&lt;br&gt;&lt;br&gt;
+### Feature Descriptions
+_co2_: average co2 concentration in ppvm &lt;br&gt;
+_year_: year of concentration measurement &lt;br&gt;
+_month_: month of concentration measurement &lt;br&gt;
+_day_: day of month of concentration measurement &lt;br&gt;
+_weight_: number of days used in each weekly average &lt;br&gt;
+_flag_: flag code &lt;br&gt;
+_station_: station code &lt;br&gt;
+&lt;br&gt;
+**Author**: Carbon Dioxide Research Group, Scripps Institution of Oceanography, University of California-San Diego, La Jolla, California, USA 92023-0444 &lt;br&gt;
+**Source**: [original](http://cdiac.ess-dive.lbl.gov/ftp/trends/co2/sio-keel-flask/maunaloa_c.dat) - September 2004
+
+Downloaded from openml.org.</code></pre>
+</div>
+</div>
+<div id="cell-3" class="cell" data-outputid="e748e355-746a-436a-a870-efeab3ee37fa" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the data</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">5</span>))    <span class="co"># Initialize empty figure</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>plt.scatter(X, y, c<span class="op">=</span><span class="st">'k'</span>,s<span class="op">=</span><span class="dv">1</span>) <span class="co"># Scatterplot of data</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Year"</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="vs">r"CO</span><span class="dv">$</span><span class="vs">_2</span><span class="dv">$</span><span class="vs"> in ppm"</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="vs">r"Atmospheric CO</span><span class="dv">$</span><span class="vs">_2</span><span class="dv">$</span><span class="vs"> concentration at Mauna Loa"</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ps1_files/figure-html/ps1_part1-cell-3-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-4" class="cell" data-outputid="a3115c21-560a-4aa1-9581-b601fd694946" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>y[:<span class="dv">100</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<pre><code>array([316.1, 317.3, 317.6, 317.5, 316.4, 316.9, 317.5, 317.9, 315.8,
+       315.8, 315.4, 315.5, 315.6, 315.1, 315. , 314.1, 313.5, 313. ,
+       313.2, 313.5, 314. , 314.5, 314.4, 314.7, 315.2, 315.2, 315.5,
+       315.6, 315.8, 315.4, 316.9, 316.6, 316.6, 316.8, 316.7, 316.7,
+       317.7, 317.1, 317.6, 318.3, 318.2, 318.7, 318. , 318.4, 318.5,
+       318.1, 317.8, 317.7, 316.8, 316.8, 316.4, 316.1, 315.6, 314.9,
+       315. , 314.1, 314.4, 313.9, 313.5, 313.5, 313. , 313.1, 313.4,
+       313.4, 314.1, 314.4, 314.8, 315.2, 315.1, 315. , 315.6, 315.8,
+       315.7, 315.7, 316.4, 316.7, 316.5, 316.6, 316.6, 316.9, 317.4,
+       317. , 316.9, 317.7, 318. , 317.7, 318.6, 319.3, 319. , 319. ,
+       319.7, 319.9, 319.8, 320. , 320. , 319.4, 320. , 319.4, 319. ,
+       318.1])</code></pre>
+</div>
+</div>
+</section>
+<section id="linear-models" class="level3" data-number="20.1.2">
+<h3 data-number="20.1.2" class="anchored" data-anchor-id="linear-models"><span class="header-section-number">20.1.2</span> Linear Models</h3>
+<p>Construct the following linear models: 1. Model 1: “Vanilla” Linear Regression, that is, where <span class="math inline">\(CO_2 = a+b \cdot time\)</span> 2. Model 2: Quadratic Regression, where <span class="math inline">\(CO_2 = a+b \cdot t + c\cdot t^2\)</span> 3. Model 3: A more complex “linear” model with the following additive terms <span class="math inline">\(CO_2=a+b\cdot t+c\cdot sin(\omega\cdot t)\)</span>: * a linear (in time) term * a sinusoidal additive term with period such that the peak-to-peak of the sinsusoid is roughly ~1 year and phase shift of zero (set <span class="math inline">\(\omega\)</span> as appropriate to match the peaks) 4. Model 4: A “linear” model with the following additive terms (<span class="math inline">\(CO_2=a+b\cdot t+c\cdot t^2+d\cdot sin(\omega\cdot t)\)</span>: * a quadratic (in time) polynomial * a sinusoidal additive term with period such that the peak-to-peak of the sinsusoid is roughly ~1 year and phase shift of zero (set <span class="math inline">\(\omega\)</span> as appropriate to match the peaks)</p>
+<p>Evauate these models using <strong>the appropriate kind of Cross Validation</strong> for each of the following amounts of Training data: 1. N=50 Training Data Points 2. N=100 3. N=200 4. N=500 5. N=1000 6. N=2000</p>
+<p><strong>Question</strong>: Before you even construct the models or do any coding below, what is your initial guess or intuition behind how each of those four models will perform? Note: there is no right or wrong answer to this part of the assignment and this question will only be graded on completeness, not accuracy. It’s intent is to get you to think about and write down your preliminary intuition regarding what you think will happen before you actually implement anything, based on your approximate understanding of how functions of the above complexity <em>should</em> perform as N increases.</p>
+<p><strong>Student Response:</strong> [Insert your response here]</p>
+<p><strong>Question</strong>: What is the appropriate kind of Cross Validation to perform in this case if we want a correct Out of Sample estimate of our Test MSE?</p>
+<p><strong>Student Response:</strong> [Insert your response here]</p>
+<p>Now, for each of the above models and training data sizes: * Plot the predicted CO2 as a function of time, including the actual data, for each of the N=X training data examples. This should correspond to six plots (one for each amount of training data) if you plot all models on the same plot, or 6x4 = 24 plots if you plot each model and training data plot separately. * Create a <a href="https://scikit-learn.org/stable/auto_examples/model_selection/plot_learning_curve.html">Learning Curve</a> plot for the model which plots its Training and Test MSE as a function of training data. That is, plot how Training and Testing MSE change as you increase the training data for each model. This could be a single plot for all four models (8 lines on the plot) or four different plots corresponding to the learning curve of each model separately.</p>
+<div id="cell-10" class="cell" data-outputid="18527223-3502-4389-af9a-3187d756bc39">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>X_train_100 <span class="op">=</span> X[:<span class="dv">100</span>]</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>y_train_100 <span class="op">=</span> y[:<span class="dv">100</span>]</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>X_test <span class="op">=</span> X[<span class="dv">100</span>:<span class="dv">200</span>]</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Shape of X_train_100: </span><span class="sc">%s</span><span class="st">"</span> <span class="op">%</span> <span class="bu">str</span>(X_train_100.shape))</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Beginning of X_train_100: </span><span class="sc">%s</span><span class="st">"</span> <span class="op">%</span> <span class="bu">str</span>(X_train_100[<span class="dv">0</span>:<span class="dv">5</span>]))</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Shape of y_train_100: </span><span class="sc">%s</span><span class="st">"</span> <span class="op">%</span> <span class="bu">str</span>(y_train_100.shape))</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Beginning of y_train_100: </span><span class="sc">%s</span><span class="st">"</span> <span class="op">%</span> <span class="bu">str</span>(y_train_100[<span class="dv">0</span>:<span class="dv">5</span>]))</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Shape of X_test: </span><span class="sc">%s</span><span class="st">'</span> <span class="op">%</span> <span class="bu">str</span>(X_test.shape))</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Beginning of X_test: </span><span class="sc">%s</span><span class="st">"</span> <span class="op">%</span> <span class="bu">str</span>(X_test[<span class="dv">0</span>:<span class="dv">5</span>]))</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co">### Modify the below code. You can leave the code above as is. </span><span class="al">###</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Shape of X_train_100: (100, 1)
+Beginning of X_train_100: [[1958.23819791]
+ [1958.25736326]
+ [1958.27652861]
+ [1958.29569396]
+ [1958.31485931]]
+Shape of y_train_100: (100,)
+Beginning of y_train_100: [316.1 317.3 317.6 317.5 316.4]
+Shape of X_test: (100, 1)
+Beginning of X_test: [[1960.51887445]
+ [1960.5380398 ]
+ [1960.55720514]
+ [1960.57637049]
+ [1960.59553584]]</code></pre>
+</div>
+</div>
+<div id="cell-11" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Insert Modeling Building or Plotting code here</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Note, you may implement these however you see fit</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Ex: using an existing library, solving the Normal Eqns</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#     implementing your own SGD solver for them. Your Choice.</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> SGDRegressor, LinearRegression</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>sgd <span class="op">=</span> SGDRegressor()</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>lr <span class="op">=</span> LinearRegression()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-12" class="cell" data-outputid="b5cedb98-3f09-40e3-ff7f-9ef965110298">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>sgd.fit(X,y)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>lr.fit(X,y)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="13">
+<pre><code>LinearRegression()</code></pre>
+</div>
+</div>
+<div id="cell-13" class="cell" data-outputid="31601540-1e5c-43a8-8260-1bfefde7fb12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>sgd.predict(X)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<pre><code>array([-1.78959753e+15, -1.78961505e+15, -1.78963256e+15, ...,
+       -1.82954889e+15, -1.82956640e+15, -1.82958392e+15])</code></pre>
+</div>
+</div>
+<div id="cell-14" class="cell" data-outputid="7f150c4a-757f-412c-8a58-48c197b9247e">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>lr.predict(X)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="15">
+<pre><code>array([310.2080183 , 310.23375578, 310.25949326, ..., 368.9152125 ,
+       368.94094999, 368.96668747])</code></pre>
+</div>
+</div>
+<p><strong>Question</strong>: Which Model appears to perform best in the N=50 or N=100 Condition? Why is this?</p>
+<p><strong>Student Response:</strong> [Insert your response here]</p>
+<p><strong>Question</strong>: Which Model appears to perform best as the N=200 to 500? Why is this?</p>
+<p><strong>Student Response:</strong> [Insert your response here]</p>
+<p><strong>Question</strong>: Which Model appears to perform best as N = 2000? Why is this?</p>
+<p><strong>Student Response:</strong> [Insert your response here]</p>
+</section>
+</section>
+<section id="ps1-part-2-unsupervised-linear-models" class="level2 quarto-embed-nb-cell" data-notebook="/home/runner/work/ML4ME_Textbook/ML4ME_Textbook/problems/ps1_part2.ipynb" data-notebook-title="PS1 Part 2: Unsupervised Linear Models" data-notebook-cellid="cell-0" data-number="20.2">
+<h2 data-number="20.2" class="anchored" data-anchor-id="ps1-part-2-unsupervised-linear-models"><span class="header-section-number">20.2</span> PS1 Part 2: Unsupervised Linear Models</h2>
+<section id="toy-dataset" class="level3" data-number="20.2.1">
+<h3 data-number="20.2.1" class="anchored" data-anchor-id="toy-dataset"><span class="header-section-number">20.2.1</span> Toy Dataset</h3>
+<p>For this problem, you will use the data file hb.csv. The input is 2,280 data points, each of which is 7 dimensional (i.e., input csv is 2280 rows by 7 columns). Use Principal Component Analysis (either an existing library, or through your own implementation by taking the SVD of the Covariance Matrix) for the follow tasks.</p>
+<div id="cell-2" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>matplotlib inline</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/IDEALLab/ML4ME_Textbook/main/problems/hb.csv"</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pandas.read_csv(url,header<span class="op">=</span><span class="va">None</span>)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co">#data.head()</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="task-1" class="level3" data-number="20.2.2">
+<h3 data-number="20.2.2" class="anchored" data-anchor-id="task-1"><span class="header-section-number">20.2.2</span> Task 1</h3>
+<p>Assuming that the 7-dimensional space is excessive, you would like to reduce the dimension of the space. However, what dimensionality of space should we reduce it to? To determine this we need to compute its intrinsic dimensionality. Plot the relative value of the information content of each of the principal components and compare them.</p>
+<p>Note: this information content is called the “explained variance” of each component, but you can also get this from the magnitude of the singular values. This plot is sometimes called a “Scree Plot”.</p>
+<div id="cell-4" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Code Here</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><strong>Question:</strong> Approximately how many components dominate the space?, and what does this tell us about the intrinsic dimensionality of the space?</p>
+<p><strong>Response</strong>:</p>
+<section id="task-2" class="level4" data-number="20.2.2.1">
+<h4 data-number="20.2.2.1" class="anchored" data-anchor-id="task-2"><span class="header-section-number">20.2.2.1</span> Task 2</h4>
+<p>Now use PCA to project the 7-dimensional points on the K-dimensional space (where K is your answer from above) and plot the points. (For K=1,2, or 3, use a 1, 2, or 3D plot, respectively. For 4+ dimensions, use a grid of pairwise 2D Plots, like the Scatter Matrix we used in class).</p>
+<div id="cell-7" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Code Here</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><strong>Question:</strong> What do you notice?</p>
+<p><strong>Response</strong>:</p>
+</section>
+</section>
+<section id="topology-optimization-dataset" class="level3" data-number="20.2.3">
+<h3 data-number="20.2.3" class="anchored" data-anchor-id="topology-optimization-dataset"><span class="header-section-number">20.2.3</span> Topology Optimization Dataset</h3>
+<p>For this problem, you will be using unsupervised linear models to help understand and interpret the results of a mechanical optimization problem. Specifically, to understand the solution space generated by a topology optimization code; that is, the results of finding the optimal geometries for minimizing the compliance of various bridge structures with different loading conditions. The input consists of 1,000 images of optimized material distribution for a beam as described in <em>Figure 1</em>. A symmetrical boundary condition, left side, is used to reduce the analysis to only half. Also, a rolling support is included at the lower right corner. Notice that the rolling support is the only support in the vertical direction.</p>
+<p>&nbsp;</p>
+<center>
+<img src="beam_description.jpg" alt="Beam description" style="max-width:100%;height:auto;">
+</center>
+<center>
+Figure 1: Left: Nx-by-Ny design domain for topology optimization problem. Right: Example loading configuration and resulting optimal topology. Two external forces, Fi, were applied to the beam at random nodes represented by (xi, yi) coordinates.<sup>1</sup>
+</center>
+<p>&nbsp;</p>
+<p>Use Principal Component Analysis (either an existing library, or through your own implementation by taking the SVD of the Covariance Matrix) for the follow tasks.</p>
+<p><sup>1. This problems data is based on the problem setup seen in the following paper: Ulu, E., Zhang, R., &amp; Kara, L. B. (2016). A data-driven investigation and estimation of optimal topologies under variable loading configurations. <em>Computer Methods in Biomechanics and Biomedical Engineering: Imaging &amp; Visualization</em>, 4(2), 61-72.</sup></p>
+<div id="cell-10" class="cell" data-outputid="4139b9f7-52fc-4387-c562-869b08341205" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># To help you get started, the below code will load the images from the associated image folder:</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>matplotlib inline</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> PIL <span class="im">import</span> Image</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests, zipfile, io</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="co">#im_dir = './topo_opt_runs/'</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/IDEALLab/ML4ME_Textbook/main/problems/topo_opt_runs.zip"</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>resp <span class="op">=</span> requests.get(url)</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>resp.raise_for_status()</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>zf <span class="op">=</span> zipfile.ZipFile(io.BytesIO(resp.content))</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>images <span class="op">=</span> []</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name <span class="kw">in</span> <span class="bu">sorted</span>(zf.namelist()):</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> zf.<span class="bu">open</span>(name) <span class="im">as</span> f:</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>        img <span class="op">=</span> Image.<span class="bu">open</span>(f).convert(<span class="st">'L'</span>)</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>        images.append(np.asarray(img))</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>height,width <span class="op">=</span> images[<span class="dv">0</span>].shape</span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'The images are </span><span class="sc">{:d}</span><span class="st"> pixels high and </span><span class="sc">{:d}</span><span class="st"> pixels wide'</span>.<span class="bu">format</span>(height,width))</span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Print matrix corresponding to the image:</span></span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(images[<span class="op">-</span><span class="dv">1</span>])</span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a><span class="co"># And show example image, so you can see how matrix correponds:</span></span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>img</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>The images are 217 pixels high and 434 pixels wide
+[[  0   0   0 ... 255 255 255]
+ [  0   0   0 ... 255 255 255]
+ [  0   0   0 ... 255 255 255]
+ ...
+ [  0   0   0 ...   0   0   0]
+ [  0   0   0 ...   0   0   0]
+ [  0   0   0 ...   0   0   0]]</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<div>
+<figure class="figure">
+<p><img src="ps1_files/figure-html/ps1_part2-cell-5-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="task-1-screesingular-value-plot" class="level3" data-number="20.2.4">
+<h3 data-number="20.2.4" class="anchored" data-anchor-id="task-1-screesingular-value-plot"><span class="header-section-number">20.2.4</span> Task 1: Scree/Singular Value Plot</h3>
+<p>As with the toy example, assume that the 94,178-dimensional space is excessive. You would like to reduce the dimension of the image space. First compute its intrinsic dimensionality. For this application, “good enough” means capturing 95% of the variance in the dataset. How many dimensions are needed to capture at least 95% of the variance in the provided dataset? Store your answer in numDimsNeeded. (Hint: A Scree plot may be helpful, though visual inspection of a graph may not be precise enough.)</p>
+<p><strong>Question:</strong> Approximately how many components dominate the space? What does this tell us about the intrinsic dimensionality of the space?</p>
+<p><strong>Response</strong>:</p>
+</section>
+<section id="task-2-principal-components" class="level3" data-number="20.2.5">
+<h3 data-number="20.2.5" class="anchored" data-anchor-id="task-2-principal-components"><span class="header-section-number">20.2.5</span> Task 2: Principal Components</h3>
+<p>Now plot the first 5 principal components. Hint: looking at each of these top 5 principal components; do they make sense physically, in terms of what it means for where material in the bridge is placed? Compare, for example, the differences between the 1st and 2nd principal component?</p>
+</section>
+</section>
+<section id="ps1-part-3-bi-linear-models-and-sgd" class="level2 quarto-embed-nb-cell" data-notebook="/home/runner/work/ML4ME_Textbook/ML4ME_Textbook/problems/ps1_part3.ipynb" data-notebook-title="PS1 Part 3: Bi-Linear Models and SGD" data-notebook-cellid="cell-0" data-number="20.3">
+<h2 data-number="20.3" class="anchored" data-anchor-id="ps1-part-3-bi-linear-models-and-sgd"><span class="header-section-number">20.3</span> PS1 Part 3: Bi-Linear Models and SGD</h2>
+<section id="bilinear-models-for-recommendation" class="level3" data-number="20.3.1">
+<h3 data-number="20.3.1" class="anchored" data-anchor-id="bilinear-models-for-recommendation"><span class="header-section-number">20.3.1</span> Bilinear Models for Recommendation</h3>
+<p>For this problem, you will derive a very simple recommendation system that uses a combination of unsupervised and supervised approachs and demonstrates use of Stochastic Gradient Descent.</p>
+<p>Specifically, in class we discussed recommender models of the form: <span class="math display">\[
+f(user,movie) = \langle v_u,v_m \rangle + b_u + b_m + \mu
+\]</span></p>
+<p>where <span class="math inline">\(v\)</span> is a vector that represents a user’s or movie’s location in an N-Dimensional space, <span class="math inline">\(b\)</span> is a vector that represents a specific “bias” term fo r each movie and user, and <span class="math inline">\(\mu\)</span> is a scalar that represents a kind of global anchor or base score (i.e., a sort of average movie rating). This means that each user has two vectors (e.g., <span class="math inline">\(v_{\mathrm{jack~smith}}\)</span> and <span class="math inline">\(b_{\mathrm{jack~smith}}\)</span>), and each movie has two vectors (e.g., <span class="math inline">\(v_{\mathrm{Avengers}}\)</span> and <span class="math inline">\(b_{\mathrm{Avengers}}\)</span>), with each of those vectors being N-Dimensional (in class we used two dimensions). For this, we constructed a loss function as follows: <span class="math display">\[
+Cost = Loss + Penalty
+\]</span> where <span class="math display">\[
+Loss = \Sigma_{(u,m)\in \mathrm{Ratings}} \frac{1}{2}\left( \langle v_u,v_m \rangle + b_u + b_m + \mu - y_{u,m}\right)^2
+\]</span> and <span class="math display">\[
+Penalty = \frac{\lambda}{2}\left(\Sigma_u \left[\| v_u\|^2_2 + b_u^2\right] + \Sigma_m \left[\|v_m\|^2_2 + b_m^2\right]\right)
+\]</span></p>
+</section>
+<section id="task-1-analytical-gradients" class="level3" data-number="20.3.2">
+<h3 data-number="20.3.2" class="anchored" data-anchor-id="task-1-analytical-gradients"><span class="header-section-number">20.3.2</span> Task 1: Analytical Gradients</h3>
+<p>To use stochastic gradient descent, we first need to write down the gradients. Using the above cost function (including both the loss and penalty), compute the following partial derivatives:</p>
+<p><span class="math display">\[
+\frac{\partial \textrm{Cost}}{\partial v_u } =
+\]</span></p>
+<p><span class="math display">\[
+\frac{\partial \textrm{Cost}}{\partial v_m } =
+\]</span></p>
+<p><span class="math display">\[
+\frac{\partial \textrm{Cost}}{\partial b_u} =
+\]</span></p>
+<p><span class="math display">\[
+\frac{\partial \textrm{Cost}}{\partial b_m} =
+\]</span></p>
+<p><span class="math display">\[
+\frac{\partial \textrm{Cost}}{\partial \mu} =
+\]</span></p>
+<p>You can either do this directly in the notebook using LaTeX notation, or via a scanned image. Please remember to show your work in how you computed the derivatives, not just the final result. Note: Recall that the partial derivative of e.g.&nbsp;Nicholas’s rating on Titanic with respect to the user Mark would be zero. When computing your SGD updates, consider how this might impact individual terms for users and movies in the loss function.</p>
+</section>
+<section id="task-2-stochastic-gradient-descent" class="level3" data-number="20.3.3">
+<h3 data-number="20.3.3" class="anchored" data-anchor-id="task-2-stochastic-gradient-descent"><span class="header-section-number">20.3.3</span> Task 2: Stochastic Gradient Descent</h3>
+<p>Now you are actually going to implement SGD on this type of model and optimize it until convergence on a toy dataset. To simplify the implementation, we’ll actually make the model a little simpler than the one you derived updates for in task 1. Specifically, we’ll just use:</p>
+<p><span class="math display">\[
+Cost = \Sigma_{(u,m)\in \mathrm{Ratings}} \frac{1}{2}\left( \langle v_u,v_m \rangle + \mu - y_{u,m}\right)^2 + \frac{\lambda}{2}\left(\| v_u\|^2_2 + \|v_m\|^2_2\right)
+\]</span></p>
+<p>This way all you have to estimate is two vectors — <span class="math inline">\(v_u\)</span> for each user and <span class="math inline">\(v_m\)</span> for each movie — and <span class="math inline">\(\mu\)</span> — a scalar value similar to an average rating. For simplicity, we’ll assume here that the size of the latent space (K) is 2 (i.e., the length of each <span class="math inline">\(v_u\)</span> &amp; <span class="math inline">\(v_m\)</span>).</p>
+<p>Using your above gradients, write down the update equations for each vector using stochastic gradient descent. Once you have done this, implement those update equations in code like we did in the in-class notebook. For simplicity, you can just use a constant step size <span class="math inline">\(\alpha\)</span> if you wish, though you may change this if you want. Note: depending on exactly how you implement your model and what batch size you use, i.e., one point at a time, or some subset of data points, values of <span class="math inline">\(\alpha\)</span> anywhere between around 0.7 and 0.01 should be sufficient to converge the model in under 1000 epochs, i.e., passes through the dataset. If you implement more advanced tricks covered in some optional readings this can converge much faster, but that is not necessary for this assignment, and it does not matter to me how quickly your model coverges, so long as it does so.</p>
+<p>Use the below small sample dataset of movie ratings for five users and six movies to perform stochastic gradient descent to update those vectors until your model converges. To initialize your SGD, you can use the initial weights/terms we provide below, or you can initialize the model any other way you wish – the exact initialization should not make a big difference here.</p>
+<div id="cell-4" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Your Code below!</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cell-5" class="cell" data-outputid="05af604a-9460-41f6-bb8b-b820cd821405">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>missing_ratings <span class="op">=</span> pd.read_csv(<span class="st">'missing.csv'</span>)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>ratings <span class="op">=</span> pd.read_csv(<span class="st">'ratings.csv'</span>)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>ratings</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">movie</th>
+<th data-quarto-table-cell-role="th">user</th>
+<th data-quarto-table-cell-role="th">ratings</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>The Avengers</td>
+<td>Alex</td>
+<td>3.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>The Avengers</td>
+<td>Priya</td>
+<td>3.5</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>The Avengers</td>
+<td>Yichen</td>
+<td>3.5</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>When Harry Met Sally</td>
+<td>Alex</td>
+<td>3.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>When Harry Met Sally</td>
+<td>Sally</td>
+<td>4.5</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">5</th>
+<td>When Harry Met Sally</td>
+<td>Priya</td>
+<td>3.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">6</th>
+<td>When Harry Met Sally</td>
+<td>Yichen</td>
+<td>3.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">7</th>
+<td>Silence of the Lambs</td>
+<td>Alex</td>
+<td>3.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">8</th>
+<td>Silence of the Lambs</td>
+<td>Sally</td>
+<td>4.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">9</th>
+<td>Silence of the Lambs</td>
+<td>Juan</td>
+<td>3.5</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">10</th>
+<td>Silence of the Lambs</td>
+<td>Priya</td>
+<td>3.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">11</th>
+<td>Silence of the Lambs</td>
+<td>Yichen</td>
+<td>2.5</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">12</th>
+<td>Shawshank Redemption</td>
+<td>Juan</td>
+<td>2.5</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">13</th>
+<td>Shawshank Redemption</td>
+<td>Priya</td>
+<td>4.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">14</th>
+<td>Shawshank Redemption</td>
+<td>Yichen</td>
+<td>4.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">15</th>
+<td>The Hangover</td>
+<td>Alex</td>
+<td>3.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">16</th>
+<td>The Hangover</td>
+<td>Sally</td>
+<td>3.5</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">17</th>
+<td>The Hangover</td>
+<td>Priya</td>
+<td>3.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">18</th>
+<td>The Hangover</td>
+<td>Yichen</td>
+<td>2.5</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">19</th>
+<td>The Godfather</td>
+<td>Alex</td>
+<td>3.0</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">20</th>
+<td>The Godfather</td>
+<td>Priya</td>
+<td>3.5</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="cell-6" class="cell" data-outputid="b10a6d2c-5a8e-4ba8-d929-8f00a66ebc48">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Alternatively, if you prefer, you can convert it into numpy first:</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>ratings_numpy <span class="op">=</span> ratings.to_numpy()</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>ratings_numpy</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<pre><code>array([['The Avengers', 'Alex', 3.0],
+       ['The Avengers', 'Priya', 3.5],
+       ['The Avengers', 'Yichen', 3.5],
+       ['When Harry Met Sally', 'Alex', 3.0],
+       ['When Harry Met Sally', 'Sally', 4.5],
+       ['When Harry Met Sally', 'Priya', 3.0],
+       ['When Harry Met Sally', 'Yichen', 3.0],
+       ['Silence of the Lambs', 'Alex', 3.0],
+       ['Silence of the Lambs', 'Sally', 4.0],
+       ['Silence of the Lambs', 'Juan', 3.5],
+       ['Silence of the Lambs', 'Priya', 3.0],
+       ['Silence of the Lambs', 'Yichen', 2.5],
+       ['Shawshank Redemption', 'Juan', 2.5],
+       ['Shawshank Redemption', 'Priya', 4.0],
+       ['Shawshank Redemption', 'Yichen', 4.0],
+       ['The Hangover', 'Alex', 3.0],
+       ['The Hangover', 'Sally', 3.5],
+       ['The Hangover', 'Priya', 3.0],
+       ['The Hangover', 'Yichen', 2.5],
+       ['The Godfather', 'Alex', 3.0],
+       ['The Godfather', 'Priya', 3.5]], dtype=object)</code></pre>
+</div>
+</div>
+<p>Let’s initialize the vectors to some random numbers, and <span class="math inline">\(\mu\)</span> to 2.5</p>
+<div id="cell-8" class="cell" data-outputid="28a202a9-68bb-4cc4-bb46-5849626b0e77">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>K<span class="op">=</span><span class="dv">2</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>user_names <span class="op">=</span> ratings[<span class="st">'user'</span>].unique()</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>movie_names <span class="op">=</span> ratings[<span class="st">'movie'</span>].unique()</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>mu<span class="op">=</span> <span class="fl">2.5</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Setting the seed of the random generator to a value so that everyone sees the same initialization</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="co"># should should be able to comment out the below with no ill-effects on whatever model you implement</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="co"># this may just help us in office hours if folks have difficulty implementing things</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">0</span>)</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>V <span class="op">=</span> pd.DataFrame(np.random.random((<span class="bu">len</span>(user_names)<span class="op">+</span><span class="bu">len</span>(movie_names),K)),index<span class="op">=</span>np.hstack([user_names,movie_names]))</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(V)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                             0         1
+Alex                  0.548814  0.715189
+Priya                 0.602763  0.544883
+Yichen                0.423655  0.645894
+Sally                 0.437587  0.891773
+Juan                  0.963663  0.383442
+The Avengers          0.791725  0.528895
+When Harry Met Sally  0.568045  0.925597
+Silence of the Lambs  0.071036  0.087129
+Shawshank Redemption  0.020218  0.832620
+The Hangover          0.778157  0.870012
+The Godfather         0.978618  0.799159</code></pre>
+</div>
+</div>
+<div id="cell-9" class="cell" data-outputid="48bde2a6-8577-4fe1-ae1c-80d6d2598569">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Here is one example of how to go through rows of a ratings matrix</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> index, rating <span class="kw">in</span> ratings.iterrows():</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    user  <span class="op">=</span> rating[<span class="st">'user'</span>]</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    movie <span class="op">=</span> rating[<span class="st">'movie'</span>]</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    score <span class="op">=</span> rating[<span class="st">'ratings'</span>]</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>user<span class="sc">}</span><span class="ss"> gave </span><span class="sc">{</span>movie<span class="sc">}</span><span class="ss"> a score of </span><span class="sc">{</span>score<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Alex gave The Avengers a score of 3.0
+Priya gave The Avengers a score of 3.5
+Yichen gave The Avengers a score of 3.5
+Alex gave When Harry Met Sally a score of 3.0
+Sally gave When Harry Met Sally a score of 4.5
+Priya gave When Harry Met Sally a score of 3.0
+Yichen gave When Harry Met Sally a score of 3.0
+Alex gave Silence of the Lambs a score of 3.0
+Sally gave Silence of the Lambs a score of 4.0
+Juan gave Silence of the Lambs a score of 3.5
+Priya gave Silence of the Lambs a score of 3.0
+Yichen gave Silence of the Lambs a score of 2.5
+Juan gave Shawshank Redemption a score of 2.5
+Priya gave Shawshank Redemption a score of 4.0
+Yichen gave Shawshank Redemption a score of 4.0
+Alex gave The Hangover a score of 3.0
+Sally gave The Hangover a score of 3.5
+Priya gave The Hangover a score of 3.0
+Yichen gave The Hangover a score of 2.5
+Alex gave The Godfather a score of 3.0
+Priya gave The Godfather a score of 3.5</code></pre>
+</div>
+</div>
+<div id="cell-11" class="cell" data-outputid="a7c28801-d948-4b69-990b-49d2f87d8ec0">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Here is an example of one way to access rows of V</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> index, rating <span class="kw">in</span> ratings.iterrows():</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    user  <span class="op">=</span> rating[<span class="st">'user'</span>]</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    movie <span class="op">=</span> rating[<span class="st">'movie'</span>]</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>user<span class="sc">}</span><span class="ss">'s location in V is </span><span class="sc">{</span>V<span class="sc">.</span>loc[user]<span class="sc">.</span>to_numpy()<span class="sc">}</span><span class="ss">."</span>)</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>movie<span class="sc">}</span><span class="ss">'s location in V is </span><span class="sc">{</span>V<span class="sc">.</span>loc[movie]<span class="sc">.</span>to_numpy()<span class="sc">}</span><span class="ss">."</span>)</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>()</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="co"># You could also do it in Numpy directly, which will likely lead to much faster SGD updates,</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="co"># but that shouldn't be necessary for problems of this size. Up to you!</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Alex's location in V is [0.5488135  0.71518937].
+The Avengers's location in V is [0.79172504 0.52889492].
+
+Priya's location in V is [0.60276338 0.54488318].
+The Avengers's location in V is [0.79172504 0.52889492].
+
+Yichen's location in V is [0.4236548  0.64589411].
+The Avengers's location in V is [0.79172504 0.52889492].
+
+Alex's location in V is [0.5488135  0.71518937].
+When Harry Met Sally's location in V is [0.56804456 0.92559664].
+
+Sally's location in V is [0.43758721 0.891773  ].
+When Harry Met Sally's location in V is [0.56804456 0.92559664].
+
+Priya's location in V is [0.60276338 0.54488318].
+When Harry Met Sally's location in V is [0.56804456 0.92559664].
+
+Yichen's location in V is [0.4236548  0.64589411].
+When Harry Met Sally's location in V is [0.56804456 0.92559664].
+
+Alex's location in V is [0.5488135  0.71518937].
+Silence of the Lambs's location in V is [0.07103606 0.0871293 ].
+
+Sally's location in V is [0.43758721 0.891773  ].
+Silence of the Lambs's location in V is [0.07103606 0.0871293 ].
+
+Juan's location in V is [0.96366276 0.38344152].
+Silence of the Lambs's location in V is [0.07103606 0.0871293 ].
+
+Priya's location in V is [0.60276338 0.54488318].
+Silence of the Lambs's location in V is [0.07103606 0.0871293 ].
+
+Yichen's location in V is [0.4236548  0.64589411].
+Silence of the Lambs's location in V is [0.07103606 0.0871293 ].
+
+Juan's location in V is [0.96366276 0.38344152].
+Shawshank Redemption's location in V is [0.0202184  0.83261985].
+
+Priya's location in V is [0.60276338 0.54488318].
+Shawshank Redemption's location in V is [0.0202184  0.83261985].
+
+Yichen's location in V is [0.4236548  0.64589411].
+Shawshank Redemption's location in V is [0.0202184  0.83261985].
+
+Alex's location in V is [0.5488135  0.71518937].
+The Hangover's location in V is [0.77815675 0.87001215].
+
+Sally's location in V is [0.43758721 0.891773  ].
+The Hangover's location in V is [0.77815675 0.87001215].
+
+Priya's location in V is [0.60276338 0.54488318].
+The Hangover's location in V is [0.77815675 0.87001215].
+
+Yichen's location in V is [0.4236548  0.64589411].
+The Hangover's location in V is [0.77815675 0.87001215].
+
+Alex's location in V is [0.5488135  0.71518937].
+The Godfather's location in V is [0.97861834 0.79915856].
+
+Priya's location in V is [0.60276338 0.54488318].
+The Godfather's location in V is [0.97861834 0.79915856].
+</code></pre>
+</div>
+</div>
+</section>
+<section id="train-your-bilinear-model-using-sgd" class="level3" data-number="20.3.4">
+<h3 data-number="20.3.4" class="anchored" data-anchor-id="train-your-bilinear-model-using-sgd"><span class="header-section-number">20.3.4</span> Train your Bilinear Model using SGD</h3>
+<div id="cell-13" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Your Model building and training code here!</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="assessing-your-accuracy" class="level3" data-number="20.3.5">
+<h3 data-number="20.3.5" class="anchored" data-anchor-id="assessing-your-accuracy"><span class="header-section-number">20.3.5</span> Assessing your accuracy</h3>
+<p>Let’s predict the ratings for the missing entries using our (randomly initialized) model.</p>
+<div id="cell-15" class="cell" data-outputid="224356e6-476b-4453-8d84-d00bb42ecaa1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> index, rating <span class="kw">in</span> missing_ratings.iterrows():</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    user  <span class="op">=</span> rating[<span class="st">'user'</span>]</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    movie <span class="op">=</span> rating[<span class="st">'movie'</span>]</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    prediction <span class="op">=</span> np.dot(V.loc[user],V.loc[movie])<span class="op">+</span>mu</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Prediction: </span><span class="sc">{</span>user<span class="sc">}</span><span class="ss"> will rate </span><span class="sc">{</span>movie<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>prediction<span class="sc">:.2f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Prediction: Sally will rate The Avengers: 3.32
+Prediction: Juan will rate The Avengers: 3.47
+Prediction: Juan will rate When Harry Met Sally: 3.40
+Prediction: Alex will rate Shawshank Redemption: 3.11
+Prediction: Sally will rate Shawshank Redemption: 3.25
+Prediction: Juan will rate The Hangover: 3.58
+Prediction: Sally will rate The Godfather: 3.64
+Prediction: Juan will rate The Godfather: 3.75
+Prediction: Yichen will rate The Godfather: 3.43</code></pre>
+</div>
+</div>
+</section>
+</section>
+
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../problems/problems.html" class="pagination-link" aria-label="Problems">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Problems</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../problems/ps2.html" class="pagination-link" aria-label="Problem Set 2">
+        <span class="nav-page-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Problem Set 2</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Machine Learning for Mechanical Engineers © 2025 by <a href="./index.qmd#sec-contributors">Mark Fuge and IDEAL Lab Contributors</a> is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

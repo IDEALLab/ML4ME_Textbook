@@ -1,0 +1,15 @@
+# Evaluating Machine Learning Models {#sec-evaluating-models}
+
+Before we address specific types or classes of models, it is useful to discuss how we *evaluate* models. Specifically, this will include:
+
+1. Defining what we view as a measure of success for the model -- for example, many of the [model metrics mentioned in the SKLearn metrics documentation](https://scikit-learn.org/stable/modules/model_evaluation.html)
+2. Finding a way to get an accurate Out-of-Sample Estimate of that metric -- this is where Cross Validation plays a central role, and is more difficult or complex than one might first initially expect.
+
+Both of these topics you would have covered extensively in the Stochastics and Machine Learning course (including, e.g., the Bias-Variance tradeoff), but we will briefly review some of the core concepts below while 
+
+{{< embed ../notebooks/cross_validation_linear_regression.ipynb echo=True >}}
+
+{{< embed ../notebooks/derivative_free_hyper_parameter_optimization.ipynb echo=True >}}
+
+## Useful Plots and Diagnostics for ML Models {#sec-diagonstic-plots}
+(To Be Written)
