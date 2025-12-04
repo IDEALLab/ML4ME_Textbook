@@ -9,7 +9,7 @@
 <meta name="author" content="Mark Fuge">
 <meta name="dcterms.date" content="2025-09-23">
 
-<title>1&nbsp; Reviewing Supervised Linear Models – Machine Learning for Mechanical Engineering</title>
+<title>2&nbsp; Reviewing Supervised Linear Models – Machine Learning for Mechanical Engineering</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -68,7 +68,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
 <link href="../notebooks/cross_validation_linear_regression.html" rel="next">
-<link href="../part1/part1.html" rel="prev">
+<link href="../intro.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -153,7 +153,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../part1/part1.html">Foundational Skills</a></li><li class="breadcrumb-item"><a href="../part1/reviewing_supervised_linear_models.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Reviewing Supervised Linear Models</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../part1/reviewing_supervised_linear_models.html">part1/index.qmd</a></li><li class="breadcrumb-item"><a href="../part1/reviewing_supervised_linear_models.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Reviewing Supervised Linear Models</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -184,10 +184,16 @@ window.Quarto = {
  <span class="menu-text">Preface</span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  </div>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../part1/part1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Foundational Skills</span></a>
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">part1/index.qmd</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -196,43 +202,43 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part1/reviewing_supervised_linear_models.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Reviewing Supervised Linear Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Reviewing Supervised Linear Models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../notebooks/cross_validation_linear_regression.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Evaluating Machine Learning Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Evaluating Machine Learning Models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../notebooks/supervised_linear_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Introduction to Gradient Descent</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Introduction to Gradient Descent</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part1/linear_decompositions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Review of Linear Unsupervised Learning</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Review of Linear Unsupervised Learning</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part1/taking_derivatives.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Taking Derivatives with Automatic Differentiation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Taking Derivatives with Automatic Differentiation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part1/distribution_distance.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Measuring Distribution Distances</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Measuring Distribution Distances</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part1/introduction_to_inference.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Introduction to Inference</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Introduction to Inference</span></span></a>
   </div>
 </li>
       </ul>
@@ -249,73 +255,79 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part2/review_neural_networks.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Review of Neural Networks</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Review of Neural Networks</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part2/gen_models/intro_to_GANS.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Introduction to Push-Forward Generative Models – Generative Adversarial Networks (GANs)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Introduction to Push-Forward Generative Models – Generative Adversarial Networks (GANs)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part2/gen_models/GAN_pitfalls.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">GAN Training Pitfalls</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">GAN Training Pitfalls</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part2/gen_models/OT.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Optimal Transport for Generative Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Optimal Transport for Generative Models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part2/gen_models/VAEs.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Variational Autoencoders (VAEs)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Variational Autoencoders (VAEs)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part2/gen_models/normalizing_flows.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Normalizing Flows</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Normalizing Flows</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part2/gen_models/continuous_flows.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">From Discrete Transformations to Continuous Flows</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">From Discrete Transformations to Continuous Flows</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part2/gen_models/score_matching.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">From Continuous Flows to Score Matching</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">From Continuous Flows to Score Matching</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part2/gen_models/diffusion_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">From Score Matching to Diffusion Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">From Score Matching to Diffusion Models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part2/gen_models/flow_matching.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Flow Matching</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Flow Matching</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part2/gen_models/latent_generative_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Latent Generative Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Latent Generative Models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part2/introduction_to_reinforcement_learning.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Introduction to Deep Reinforcement Learning</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Introduction to Deep Reinforcement Learning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../part2/gen_models/transformers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Introduction to Transformers</span></span></a>
   </div>
 </li>
       </ul>
@@ -338,13 +350,13 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../problems/ps1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Problem Set 1</span></span></a>
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Problem Set 1</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../problems/ps2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Problem Set 2</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Problem Set 2</span></span></a>
   </div>
 </li>
       </ul>
@@ -361,7 +373,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../notebooks/california_housing_visualization.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Housing Price Data Visualization In-Class Exercise</span></span></a>
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Housing Price Data Visualization In-Class Exercise</span></span></a>
   </div>
 </li>
       </ul>
@@ -411,23 +423,23 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#what-is-a-linear-model" id="toc-what-is-a-linear-model" class="nav-link active" data-scroll-target="#what-is-a-linear-model"><span class="header-section-number">1.1</span> What is a Linear Model?</a></li>
-  <li><a href="#regularization-and-controlling-model-complexity" id="toc-regularization-and-controlling-model-complexity" class="nav-link" data-scroll-target="#regularization-and-controlling-model-complexity"><span class="header-section-number">1.2</span> Regularization and Controlling Model Complexity</a>
+  <li><a href="#what-is-a-linear-model" id="toc-what-is-a-linear-model" class="nav-link active" data-scroll-target="#what-is-a-linear-model"><span class="header-section-number">2.1</span> What is a Linear Model?</a></li>
+  <li><a href="#regularization-and-controlling-model-complexity" id="toc-regularization-and-controlling-model-complexity" class="nav-link" data-scroll-target="#regularization-and-controlling-model-complexity"><span class="header-section-number">2.2</span> Regularization and Controlling Model Complexity</a>
   <ul class="collapse">
-  <li><a href="#norms-and-their-relationship-to-regularization" id="toc-norms-and-their-relationship-to-regularization" class="nav-link" data-scroll-target="#norms-and-their-relationship-to-regularization"><span class="header-section-number">1.2.1</span> Norms and their relationship to Regularization</a></li>
+  <li><a href="#norms-and-their-relationship-to-regularization" id="toc-norms-and-their-relationship-to-regularization" class="nav-link" data-scroll-target="#norms-and-their-relationship-to-regularization"><span class="header-section-number">2.2.1</span> Norms and their relationship to Regularization</a></li>
   </ul></li>
-  <li><a href="#examples-of-other-commonly-used-loss-functions-in-linear-models" id="toc-examples-of-other-commonly-used-loss-functions-in-linear-models" class="nav-link" data-scroll-target="#examples-of-other-commonly-used-loss-functions-in-linear-models"><span class="header-section-number">1.3</span> Examples of Other Commonly used Loss Functions in Linear Models</a></li>
-  <li><a href="#loss-functions-for-regression" id="toc-loss-functions-for-regression" class="nav-link" data-scroll-target="#loss-functions-for-regression"><span class="header-section-number">1.4</span> Loss Functions for Regression</a>
+  <li><a href="#examples-of-other-commonly-used-loss-functions-in-linear-models" id="toc-examples-of-other-commonly-used-loss-functions-in-linear-models" class="nav-link" data-scroll-target="#examples-of-other-commonly-used-loss-functions-in-linear-models"><span class="header-section-number">2.3</span> Examples of Other Commonly used Loss Functions in Linear Models</a></li>
+  <li><a href="#loss-functions-for-regression" id="toc-loss-functions-for-regression" class="nav-link" data-scroll-target="#loss-functions-for-regression"><span class="header-section-number">2.4</span> Loss Functions for Regression</a>
   <ul class="collapse">
-  <li><a href="#handling-outliers-using-robust-loss-functions" id="toc-handling-outliers-using-robust-loss-functions" class="nav-link" data-scroll-target="#handling-outliers-using-robust-loss-functions"><span class="header-section-number">1.4.1</span> Handling Outliers using Robust Loss Functions</a></li>
+  <li><a href="#handling-outliers-using-robust-loss-functions" id="toc-handling-outliers-using-robust-loss-functions" class="nav-link" data-scroll-target="#handling-outliers-using-robust-loss-functions"><span class="header-section-number">2.4.1</span> Handling Outliers using Robust Loss Functions</a></li>
   </ul></li>
-  <li><a href="#loss-functions-for-linear-classification" id="toc-loss-functions-for-linear-classification" class="nav-link" data-scroll-target="#loss-functions-for-linear-classification"><span class="header-section-number">1.5</span> Loss Functions for Linear Classification</a></li>
-  <li><a href="#penalty-functions-example-of-how-l_p-penalty-changes-loss-optima" id="toc-penalty-functions-example-of-how-l_p-penalty-changes-loss-optima" class="nav-link" data-scroll-target="#penalty-functions-example-of-how-l_p-penalty-changes-loss-optima"><span class="header-section-number">1.6</span> Penalty Functions: Example of How <span class="math inline">\(L_p\)</span> Penalty Changes Loss Optima</a></li>
-  <li><a href="#summary-of-how-to-select-a-loss-or-penalty-function" id="toc-summary-of-how-to-select-a-loss-or-penalty-function" class="nav-link" data-scroll-target="#summary-of-how-to-select-a-loss-or-penalty-function"><span class="header-section-number">1.7</span> Summary of How to Select a Loss or Penalty function</a>
+  <li><a href="#loss-functions-for-linear-classification" id="toc-loss-functions-for-linear-classification" class="nav-link" data-scroll-target="#loss-functions-for-linear-classification"><span class="header-section-number">2.5</span> Loss Functions for Linear Classification</a></li>
+  <li><a href="#penalty-functions-example-of-how-l_p-penalty-changes-loss-optima" id="toc-penalty-functions-example-of-how-l_p-penalty-changes-loss-optima" class="nav-link" data-scroll-target="#penalty-functions-example-of-how-l_p-penalty-changes-loss-optima"><span class="header-section-number">2.6</span> Penalty Functions: Example of How <span class="math inline">\(L_p\)</span> Penalty Changes Loss Optima</a></li>
+  <li><a href="#summary-of-how-to-select-a-loss-or-penalty-function" id="toc-summary-of-how-to-select-a-loss-or-penalty-function" class="nav-link" data-scroll-target="#summary-of-how-to-select-a-loss-or-penalty-function"><span class="header-section-number">2.7</span> Summary of How to Select a Loss or Penalty function</a>
   <ul class="collapse">
-  <li><a href="#loss-functions-for-regression-1" id="toc-loss-functions-for-regression-1" class="nav-link" data-scroll-target="#loss-functions-for-regression-1"><span class="header-section-number">1.7.1</span> Loss Functions for Regression:</a></li>
-  <li><a href="#loss-functions-for-classification" id="toc-loss-functions-for-classification" class="nav-link" data-scroll-target="#loss-functions-for-classification"><span class="header-section-number">1.7.2</span> Loss Functions for Classification:</a></li>
-  <li><a href="#penalty-terms-lp-norms-for-linear-models" id="toc-penalty-terms-lp-norms-for-linear-models" class="nav-link" data-scroll-target="#penalty-terms-lp-norms-for-linear-models"><span class="header-section-number">1.7.3</span> Penalty Terms (Lp Norms) for Linear Models:</a></li>
+  <li><a href="#loss-functions-for-regression-1" id="toc-loss-functions-for-regression-1" class="nav-link" data-scroll-target="#loss-functions-for-regression-1"><span class="header-section-number">2.7.1</span> Loss Functions for Regression:</a></li>
+  <li><a href="#loss-functions-for-classification" id="toc-loss-functions-for-classification" class="nav-link" data-scroll-target="#loss-functions-for-classification"><span class="header-section-number">2.7.2</span> Loss Functions for Classification:</a></li>
+  <li><a href="#penalty-terms-lp-norms-for-linear-models" id="toc-penalty-terms-lp-norms-for-linear-models" class="nav-link" data-scroll-target="#penalty-terms-lp-norms-for-linear-models"><span class="header-section-number">2.7.3</span> Penalty Terms (Lp Norms) for Linear Models:</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -435,9 +447,9 @@ window.Quarto = {
 <!-- main -->
 <main class="content page-columns page-full" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../part1/part1.html">Foundational Skills</a></li><li class="breadcrumb-item"><a href="../part1/reviewing_supervised_linear_models.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Reviewing Supervised Linear Models</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../part1/reviewing_supervised_linear_models.html">part1/index.qmd</a></li><li class="breadcrumb-item"><a href="../part1/reviewing_supervised_linear_models.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Reviewing Supervised Linear Models</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Reviewing Supervised Linear Models</span></h1>
+<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Reviewing Supervised Linear Models</span></h1>
 </div>
 
 
@@ -474,8 +486,8 @@ window.Quarto = {
 <li>Discuss different types of commonly used loss functions for linear models, demonstrating their differences and possible use cases.</li>
 </ol>
 <p>With this as a baseline model, the next chapter will review the concept of Cross-Validation and how we evaluate whether an Machine Learning model is “good”, and then the subsequent chapter will review (Stochastic) Gradient Descent, in the Linear Model context.</p>
-<section id="what-is-a-linear-model" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="what-is-a-linear-model"><span class="header-section-number">1.1</span> What is a Linear Model?</h2>
+<section id="what-is-a-linear-model" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="what-is-a-linear-model"><span class="header-section-number">2.1</span> What is a Linear Model?</h2>
 <p>Let’s start by trying to fit a model to the (admittedly simple) dataset below, where I have just sampled some (noisy) points from a periodic function:</p>
 <div id="cell-3" class="cell" data-execution_count="1">
 <details class="code-fold">
@@ -670,15 +682,15 @@ y = \mathbf{w}^T \mathbf{x}
 </div>
 <p>What is going on here? To understand this, we need to understand something about how the model is optimizing error and how we might control this behavior.</p>
 </section>
-<section id="regularization-and-controlling-model-complexity" class="level2" data-number="1.2">
-<h2 data-number="1.2" class="anchored" data-anchor-id="regularization-and-controlling-model-complexity"><span class="header-section-number">1.2</span> Regularization and Controlling Model Complexity</h2>
+<section id="regularization-and-controlling-model-complexity" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="regularization-and-controlling-model-complexity"><span class="header-section-number">2.2</span> Regularization and Controlling Model Complexity</h2>
 <p>In the base case above, all the model is trying to do is minimize the Mean Squared Error (MSE) with respect to the training error, and with a sufficient number of parameters (polynomial features, in this case), it becomes possible to always achieve perfect accuracy (i.e., fit every point) in the training data. Unfortunately, as we can see, fitting the training data perfectly does not necessarily lead to a model that generalizes well to new data. To help us control this behavior, we can introduce the concept of <strong>Regularization</strong>, which is a way of penalizing overly complex models. Specifically, we can modify our cost function to be something like:</p>
 <p><span class="math display">\[
 Cost = Loss(w,D) + \Omega(w)
 \]</span></p>
 <p>where <span class="math inline">\(\Omega(w)\)</span> represents what we call a “Regularization” of the function or a “Penalty Term” The purpose of <span class="math inline">\(\Omega(w)\)</span> is to help us prevent the (otherwise complex) model from being overly complicated, by penalizing this complexity. There are many ways to do this that we will see later on, but one common way to do this for linear models is to penalize the <strong>total weight</strong> that you allow all of the <span class="math inline">\(w_i\)</span> to have. Specifically how one calculates this total weight turns out to matter a lot, and we shall see it return in later chapters and sections. But to get us started in un-packing how to do this, we first need to talk about what a <a href="https://en.wikipedia.org/wiki/Norm_(mathematics)">Norm</a> is, how it relates to Linear Regression weights, and how it helps us perform Regularization.</p>
-<section id="norms-and-their-relationship-to-regularization" class="level3" data-number="1.2.1">
-<h3 data-number="1.2.1" class="anchored" data-anchor-id="norms-and-their-relationship-to-regularization"><span class="header-section-number">1.2.1</span> Norms and their relationship to Regularization</h3>
+<section id="norms-and-their-relationship-to-regularization" class="level3" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="norms-and-their-relationship-to-regularization"><span class="header-section-number">2.2.1</span> Norms and their relationship to Regularization</h3>
 <p>A Norm is a concept in mathematics that allows us to essentially measure length or size, typically of vectors. Any time you have tried to compute the distance between two points in space (say, by using the Pythagorean Theorem), or the magnitude of an applied Force vector, you have been using a Norm — most likely the Euclidean Norm or Euclidean Distance. For example, for a vector <span class="math inline">\(\mathbf{x}\)</span> with <span class="math inline">\(n\)</span> dimensions, the Euclidean Norm looks like this: <span class="math display">\[
 ||\mathbf{x}||_2 = \sqrt{ x_1^2 + x_2^2 + \cdots x_n^2 }
 \]</span> If you have ever had to compute the total Force Magnitude given its x and y components (for example, in Statics class), you have used the Euclidean Norm to do so. In that context, it served to take multiple components of a Force aggregate them in such a way as to tell you something about the <strong>total force</strong> – by analogy, we will do the same thing here with linear regression, where each weight is like a component and we can use the Euclidean Norm to compute the total weight.</p>
@@ -855,16 +867,16 @@ Cost = \sum_{n=1}^{N}||y-w\cdot x||^2 + \alpha \cdot ||w||^2
 </div>
 </section>
 </section>
-<section id="examples-of-other-commonly-used-loss-functions-in-linear-models" class="level2 page-columns page-full" data-number="1.3">
-<h2 data-number="1.3" class="anchored" data-anchor-id="examples-of-other-commonly-used-loss-functions-in-linear-models"><span class="header-section-number">1.3</span> Examples of Other Commonly used Loss Functions in Linear Models</h2>
+<section id="examples-of-other-commonly-used-loss-functions-in-linear-models" class="level2 page-columns page-full" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="examples-of-other-commonly-used-loss-functions-in-linear-models"><span class="header-section-number">2.3</span> Examples of Other Commonly used Loss Functions in Linear Models</h2>
 <p>Thus far we have been discussing Linear Models in their most familiar context — minimizing the Mean Squared Error (MSE) with respect to the training data, optionally with an L2 regularization on the weight vector:</p>
 <p><span class="math display">\[
 \mathcal{L}(\mathbf{w}) = \frac{1}{N} \sum_{i=1}^N (y_i - \mathbf{w}^T \mathbf{x}_i)^2 + \alpha ||\mathbf{w}||_2^2
 \]</span></p>
 <p>For now, let us ignore the regularization term, and just focus on the Loss term. Why should we minimize the squared error?<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> Why not the absolute error or other possible loss functions? Let’s explore a few of those options and then see, in practice, how they affect the learned linear model.</p>
 <div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;It turns out that there are good theoretical reasons for this, for example, that a Linear Model trained via an L2/MSE Loss is the Best Linear Unbiased Estimate (BLUE) of the Linear Model, according to the <a href="https://en.wikipedia.org/wiki/Gauss%E2%80%93Markov_theorem">Gauss-Markov Theorem</a>, but, as we will see, there are other reasons to forgo these advantages.</p></div></div></section>
-<section id="loss-functions-for-regression" class="level2" data-number="1.4">
-<h2 data-number="1.4" class="anchored" data-anchor-id="loss-functions-for-regression"><span class="header-section-number">1.4</span> Loss Functions for Regression</h2>
+<section id="loss-functions-for-regression" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="loss-functions-for-regression"><span class="header-section-number">2.4</span> Loss Functions for Regression</h2>
 <p>Beyond classical MSE, there are two main types of variants that are commonly used for regression problems:</p>
 <ul>
 <li>Robust Loss Functions, that minimize the quadratic effect of the MSE loss for very large errors. These are typically used to make the trained model less sensitive to outliers in the training data.</li>
@@ -931,8 +943,8 @@ Cost = \sum_{n=1}^{N}||y-w\cdot x||^2 + \alpha \cdot ||w||^2
 </div>
 </div>
 </div>
-<section id="handling-outliers-using-robust-loss-functions" class="level3" data-number="1.4.1">
-<h3 data-number="1.4.1" class="anchored" data-anchor-id="handling-outliers-using-robust-loss-functions"><span class="header-section-number">1.4.1</span> Handling Outliers using Robust Loss Functions</h3>
+<section id="handling-outliers-using-robust-loss-functions" class="level3" data-number="2.4.1">
+<h3 data-number="2.4.1" class="anchored" data-anchor-id="handling-outliers-using-robust-loss-functions"><span class="header-section-number">2.4.1</span> Handling Outliers using Robust Loss Functions</h3>
 <div id="cell-22" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>Code</summary>
@@ -980,8 +992,8 @@ Cost = \sum_{n=1}^{N}||y-w\cdot x||^2 + \alpha \cdot ||w||^2
 </div>
 </section>
 </section>
-<section id="loss-functions-for-linear-classification" class="level2" data-number="1.5">
-<h2 data-number="1.5" class="anchored" data-anchor-id="loss-functions-for-linear-classification"><span class="header-section-number">1.5</span> Loss Functions for Linear Classification</h2>
+<section id="loss-functions-for-linear-classification" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="loss-functions-for-linear-classification"><span class="header-section-number">2.5</span> Loss Functions for Linear Classification</h2>
 <p>Thus far we have only discussed Regression problems, where we are modeling a continuous output (e.g., <span class="math inline">\(y=w^T\cdot x\)</span>). However, Linear Models can also be used for Classification problems, where the output is discrete (e.g., <span class="math inline">\(y \in \{0,1\}\)</span> or <span class="math inline">\(y \in \{-1,1\}\)</span>). A naive approach to handling this, would be to just train a regression model as per before, but then just threshold the output at some value to derive the class label. For example, we can take the below binary data:</p>
 <div id="cell-24" class="cell" data-execution_count="11">
 <details class="code-fold">
@@ -1228,8 +1240,8 @@ y_i\cdot(w\cdot x_i)
 </div>
 </div>
 </section>
-<section id="penalty-functions-example-of-how-l_p-penalty-changes-loss-optima" class="level2 page-columns page-full" data-number="1.6">
-<h2 data-number="1.6" class="anchored" data-anchor-id="penalty-functions-example-of-how-l_p-penalty-changes-loss-optima"><span class="header-section-number">1.6</span> Penalty Functions: Example of How <span class="math inline">\(L_p\)</span> Penalty Changes Loss Optima</h2>
+<section id="penalty-functions-example-of-how-l_p-penalty-changes-loss-optima" class="level2 page-columns page-full" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="penalty-functions-example-of-how-l_p-penalty-changes-loss-optima"><span class="header-section-number">2.6</span> Penalty Functions: Example of How <span class="math inline">\(L_p\)</span> Penalty Changes Loss Optima</h2>
 <p>OK, so we have seen how different loss functions can affect the learned linear model. But what about the penalty function? How does changing the penalty function affect the learned model? Let’s explore this with a simple example by again returning to fitting a line. In this case, we will fit an actual “line” to the data, by which I mean:</p>
 <p><span class="math display">\[
 y= w_0 + w_1 \cdot x = \mathbf{w}^T \cdot \mathbf{x}
@@ -1519,19 +1531,19 @@ y= w_0 + w_1 \cdot x = \mathbf{w}^T \cdot \mathbf{x}
 </div>
 </div>
 </section>
-<section id="summary-of-how-to-select-a-loss-or-penalty-function" class="level2" data-number="1.7">
-<h2 data-number="1.7" class="anchored" data-anchor-id="summary-of-how-to-select-a-loss-or-penalty-function"><span class="header-section-number">1.7</span> Summary of How to Select a Loss or Penalty function</h2>
+<section id="summary-of-how-to-select-a-loss-or-penalty-function" class="level2" data-number="2.7">
+<h2 data-number="2.7" class="anchored" data-anchor-id="summary-of-how-to-select-a-loss-or-penalty-function"><span class="header-section-number">2.7</span> Summary of How to Select a Loss or Penalty function</h2>
 <p>In class, we reviewed a couple of different forms of loss functions and penalty functions and talked a bit about the criteria for selecting them. Below is a very short summary of these.</p>
-<section id="loss-functions-for-regression-1" class="level3" data-number="1.7.1">
-<h3 data-number="1.7.1" class="anchored" data-anchor-id="loss-functions-for-regression-1"><span class="header-section-number">1.7.1</span> Loss Functions for Regression:</h3>
+<section id="loss-functions-for-regression-1" class="level3" data-number="2.7.1">
+<h3 data-number="2.7.1" class="anchored" data-anchor-id="loss-functions-for-regression-1"><span class="header-section-number">2.7.1</span> Loss Functions for Regression:</h3>
 <ul>
 <li>If you have no prior knowledge of the function or data, then selecting an L2 type loss (like the Mean Squared Error) is reasonable. When data nicely behaves w.r.t. a linear model (e.g., features are uncorrelated, errors in the linear model are uncorrelated, have equal variances, and expected error of zero around the linear model, etc.) then a Linear Model with an L2 Loss is the Best Linear Unbiased Estimate (BLUE) according to the <a href="https://en.wikipedia.org/wiki/Gauss%E2%80%93Markov_theorem">Gauss-Markov Theorem</a>.</li>
 <li>If you have reason to believe that the data will have outliers or otherwise need to be robust to spurious large samples, then L2 loss will not be robust to this (as we saw in Lecture). For this, moving to an L1 type loss (like an Absolute Loss or Huber loss) will make the model less sensitive to outliers. It is one approach to handling <a href="https://en.wikipedia.org/wiki/Robust_regression">Robust Regression</a>.</li>
 <li>If you need to have the model’s loss be dominated only by a handful of points/data as opposed to all of the data, then epsilon-insensitive loss is appropriate since many points well-fit by the model will have “zero” loss. For things like Linear Models, this has limited usefulness right now. However, when we “kernalize” Linear models in “Kernels” week, you will see that this is a big deal, and it is what gives rise to the “Support Vector” part of “Support Vector Machines”. Specifically, decreasing epsilon towards zero increases the number of needed Support Vectors (can be a bad thing), and increasing epsilon can decrease the number of needed Support Vectors (can be a good thing). This will make more sense in a few week’s time.</li>
 </ul>
 </section>
-<section id="loss-functions-for-classification" class="level3" data-number="1.7.2">
-<h3 data-number="1.7.2" class="anchored" data-anchor-id="loss-functions-for-classification"><span class="header-section-number">1.7.2</span> Loss Functions for Classification:</h3>
+<section id="loss-functions-for-classification" class="level3" data-number="2.7.2">
+<h3 data-number="2.7.2" class="anchored" data-anchor-id="loss-functions-for-classification"><span class="header-section-number">2.7.2</span> Loss Functions for Classification:</h3>
 <ul>
 <li>Zero-One loss sounds nice, but is not useful in practice, since it is not differentiable.</li>
 <li><a href="https://en.wikipedia.org/wiki/Perceptron">Perceptron loss</a>, while of historical importance, is not terribly useful in practice, since it does not converge to a unique solution and an SVM (i.e., Hinge Loss below) has all of the same benefits.</li>
@@ -1539,8 +1551,8 @@ y= w_0 + w_1 \cdot x = \mathbf{w}^T \cdot \mathbf{x}
 <li>If you want something that <a href="https://en.wikipedia.org/wiki/Margin_(machine_learning)">maximizes the margin</a> of the classifier, then the Hinge Loss can get close to this. It is the basis of <a href="https://en.wikipedia.org/wiki/Support_vector_machine#Linear_SVM">Linear Support Vector Machines</a></li>
 </ul>
 </section>
-<section id="penalty-terms-lp-norms-for-linear-models" class="level3" data-number="1.7.3">
-<h3 data-number="1.7.3" class="anchored" data-anchor-id="penalty-terms-lp-norms-for-linear-models"><span class="header-section-number">1.7.3</span> Penalty Terms (Lp Norms) for Linear Models:</h3>
+<section id="penalty-terms-lp-norms-for-linear-models" class="level3" data-number="2.7.3">
+<h3 data-number="2.7.3" class="anchored" data-anchor-id="penalty-terms-lp-norms-for-linear-models"><span class="header-section-number">2.7.3</span> Penalty Terms (Lp Norms) for Linear Models:</h3>
 <ul>
 <li><span class="math inline">\(L_2\)</span> Norm penalties on the weight vector essentially “shrink” the weights towards zero as you increase the penalty weight. Adding this kind of penalty to a linear model has different names, depending on which community of people you are talking with. Some of these other names are: (1) <a href="https://en.wikipedia.org/wiki/Tikhonov_regularization">Tikhonov regularization</a>, (2) Ridge Regression, (3) <span class="math inline">\(L_2\)</span> Shrinkage Estimators, or (4) Gaussian Weight Priors. I find looking at the penalty term itself more helpful at understanding the effects rather than memorizing the different names.</li>
 <li><span class="math inline">\(L_0\)</span> Norm penalties, while conceptually interesting since they essentially “count” entries in the weight vector, are not practically useful since they are not differentiable and are thus difficult to optimize.</li>
@@ -1957,13 +1969,13 @@ y= w_0 + w_1 \cdot x = \mathbf{w}^T \cdot \mathbf{x}
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../part1/part1.html" class="pagination-link" aria-label="Foundational Skills">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Foundational Skills</span>
+      <a href="../intro.html" class="pagination-link" aria-label="Introduction">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="../notebooks/cross_validation_linear_regression.html" class="pagination-link" aria-label="Evaluating Machine Learning Models">
-        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Evaluating Machine Learning Models</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Evaluating Machine Learning Models</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

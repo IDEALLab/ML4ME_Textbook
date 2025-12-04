@@ -9,7 +9,7 @@
 <meta name="author" content="Mark Fuge">
 <meta name="dcterms.date" content="2025-10-26">
 
-<title>14&nbsp; From Discrete Transformations to Continuous Flows – Machine Learning for Mechanical Engineering</title>
+<title>15&nbsp; From Discrete Transformations to Continuous Flows – Machine Learning for Mechanical Engineering</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -149,7 +149,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../part2/part2.html">Foundations of Generative Models</a></li><li class="breadcrumb-item"><a href="../../part2/gen_models/continuous_flows.html"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">From Discrete Transformations to Continuous Flows</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../part2/part2.html">Foundations of Generative Models</a></li><li class="breadcrumb-item"><a href="../../part2/gen_models/continuous_flows.html"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">From Discrete Transformations to Continuous Flows</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -180,10 +180,16 @@ window.Quarto = {
  <span class="menu-text">Preface</span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  </div>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../part1/part1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Foundational Skills</span></a>
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">part1/index.qmd</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -192,43 +198,43 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../part1/reviewing_supervised_linear_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Reviewing Supervised Linear Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Reviewing Supervised Linear Models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../notebooks/cross_validation_linear_regression.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Evaluating Machine Learning Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Evaluating Machine Learning Models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../notebooks/supervised_linear_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Introduction to Gradient Descent</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Introduction to Gradient Descent</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../part1/linear_decompositions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Review of Linear Unsupervised Learning</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Review of Linear Unsupervised Learning</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../part1/taking_derivatives.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Taking Derivatives with Automatic Differentiation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Taking Derivatives with Automatic Differentiation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../part1/distribution_distance.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Measuring Distribution Distances</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Measuring Distribution Distances</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../part1/introduction_to_inference.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Introduction to Inference</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Introduction to Inference</span></span></a>
   </div>
 </li>
       </ul>
@@ -245,73 +251,79 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../part2/review_neural_networks.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Review of Neural Networks</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Review of Neural Networks</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../part2/gen_models/intro_to_GANS.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Introduction to Push-Forward Generative Models – Generative Adversarial Networks (GANs)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Introduction to Push-Forward Generative Models – Generative Adversarial Networks (GANs)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../part2/gen_models/GAN_pitfalls.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">GAN Training Pitfalls</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">GAN Training Pitfalls</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../part2/gen_models/OT.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Optimal Transport for Generative Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Optimal Transport for Generative Models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../part2/gen_models/VAEs.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Variational Autoencoders (VAEs)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Variational Autoencoders (VAEs)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../part2/gen_models/normalizing_flows.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Normalizing Flows</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Normalizing Flows</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../part2/gen_models/continuous_flows.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">From Discrete Transformations to Continuous Flows</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">From Discrete Transformations to Continuous Flows</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../part2/gen_models/score_matching.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">From Continuous Flows to Score Matching</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">From Continuous Flows to Score Matching</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../part2/gen_models/diffusion_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">From Score Matching to Diffusion Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">From Score Matching to Diffusion Models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../part2/gen_models/flow_matching.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Flow Matching</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Flow Matching</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../part2/gen_models/latent_generative_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Latent Generative Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Latent Generative Models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../part2/introduction_to_reinforcement_learning.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Introduction to Deep Reinforcement Learning</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Introduction to Deep Reinforcement Learning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../part2/gen_models/transformers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Introduction to Transformers</span></span></a>
   </div>
 </li>
       </ul>
@@ -334,13 +346,13 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../problems/ps1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Problem Set 1</span></span></a>
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Problem Set 1</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../problems/ps2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Problem Set 2</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Problem Set 2</span></span></a>
   </div>
 </li>
       </ul>
@@ -357,7 +369,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../notebooks/california_housing_visualization.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Housing Price Data Visualization In-Class Exercise</span></span></a>
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Housing Price Data Visualization In-Class Exercise</span></span></a>
   </div>
 </li>
       </ul>
@@ -407,21 +419,21 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives"><span class="header-section-number">14.1</span> Learning Objectives</a></li>
-  <li><a href="#from-finite-jacobians-to-differential-updates" id="toc-from-finite-jacobians-to-differential-updates" class="nav-link" data-scroll-target="#from-finite-jacobians-to-differential-updates"><span class="header-section-number">14.2</span> From Finite Jacobians to Differential Updates</a></li>
-  <li><a href="#example-divergence-free-rotation" id="toc-example-divergence-free-rotation" class="nav-link" data-scroll-target="#example-divergence-free-rotation"><span class="header-section-number">14.3</span> Example: Divergence-Free Rotation</a></li>
-  <li><a href="#example-contracting-divergence-controls-density-growth" id="toc-example-contracting-divergence-controls-density-growth" class="nav-link" data-scroll-target="#example-contracting-divergence-controls-density-growth"><span class="header-section-number">14.4</span> Example: Contracting Divergence Controls Density Growth</a></li>
-  <li><a href="#example-1d-continuous-normalizing-flow-with-neural-odes" id="toc-example-1d-continuous-normalizing-flow-with-neural-odes" class="nav-link" data-scroll-target="#example-1d-continuous-normalizing-flow-with-neural-odes"><span class="header-section-number">14.5</span> Example 1D Continuous Normalizing Flow with Neural ODEs</a></li>
-  <li><a href="#summary-and-next-steps" id="toc-summary-and-next-steps" class="nav-link" data-scroll-target="#summary-and-next-steps"><span class="header-section-number">14.6</span> Summary and Next Steps</a></li>
+  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives"><span class="header-section-number">15.1</span> Learning Objectives</a></li>
+  <li><a href="#from-finite-jacobians-to-differential-updates" id="toc-from-finite-jacobians-to-differential-updates" class="nav-link" data-scroll-target="#from-finite-jacobians-to-differential-updates"><span class="header-section-number">15.2</span> From Finite Jacobians to Differential Updates</a></li>
+  <li><a href="#example-divergence-free-rotation" id="toc-example-divergence-free-rotation" class="nav-link" data-scroll-target="#example-divergence-free-rotation"><span class="header-section-number">15.3</span> Example: Divergence-Free Rotation</a></li>
+  <li><a href="#example-contracting-divergence-controls-density-growth" id="toc-example-contracting-divergence-controls-density-growth" class="nav-link" data-scroll-target="#example-contracting-divergence-controls-density-growth"><span class="header-section-number">15.4</span> Example: Contracting Divergence Controls Density Growth</a></li>
+  <li><a href="#example-1d-continuous-normalizing-flow-with-neural-odes" id="toc-example-1d-continuous-normalizing-flow-with-neural-odes" class="nav-link" data-scroll-target="#example-1d-continuous-normalizing-flow-with-neural-odes"><span class="header-section-number">15.5</span> Example 1D Continuous Normalizing Flow with Neural ODEs</a></li>
+  <li><a href="#summary-and-next-steps" id="toc-summary-and-next-steps" class="nav-link" data-scroll-target="#summary-and-next-steps"><span class="header-section-number">15.6</span> Summary and Next Steps</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content page-columns page-full" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../part2/part2.html">Foundations of Generative Models</a></li><li class="breadcrumb-item"><a href="../../part2/gen_models/continuous_flows.html"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">From Discrete Transformations to Continuous Flows</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../part2/part2.html">Foundations of Generative Models</a></li><li class="breadcrumb-item"><a href="../../part2/gen_models/continuous_flows.html"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">From Discrete Transformations to Continuous Flows</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">From Discrete Transformations to Continuous Flows</span></h1>
+<h1 class="title"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">From Discrete Transformations to Continuous Flows</span></h1>
 </div>
 
 
@@ -452,8 +464,8 @@ window.Quarto = {
 
 <p>We saw in the last chapter how normalizing flows transform simple base distributions into complex target distributions via a sequence of invertible mappings. Each mapping requires computing the determinant of the Jacobian to track how densities change.</p>
 <p>In continuous normalizing flows, we ask: what happens if we let the number of layers go to infinity while shrinking each individual transformation to an infinitesimal step? That is, rather than a handful of large invertible maps, we stack infinitely many tiny, smooth updates. We will see that taking this limit produces an ordinary differential equation (ODE) whose solution transports probability mass.</p>
-<section id="learning-objectives" class="level2" data-number="14.1">
-<h2 data-number="14.1" class="anchored" data-anchor-id="learning-objectives"><span class="header-section-number">14.1</span> Learning Objectives</h2>
+<section id="learning-objectives" class="level2" data-number="15.1">
+<h2 data-number="15.1" class="anchored" data-anchor-id="learning-objectives"><span class="header-section-number">15.1</span> Learning Objectives</h2>
 <p>By the end of this notebook you should be able to:</p>
 <ul>
 <li>Recognize that a CNF is the infinitesimal limit of a discrete normalizing flow.</li>
@@ -463,8 +475,8 @@ window.Quarto = {
 <li>Connect CNFs to probability transport ideas and the diffusion models we will meet later.</li>
 </ul>
 </section>
-<section id="from-finite-jacobians-to-differential-updates" class="level2 page-columns page-full" data-number="14.2">
-<h2 data-number="14.2" class="anchored" data-anchor-id="from-finite-jacobians-to-differential-updates"><span class="header-section-number">14.2</span> From Finite Jacobians to Differential Updates</h2>
+<section id="from-finite-jacobians-to-differential-updates" class="level2 page-columns page-full" data-number="15.2">
+<h2 data-number="15.2" class="anchored" data-anchor-id="from-finite-jacobians-to-differential-updates"><span class="header-section-number">15.2</span> From Finite Jacobians to Differential Updates</h2>
 <p>As we saw last chapter, in a discrete flow the change-of-variables formula is: <span class="math display">\[
 \log p(x) = \log p(z_K) = \log p(z_0) - \sum_{i=1}^{K} \log\left|\det J_{f_i}(z_{i-1})\right|.
 \]</span></p>
@@ -589,8 +601,8 @@ v_\theta(\mathbf{z}(t),t) \\
 <span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> torch.stack(components, dim<span class="op">=</span><span class="dv">1</span>).<span class="bu">sum</span>(dim<span class="op">=</span><span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="example-divergence-free-rotation" class="level2" data-number="14.3">
-<h2 data-number="14.3" class="anchored" data-anchor-id="example-divergence-free-rotation"><span class="header-section-number">14.3</span> Example: Divergence-Free Rotation</h2>
+<section id="example-divergence-free-rotation" class="level2" data-number="15.3">
+<h2 data-number="15.3" class="anchored" data-anchor-id="example-divergence-free-rotation"><span class="header-section-number">15.3</span> Example: Divergence-Free Rotation</h2>
 <p>Consider the velocity field <span class="math inline">\(v(x, y) = (-y, x)\)</span>. Its divergence is zero, so the flow should rotate particles without changing their density. We integrate a few trajectories and compare a cloud of points before and after one full revolution.</p>
 <div id="6fe2d044" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rotation_field(x: Tensor, t: <span class="bu">float</span>) <span class="op">-&gt;</span> Tensor:</span>
@@ -644,8 +656,8 @@ v_\theta(\mathbf{z}(t),t) \\
 </div>
 <p>Because <span class="math inline">\(\nabla_x \cdot v = 0\)</span>, every particle completes a rotation on a circle of constant radius. The density of the cloud is unchanged, illustrating how divergence controls instantaneous volume change.</p>
 </section>
-<section id="example-contracting-divergence-controls-density-growth" class="level2" data-number="14.4">
-<h2 data-number="14.4" class="anchored" data-anchor-id="example-contracting-divergence-controls-density-growth"><span class="header-section-number">14.4</span> Example: Contracting Divergence Controls Density Growth</h2>
+<section id="example-contracting-divergence-controls-density-growth" class="level2" data-number="15.4">
+<h2 data-number="15.4" class="anchored" data-anchor-id="example-contracting-divergence-controls-density-growth"><span class="header-section-number">15.4</span> Example: Contracting Divergence Controls Density Growth</h2>
 <p>Now take the compressible velocity field <span class="math inline">\(v(x, y) = (-x, -y)\)</span>. The divergence is <span class="math inline">\(-2\)</span>, so the log-density should increase as <span class="math inline">\(\frac{\mathrm{d}}{\mathrm{d}t} \log p = 2\)</span>. We’ll integrate particles, track log-density, and compare to the analytic solution <span class="math inline">\(x(t) = e^{-t} x(0)\)</span>.</p>
 <div id="b234908e" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> contracting_field(x: Tensor, t: <span class="bu">float</span>) <span class="op">-&gt;</span> Tensor:</span>
@@ -726,8 +738,8 @@ Mean absolute log-density error: 4.175e-06</code></pre>
 </div>
 <p>The numerical flow contracts every trajectory toward the origin while the histogram of <span class="math inline">\(\log p\)</span> shifts by approximately <span class="math inline">\(2 T\)</span>. The errors stay small because the velocity field is linear and the RK4 integrator tracks it well.</p>
 </section>
-<section id="example-1d-continuous-normalizing-flow-with-neural-odes" class="level2" data-number="14.5">
-<h2 data-number="14.5" class="anchored" data-anchor-id="example-1d-continuous-normalizing-flow-with-neural-odes"><span class="header-section-number">14.5</span> Example 1D Continuous Normalizing Flow with Neural ODEs</h2>
+<section id="example-1d-continuous-normalizing-flow-with-neural-odes" class="level2" data-number="15.5">
+<h2 data-number="15.5" class="anchored" data-anchor-id="example-1d-continuous-normalizing-flow-with-neural-odes"><span class="header-section-number">15.5</span> Example 1D Continuous Normalizing Flow with Neural ODEs</h2>
 <p>Finally, we’ll implement a simple continuous normalizing flow using a neural ODE to learn a target distribution. We’ll define a neural network velocity field, integrate the ODE, and optimize the parameters to maximize likelihood on a simple 1D distribution.</p>
 <p>Note: this demo requires the <code>torchdiffeq</code> package. You can install it via pip if you haven’t already if you wish to run the demo.</p>
 <div id="b1b1c4b8" class="cell" data-execution_count="7">
@@ -921,8 +933,8 @@ Training complete.</code></pre>
 </div>
 </div>
 </section>
-<section id="summary-and-next-steps" class="level2" data-number="14.6">
-<h2 data-number="14.6" class="anchored" data-anchor-id="summary-and-next-steps"><span class="header-section-number">14.6</span> Summary and Next Steps</h2>
+<section id="summary-and-next-steps" class="level2" data-number="15.6">
+<h2 data-number="15.6" class="anchored" data-anchor-id="summary-and-next-steps"><span class="header-section-number">15.6</span> Summary and Next Steps</h2>
 <ul>
 <li>Continuous normalizing flows are the infinitesimal limit of discrete flows, replacing layerwise Jacobians with a divergence term integrated over time.</li>
 <li>The continuity equation formalizes conservation of probability mass and links particle dynamics to density evolution.</li>
@@ -1340,12 +1352,12 @@ Training complete.</code></pre>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="../../part2/gen_models/normalizing_flows.html" class="pagination-link" aria-label="Normalizing Flows">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Normalizing Flows</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Normalizing Flows</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="../../part2/gen_models/score_matching.html" class="pagination-link" aria-label="From Continuous Flows to Score Matching">
-        <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">From Continuous Flows to Score Matching</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">From Continuous Flows to Score Matching</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

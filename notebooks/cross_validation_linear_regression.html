@@ -9,7 +9,7 @@
 <meta name="author" content="Mark Fuge">
 <meta name="dcterms.date" content="2025-09-19">
 
-<title>2&nbsp; Evaluating Machine Learning Models – Machine Learning for Mechanical Engineering</title>
+<title>3&nbsp; Evaluating Machine Learning Models – Machine Learning for Mechanical Engineering</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -152,7 +152,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../part1/part1.html">Foundational Skills</a></li><li class="breadcrumb-item"><a href="../notebooks/cross_validation_linear_regression.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Evaluating Machine Learning Models</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../part1/reviewing_supervised_linear_models.html">part1/index.qmd</a></li><li class="breadcrumb-item"><a href="../notebooks/cross_validation_linear_regression.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Evaluating Machine Learning Models</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -183,10 +183,16 @@ window.Quarto = {
  <span class="menu-text">Preface</span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  </div>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../part1/part1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Foundational Skills</span></a>
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">part1/index.qmd</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -195,43 +201,43 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part1/reviewing_supervised_linear_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Reviewing Supervised Linear Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Reviewing Supervised Linear Models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../notebooks/cross_validation_linear_regression.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Evaluating Machine Learning Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Evaluating Machine Learning Models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../notebooks/supervised_linear_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Introduction to Gradient Descent</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Introduction to Gradient Descent</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part1/linear_decompositions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Review of Linear Unsupervised Learning</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Review of Linear Unsupervised Learning</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part1/taking_derivatives.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Taking Derivatives with Automatic Differentiation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Taking Derivatives with Automatic Differentiation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part1/distribution_distance.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Measuring Distribution Distances</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Measuring Distribution Distances</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part1/introduction_to_inference.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Introduction to Inference</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Introduction to Inference</span></span></a>
   </div>
 </li>
       </ul>
@@ -248,73 +254,79 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part2/review_neural_networks.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Review of Neural Networks</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Review of Neural Networks</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part2/gen_models/intro_to_GANS.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Introduction to Push-Forward Generative Models – Generative Adversarial Networks (GANs)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Introduction to Push-Forward Generative Models – Generative Adversarial Networks (GANs)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part2/gen_models/GAN_pitfalls.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">GAN Training Pitfalls</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">GAN Training Pitfalls</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part2/gen_models/OT.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Optimal Transport for Generative Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Optimal Transport for Generative Models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part2/gen_models/VAEs.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Variational Autoencoders (VAEs)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Variational Autoencoders (VAEs)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part2/gen_models/normalizing_flows.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Normalizing Flows</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Normalizing Flows</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part2/gen_models/continuous_flows.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">From Discrete Transformations to Continuous Flows</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">From Discrete Transformations to Continuous Flows</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part2/gen_models/score_matching.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">From Continuous Flows to Score Matching</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">From Continuous Flows to Score Matching</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part2/gen_models/diffusion_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">From Score Matching to Diffusion Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">From Score Matching to Diffusion Models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part2/gen_models/flow_matching.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Flow Matching</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Flow Matching</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part2/gen_models/latent_generative_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Latent Generative Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Latent Generative Models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part2/introduction_to_reinforcement_learning.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Introduction to Deep Reinforcement Learning</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Introduction to Deep Reinforcement Learning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../part2/gen_models/transformers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Introduction to Transformers</span></span></a>
   </div>
 </li>
       </ul>
@@ -337,13 +349,13 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../problems/ps1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Problem Set 1</span></span></a>
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Problem Set 1</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../problems/ps2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Problem Set 2</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Problem Set 2</span></span></a>
   </div>
 </li>
       </ul>
@@ -360,7 +372,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../notebooks/california_housing_visualization.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Housing Price Data Visualization In-Class Exercise</span></span></a>
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Housing Price Data Visualization In-Class Exercise</span></span></a>
   </div>
 </li>
       </ul>
@@ -410,22 +422,22 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#getting-an-unbiased-estimate-of-out-of-sample-performance" id="toc-getting-an-unbiased-estimate-of-out-of-sample-performance" class="nav-link active" data-scroll-target="#getting-an-unbiased-estimate-of-out-of-sample-performance"><span class="header-section-number">2.1</span> Getting an Unbiased Estimate of Out-of-Sample Performance</a></li>
-  <li><a href="#finding-the-optimal-hyper-parameters" id="toc-finding-the-optimal-hyper-parameters" class="nav-link" data-scroll-target="#finding-the-optimal-hyper-parameters"><span class="header-section-number">2.2</span> Finding the Optimal Hyper-parameters</a></li>
-  <li><a href="#what-if-we-have-more-than-one-variable" id="toc-what-if-we-have-more-than-one-variable" class="nav-link" data-scroll-target="#what-if-we-have-more-than-one-variable"><span class="header-section-number">2.3</span> What if we have more than one variable?</a></li>
-  <li><a href="#optimization" id="toc-optimization" class="nav-link" data-scroll-target="#optimization"><span class="header-section-number">2.4</span> Optimization</a></li>
-  <li><a href="#randomized-search" id="toc-randomized-search" class="nav-link" data-scroll-target="#randomized-search"><span class="header-section-number">2.5</span> Randomized Search</a></li>
-  <li><a href="#global-bayesian-optimization" id="toc-global-bayesian-optimization" class="nav-link" data-scroll-target="#global-bayesian-optimization"><span class="header-section-number">2.6</span> Global Bayesian Optimization</a></li>
-  <li><a href="#the-curse-of-dimensionality" id="toc-the-curse-of-dimensionality" class="nav-link" data-scroll-target="#the-curse-of-dimensionality"><span class="header-section-number">2.7</span> The Curse of Dimensionality</a></li>
+  <li><a href="#getting-an-unbiased-estimate-of-out-of-sample-performance" id="toc-getting-an-unbiased-estimate-of-out-of-sample-performance" class="nav-link active" data-scroll-target="#getting-an-unbiased-estimate-of-out-of-sample-performance"><span class="header-section-number">3.1</span> Getting an Unbiased Estimate of Out-of-Sample Performance</a></li>
+  <li><a href="#finding-the-optimal-hyper-parameters" id="toc-finding-the-optimal-hyper-parameters" class="nav-link" data-scroll-target="#finding-the-optimal-hyper-parameters"><span class="header-section-number">3.2</span> Finding the Optimal Hyper-parameters</a></li>
+  <li><a href="#what-if-we-have-more-than-one-variable" id="toc-what-if-we-have-more-than-one-variable" class="nav-link" data-scroll-target="#what-if-we-have-more-than-one-variable"><span class="header-section-number">3.3</span> What if we have more than one variable?</a></li>
+  <li><a href="#optimization" id="toc-optimization" class="nav-link" data-scroll-target="#optimization"><span class="header-section-number">3.4</span> Optimization</a></li>
+  <li><a href="#randomized-search" id="toc-randomized-search" class="nav-link" data-scroll-target="#randomized-search"><span class="header-section-number">3.5</span> Randomized Search</a></li>
+  <li><a href="#global-bayesian-optimization" id="toc-global-bayesian-optimization" class="nav-link" data-scroll-target="#global-bayesian-optimization"><span class="header-section-number">3.6</span> Global Bayesian Optimization</a></li>
+  <li><a href="#the-curse-of-dimensionality" id="toc-the-curse-of-dimensionality" class="nav-link" data-scroll-target="#the-curse-of-dimensionality"><span class="header-section-number">3.7</span> The Curse of Dimensionality</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../part1/part1.html">Foundational Skills</a></li><li class="breadcrumb-item"><a href="../notebooks/cross_validation_linear_regression.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Evaluating Machine Learning Models</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../part1/reviewing_supervised_linear_models.html">part1/index.qmd</a></li><li class="breadcrumb-item"><a href="../notebooks/cross_validation_linear_regression.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Evaluating Machine Learning Models</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Evaluating Machine Learning Models</span></h1>
+<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Evaluating Machine Learning Models</span></h1>
 </div>
 
 
@@ -497,8 +509,8 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<section id="getting-an-unbiased-estimate-of-out-of-sample-performance" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="getting-an-unbiased-estimate-of-out-of-sample-performance"><span class="header-section-number">2.1</span> Getting an Unbiased Estimate of Out-of-Sample Performance</h2>
+<section id="getting-an-unbiased-estimate-of-out-of-sample-performance" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="getting-an-unbiased-estimate-of-out-of-sample-performance"><span class="header-section-number">3.1</span> Getting an Unbiased Estimate of Out-of-Sample Performance</h2>
 <p>When we train a machine learning model, we are typically interested in how well the model will perform on data it has not seen before. This is often referred to as the model’s generalization performance. However, if we evaluate the model’s performance on the same data it was trained on, we may get an overly optimistic estimate of its true performance. This is because the model may have simply memorized the training data, rather than learning the underlying patterns. One popular way to assess this is through <a href="https://en.wikipedia.org/wiki/Cross-validation_(statistics)">Cross Validation</a>:</p>
 <div id="cell-4" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Now let's split the data into training and test data:</span></span>
@@ -652,8 +664,8 @@ y_test
 </ol>
 <p><strong>Discussion Point</strong>: Under what conditions or situations would using each type of cross-validation above be appropriate versus inappropriate?</p>
 </section>
-<section id="finding-the-optimal-hyper-parameters" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="finding-the-optimal-hyper-parameters"><span class="header-section-number">2.2</span> Finding the Optimal Hyper-parameters</h2>
+<section id="finding-the-optimal-hyper-parameters" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="finding-the-optimal-hyper-parameters"><span class="header-section-number">3.2</span> Finding the Optimal Hyper-parameters</h2>
 <p>Now that we have introduced the usage of hyper-parameters and cross-validation, a natural question arises: How do we choose the hyper-parameters? There are many ways to do this, and this section will describe the most common and basic ones, while leaving more advanced techniques (like Implicit Differentiation) for later. Specifically, this section will: 1. Define the concepts of Grid and Random Hyper-parameter search. 2. Use Grid and Random search to optimize hyper-parameters of a model. 2. Distinguish when Randomized Search is much better than grid search. 3. Describe how Global Optimization procedures such as Bayesian Optimization work. 4. Recognize why none of those at all work in High Dimensions and describe the “Curse of Dimensionality”</p>
 <p>In future chapters once we cover more advanced derivative methods, we can discuss how to use tools like Implicit Differentiation to directly compute the gradient of the cross-validation score with respect to hyper-parameters, and then use this gradient to optimize the hyper-parameters using standard gradient-based optimization methods. However, for now, let’s focus on more basic derivative-free methods, since they are more widely used and easier to understand.</p>
 <p>Let’s start by returning to our Polynomial example, and this time focus on finding the best combination of degree and penalty weight for a linear model.</p>
@@ -705,8 +717,8 @@ y_test
 </div>
 </div>
 </section>
-<section id="what-if-we-have-more-than-one-variable" class="level2" data-number="2.3">
-<h2 data-number="2.3" class="anchored" data-anchor-id="what-if-we-have-more-than-one-variable"><span class="header-section-number">2.3</span> What if we have more than one variable?</h2>
+<section id="what-if-we-have-more-than-one-variable" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="what-if-we-have-more-than-one-variable"><span class="header-section-number">3.3</span> What if we have more than one variable?</h2>
 <p>Let’s look at both polynomial degree and regularization weight</p>
 <div id="cell-14" class="cell" data-execution_count="8">
 <details class="code-fold">
@@ -794,8 +806,8 @@ y_test
 </div>
 </div>
 </section>
-<section id="optimization" class="level2" data-number="2.4">
-<h2 data-number="2.4" class="anchored" data-anchor-id="optimization"><span class="header-section-number">2.4</span> Optimization</h2>
+<section id="optimization" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="optimization"><span class="header-section-number">3.4</span> Optimization</h2>
 <p>At the end of the day, all this is doing is optimization/search over different parameters.</p>
 <p>How should we go about automating this?</p>
 <p>Most common: Grid Search.</p>
@@ -1372,8 +1384,8 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
 </div>
 </div>
 </section>
-<section id="randomized-search" class="level2" data-number="2.5">
-<h2 data-number="2.5" class="anchored" data-anchor-id="randomized-search"><span class="header-section-number">2.5</span> Randomized Search</h2>
+<section id="randomized-search" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="randomized-search"><span class="header-section-number">3.5</span> Randomized Search</h2>
 <p>In reality, grid search is wasteful and not easy to control. A better (and still easy way) is to randomize the search.</p>
 <div id="cell-27" class="cell" data-execution_count="24">
 <details class="code-fold">
@@ -1934,8 +1946,8 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
 </div>
 </div>
 </section>
-<section id="global-bayesian-optimization" class="level2" data-number="2.6">
-<h2 data-number="2.6" class="anchored" data-anchor-id="global-bayesian-optimization"><span class="header-section-number">2.6</span> Global Bayesian Optimization</h2>
+<section id="global-bayesian-optimization" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="global-bayesian-optimization"><span class="header-section-number">3.6</span> Global Bayesian Optimization</h2>
 <p>Surely, since we are essentially doing optimization, we could approach hyper-parameter selection as an optimization problem as well, right?</p>
 <p>Enter techniques like Global Bayesian Optimization below:</p>
 <div id="cell-36" class="cell" data-execution_count="34">
@@ -2134,8 +2146,8 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
 </div>
 </div>
 </section>
-<section id="the-curse-of-dimensionality" class="level2" data-number="2.7">
-<h2 data-number="2.7" class="anchored" data-anchor-id="the-curse-of-dimensionality"><span class="header-section-number">2.7</span> The Curse of Dimensionality</h2>
+<section id="the-curse-of-dimensionality" class="level2" data-number="3.7">
+<h2 data-number="3.7" class="anchored" data-anchor-id="the-curse-of-dimensionality"><span class="header-section-number">3.7</span> The Curse of Dimensionality</h2>
 <p>Discuss on board examples of the Curse of Dimensionality and how it affects algorithms dependent on calculating distances.</p>
 <ul>
 <li>Space-filling properties of inscribed hyper-cube</li>
@@ -2578,12 +2590,12 @@ div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="../part1/reviewing_supervised_linear_models.html" class="pagination-link" aria-label="Reviewing Supervised Linear Models">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Reviewing Supervised Linear Models</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Reviewing Supervised Linear Models</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="../notebooks/supervised_linear_models.html" class="pagination-link" aria-label="Introduction to Gradient Descent">
-        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Introduction to Gradient Descent</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Introduction to Gradient Descent</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

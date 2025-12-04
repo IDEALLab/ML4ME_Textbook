@@ -9,7 +9,7 @@
 <meta name="author" content="Mark Fuge">
 <meta name="dcterms.date" content="2025-11-26">
 
-<title>19&nbsp; Introduction to Deep Reinforcement Learning – Machine Learning for Mechanical Engineering</title>
+<title>20&nbsp; Introduction to Deep Reinforcement Learning – Machine Learning for Mechanical Engineering</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -67,7 +67,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../references.html" rel="next">
+<link href="../part2/gen_models/transformers.html" rel="next">
 <link href="../part2/gen_models/latent_generative_models.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -153,7 +153,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../part2/part2.html">Foundations of Generative Models</a></li><li class="breadcrumb-item"><a href="../part2/introduction_to_reinforcement_learning.html"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Introduction to Deep Reinforcement Learning</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../part2/part2.html">Foundations of Generative Models</a></li><li class="breadcrumb-item"><a href="../part2/introduction_to_reinforcement_learning.html"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Introduction to Deep Reinforcement Learning</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -184,10 +184,16 @@ window.Quarto = {
  <span class="menu-text">Preface</span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  </div>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../part1/part1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Foundational Skills</span></a>
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">part1/index.qmd</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -196,43 +202,43 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part1/reviewing_supervised_linear_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Reviewing Supervised Linear Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Reviewing Supervised Linear Models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../notebooks/cross_validation_linear_regression.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Evaluating Machine Learning Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Evaluating Machine Learning Models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../notebooks/supervised_linear_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Introduction to Gradient Descent</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Introduction to Gradient Descent</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part1/linear_decompositions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Review of Linear Unsupervised Learning</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Review of Linear Unsupervised Learning</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part1/taking_derivatives.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Taking Derivatives with Automatic Differentiation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Taking Derivatives with Automatic Differentiation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part1/distribution_distance.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Measuring Distribution Distances</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Measuring Distribution Distances</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part1/introduction_to_inference.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Introduction to Inference</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Introduction to Inference</span></span></a>
   </div>
 </li>
       </ul>
@@ -249,73 +255,79 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part2/review_neural_networks.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Review of Neural Networks</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Review of Neural Networks</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part2/gen_models/intro_to_GANS.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Introduction to Push-Forward Generative Models – Generative Adversarial Networks (GANs)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Introduction to Push-Forward Generative Models – Generative Adversarial Networks (GANs)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part2/gen_models/GAN_pitfalls.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">GAN Training Pitfalls</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">GAN Training Pitfalls</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part2/gen_models/OT.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Optimal Transport for Generative Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Optimal Transport for Generative Models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part2/gen_models/VAEs.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Variational Autoencoders (VAEs)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Variational Autoencoders (VAEs)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part2/gen_models/normalizing_flows.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Normalizing Flows</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Normalizing Flows</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part2/gen_models/continuous_flows.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">From Discrete Transformations to Continuous Flows</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">From Discrete Transformations to Continuous Flows</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part2/gen_models/score_matching.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">From Continuous Flows to Score Matching</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">From Continuous Flows to Score Matching</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part2/gen_models/diffusion_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">From Score Matching to Diffusion Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">From Score Matching to Diffusion Models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part2/gen_models/flow_matching.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Flow Matching</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Flow Matching</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part2/gen_models/latent_generative_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Latent Generative Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Latent Generative Models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../part2/introduction_to_reinforcement_learning.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Introduction to Deep Reinforcement Learning</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Introduction to Deep Reinforcement Learning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../part2/gen_models/transformers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Introduction to Transformers</span></span></a>
   </div>
 </li>
       </ul>
@@ -338,13 +350,13 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../problems/ps1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Problem Set 1</span></span></a>
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Problem Set 1</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../problems/ps2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Problem Set 2</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Problem Set 2</span></span></a>
   </div>
 </li>
       </ul>
@@ -361,7 +373,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../notebooks/california_housing_visualization.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Housing Price Data Visualization In-Class Exercise</span></span></a>
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Housing Price Data Visualization In-Class Exercise</span></span></a>
   </div>
 </li>
       </ul>
@@ -411,21 +423,21 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives"><span class="header-section-number">19.1</span> Learning Objectives</a></li>
-  <li><a href="#deep-q-network-dqn" id="toc-deep-q-network-dqn" class="nav-link" data-scroll-target="#deep-q-network-dqn"><span class="header-section-number">19.2</span> Deep Q-Network (DQN)</a></li>
-  <li><a href="#policy-gradients-reinforce" id="toc-policy-gradients-reinforce" class="nav-link" data-scroll-target="#policy-gradients-reinforce"><span class="header-section-number">19.3</span> Policy Gradients (REINFORCE)</a></li>
-  <li><a href="#vanilla-actor-critic-ac" id="toc-vanilla-actor-critic-ac" class="nav-link" data-scroll-target="#vanilla-actor-critic-ac"><span class="header-section-number">19.4</span> Vanilla Actor-Critic (AC)</a></li>
-  <li><a href="#proximal-policy-optimization-ppo" id="toc-proximal-policy-optimization-ppo" class="nav-link" data-scroll-target="#proximal-policy-optimization-ppo"><span class="header-section-number">19.5</span> Proximal Policy Optimization (PPO)</a></li>
-  <li><a href="#summary-and-next-steps" id="toc-summary-and-next-steps" class="nav-link" data-scroll-target="#summary-and-next-steps"><span class="header-section-number">19.6</span> Summary and Next Steps</a></li>
+  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives"><span class="header-section-number">20.1</span> Learning Objectives</a></li>
+  <li><a href="#deep-q-network-dqn" id="toc-deep-q-network-dqn" class="nav-link" data-scroll-target="#deep-q-network-dqn"><span class="header-section-number">20.2</span> Deep Q-Network (DQN)</a></li>
+  <li><a href="#policy-gradients-reinforce" id="toc-policy-gradients-reinforce" class="nav-link" data-scroll-target="#policy-gradients-reinforce"><span class="header-section-number">20.3</span> Policy Gradients (REINFORCE)</a></li>
+  <li><a href="#vanilla-actor-critic-ac" id="toc-vanilla-actor-critic-ac" class="nav-link" data-scroll-target="#vanilla-actor-critic-ac"><span class="header-section-number">20.4</span> Vanilla Actor-Critic (AC)</a></li>
+  <li><a href="#proximal-policy-optimization-ppo" id="toc-proximal-policy-optimization-ppo" class="nav-link" data-scroll-target="#proximal-policy-optimization-ppo"><span class="header-section-number">20.5</span> Proximal Policy Optimization (PPO)</a></li>
+  <li><a href="#summary-and-next-steps" id="toc-summary-and-next-steps" class="nav-link" data-scroll-target="#summary-and-next-steps"><span class="header-section-number">20.6</span> Summary and Next Steps</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../part2/part2.html">Foundations of Generative Models</a></li><li class="breadcrumb-item"><a href="../part2/introduction_to_reinforcement_learning.html"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Introduction to Deep Reinforcement Learning</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../part2/part2.html">Foundations of Generative Models</a></li><li class="breadcrumb-item"><a href="../part2/introduction_to_reinforcement_learning.html"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Introduction to Deep Reinforcement Learning</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Introduction to Deep Reinforcement Learning</span></h1>
+<h1 class="title"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Introduction to Deep Reinforcement Learning</span></h1>
 </div>
 
 
@@ -455,8 +467,8 @@ window.Quarto = {
 
 
 <p>In this chapter we will briefly review key reinforcement learning (RL) algorithms, and implement them on the Acrobot-v1 environment from the <a href="https://gymnasium.farama.org/">Gymnasium library</a>. Specifically, we will review the differences between value-based (sometimes called “Critic Methods”) and policy-based methods (sometimes called “Actor Methods”), and we to demonstrate the differences, we will implement Deep Q-Networks (DQN), Policy Gradient (REINFORCE), Vanilla Actor-Critic (AC), and finally Proximal Policy Optimization.</p>
-<section id="learning-objectives" class="level2" data-number="19.1">
-<h2 data-number="19.1" class="anchored" data-anchor-id="learning-objectives"><span class="header-section-number">19.1</span> Learning Objectives</h2>
+<section id="learning-objectives" class="level2" data-number="20.1">
+<h2 data-number="20.1" class="anchored" data-anchor-id="learning-objectives"><span class="header-section-number">20.1</span> Learning Objectives</h2>
 <ul>
 <li>Understand how value-based, policy-based, and actor-critic methods differ conceptually and algorithmically.</li>
 <li>Interpret diagnostic plots (learning curves, value plots, policy visualizations).</li>
@@ -541,8 +553,8 @@ Episode finished! Total reward: -500.0</code></pre>
 </div>
 </div>
 </section>
-<section id="deep-q-network-dqn" class="level2" data-number="19.2">
-<h2 data-number="19.2" class="anchored" data-anchor-id="deep-q-network-dqn"><span class="header-section-number">19.2</span> Deep Q-Network (DQN)</h2>
+<section id="deep-q-network-dqn" class="level2" data-number="20.2">
+<h2 data-number="20.2" class="anchored" data-anchor-id="deep-q-network-dqn"><span class="header-section-number">20.2</span> Deep Q-Network (DQN)</h2>
 <p>In Deep Q-Networks (DQN), we learn a state-action value function <span class="math inline">\(Q(s, a)\)</span> that estimates the expected return from taking action <span class="math inline">\(a\)</span> in state <span class="math inline">\(s\)</span> and following the current policy thereafter. The policy is derived from the Q-function by selecting the action with the highest estimated value, often with some exploration strategy like <span class="math inline">\(\epsilon\)</span>-greedy, to prevent getting stuck in suboptimal policies. Specifically, a small MLP predicts <span class="math inline">\(Q(s, a)\)</span> a continuous space of angles and velocities, and then has to predict the Q-values for a discrete set of actions: applying positive torque, negative torque, or no torque. To select actions, the agent picks the action with the highest Q-value for the current state: <span class="math display">\[a_t = \arg\max_a Q_\theta(s_t, a).\]</span></p>
 <p>To encourage exploration the policy is <span class="math inline">\(\epsilon\)</span>-greedy, which means that it takes the Q-maximizing action with probability <span class="math inline">\(1 - \epsilon\)</span> and a random action with probability <span class="math inline">\(\epsilon\)</span>.</p>
 <p>To train the Q-function, we use the Bellman equation as a target for supervised learning: <span class="math display">\[y_t = r_t + \gamma \max_{a'} Q_\theta(s_{t+1}, a'),\]</span></p>
@@ -845,8 +857,8 @@ Episode finished! Total reward: -500.0</code></pre>
 </div>
 </div>
 </section>
-<section id="policy-gradients-reinforce" class="level2" data-number="19.3">
-<h2 data-number="19.3" class="anchored" data-anchor-id="policy-gradients-reinforce"><span class="header-section-number">19.3</span> Policy Gradients (REINFORCE)</h2>
+<section id="policy-gradients-reinforce" class="level2" data-number="20.3">
+<h2 data-number="20.3" class="anchored" data-anchor-id="policy-gradients-reinforce"><span class="header-section-number">20.3</span> Policy Gradients (REINFORCE)</h2>
 <p>In contrast to value-based methods like DQN, policy gradient methods directly optimize the policy <span class="math inline">\(\pi_\theta(a|s)\)</span> without relying on a value function. This has several advantages, including the ability to naturally handle continuous action spaces and stochastic policies. To do this, Policy Gradient methods optimize the expected return by adjusting the policy parameters <span class="math inline">\(\theta\)</span> in the direction that increases the likelihood of actions that lead to higher returns. It does this via the same Log-Derivative trick we learned about during Variational Inference, which allows us to express the gradient of a function under an Expectation (i.e., the expected return here) with respect to the policy parameters as an expectation over the policy itself: <span class="math display">\[ \nabla_\theta J(\theta) = \mathbb{E}_{\pi_\theta} \left[ \nabla_\theta \log \pi_\theta(a|s) R(\tau) \right], \]</span> where <span class="math inline">\(R(\tau)\)</span> is the total return from trajectory <span class="math inline">\(\tau\)</span>.</p>
 <div id="962f004f" class="cell" data-execution_count="27">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Basic Policy Gradient (REINFORCE) Agent</span></span>
@@ -1062,8 +1074,8 @@ Episode finished! Total reward: -500.0</code></pre>
 </div>
 </div>
 </section>
-<section id="vanilla-actor-critic-ac" class="level2" data-number="19.4">
-<h2 data-number="19.4" class="anchored" data-anchor-id="vanilla-actor-critic-ac"><span class="header-section-number">19.4</span> Vanilla Actor-Critic (AC)</h2>
+<section id="vanilla-actor-critic-ac" class="level2" data-number="20.4">
+<h2 data-number="20.4" class="anchored" data-anchor-id="vanilla-actor-critic-ac"><span class="header-section-number">20.4</span> Vanilla Actor-Critic (AC)</h2>
 <p>While Policy Gradient methods like REINFORCE are powerful, they can suffer from high variance in their gradient estimates, which can slow down learning. This is because they rely solely on sampled returns to estimate the expected return, which can be noisy, especially in environments with high variability, long horizons, or sparse rewards. Moreover, in environments where rewards differ significantly across states and actions, the variance can be exacerbated, making it difficult for the policy to converge to an optimal solution.</p>
 <p>To address these issues, researchers developed Actor-Critic methods, which combine the strengths of both value-based and policy-based approaches. The main idea behind Actor-Critic methods is to use a value function (the critic) to provide a more stable estimate of the expected return, which can then be used to guide the policy updates (the actor). This helps reduce the variance of the policy gradient estimates while still allowing for direct optimization of the policy. In this way, the actor policy only needs to learn the relative advantages of actions, rather than their absolute returns, which can be easier and more stable. This is referred to as learning the “advantage function,” which measures how much better an action is compared to the average action in a given state. By normalizing the returns in this way, Actor-Critic methods can in principle achieve lower variance in their gradient estimates, leading to more stable and efficient learning.</p>
 <p>Specifically, Actor-Critic methods use two function approximators: one for the policy <span class="math inline">\(\pi_\theta(a|s)\)</span> (the actor) and another for the value function <span class="math inline">\(V_\phi(s)\)</span> (the critic). The Actor-Critic combines value-based bootstrapping (like in Value Iteration) with policy gradients. With TD(0), the critic target is <span class="math display">\[y_t = r_t + \gamma V_{\phi}(s_{t+1}).\]</span> The advantage estimate is <span class="math inline">\(A_t = y_t - V_{\phi}(s_t)\)</span> and the critic minimizes <span class="math display">\[\mathcal{L}_{\text{critic}} = (V_{\phi}(s_t) - y_t)^2.\]</span> The actor update uses <span class="math inline">\(\nabla\log \pi_\theta(a_t|s_t) A_t\)</span>, which we can understand intuitively as increasing the log-probability of actions that lead to higher-than-expected returns (positive advantage) and decreasing it for actions that lead to lower-than-expected returns (negative advantage).</p>
@@ -1313,8 +1325,8 @@ Episode finished! Total reward: -500.0</code></pre>
 </div>
 </div>
 </section>
-<section id="proximal-policy-optimization-ppo" class="level2" data-number="19.5">
-<h2 data-number="19.5" class="anchored" data-anchor-id="proximal-policy-optimization-ppo"><span class="header-section-number">19.5</span> Proximal Policy Optimization (PPO)</h2>
+<section id="proximal-policy-optimization-ppo" class="level2" data-number="20.5">
+<h2 data-number="20.5" class="anchored" data-anchor-id="proximal-policy-optimization-ppo"><span class="header-section-number">20.5</span> Proximal Policy Optimization (PPO)</h2>
 <p>Building on the original idea of Actor-Critic methods, Proximal Policy Optimization (PPO), which (as of writing) is one of the most widely used Deep RL methods, introduces several enhancements to improve stability and performance. One of the key innovations in PPO is the use of a clipped surrogate objective to limit the size of policy updates, preventing large, destabilizing changes to the policy. This is achieved by defining a ratio of the new policy to the old policy: <span class="math display">\[
 r_t(\theta) = \frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{\text{old}}}(a_t|s_t)}
 \]</span></p>
@@ -1537,8 +1549,8 @@ r_t(\theta) = \frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{\text{old}}}(a_t|s_t)}
 </div>
 </div>
 </section>
-<section id="summary-and-next-steps" class="level2" data-number="19.6">
-<h2 data-number="19.6" class="anchored" data-anchor-id="summary-and-next-steps"><span class="header-section-number">19.6</span> Summary and Next Steps</h2>
+<section id="summary-and-next-steps" class="level2" data-number="20.6">
+<h2 data-number="20.6" class="anchored" data-anchor-id="summary-and-next-steps"><span class="header-section-number">20.6</span> Summary and Next Steps</h2>
 <p>We saw above two related paradigms for solving reinforcement learning problems: value-based methods (DQN) and policy-based methods (REINFORCE), plus a merger of the two approaches in Actor-Critic and PPO. Each has its own strengths and weaknesses, and the choice of which to use often depends on the specific characteristics of the problem at hand, such as the nature of the action space (discrete vs.&nbsp;continuous), the complexity of the environment, and the desired trade-off between exploration and exploitation. Specifically:</p>
 <ul>
 <li><strong>Value-Based Methods (DQN)</strong>: These methods are effective for discrete action spaces and can leverage the power of value functions to guide exploration. However, they can struggle with stability and convergence, especially in high-dimensional state spaces or continuous action spaces.</li>
@@ -1962,12 +1974,12 @@ r_t(\theta) = \frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{\text{old}}}(a_t|s_t)}
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="../part2/gen_models/latent_generative_models.html" class="pagination-link" aria-label="Latent Generative Models">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Latent Generative Models</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Latent Generative Models</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../references.html" class="pagination-link" aria-label="References">
-        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../part2/gen_models/transformers.html" class="pagination-link" aria-label="Introduction to Transformers">
+        <span class="nav-page-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Introduction to Transformers</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

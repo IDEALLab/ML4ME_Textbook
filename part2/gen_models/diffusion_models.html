@@ -8,7 +8,7 @@
 
 <meta name="author" content="Mark Fuge">
 
-<title>16&nbsp; From Score Matching to Diffusion Models – Machine Learning for Mechanical Engineering</title>
+<title>17&nbsp; From Score Matching to Diffusion Models – Machine Learning for Mechanical Engineering</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -151,7 +151,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../part2/part2.html">Foundations of Generative Models</a></li><li class="breadcrumb-item"><a href="../../part2/gen_models/diffusion_models.html"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">From Score Matching to Diffusion Models</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../part2/part2.html">Foundations of Generative Models</a></li><li class="breadcrumb-item"><a href="../../part2/gen_models/diffusion_models.html"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">From Score Matching to Diffusion Models</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -182,10 +182,16 @@ window.Quarto = {
  <span class="menu-text">Preface</span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  </div>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../part1/part1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Foundational Skills</span></a>
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">part1/index.qmd</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -194,43 +200,43 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../part1/reviewing_supervised_linear_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Reviewing Supervised Linear Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Reviewing Supervised Linear Models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../notebooks/cross_validation_linear_regression.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Evaluating Machine Learning Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Evaluating Machine Learning Models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../notebooks/supervised_linear_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Introduction to Gradient Descent</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Introduction to Gradient Descent</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../part1/linear_decompositions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Review of Linear Unsupervised Learning</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Review of Linear Unsupervised Learning</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../part1/taking_derivatives.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Taking Derivatives with Automatic Differentiation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Taking Derivatives with Automatic Differentiation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../part1/distribution_distance.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Measuring Distribution Distances</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Measuring Distribution Distances</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../part1/introduction_to_inference.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Introduction to Inference</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Introduction to Inference</span></span></a>
   </div>
 </li>
       </ul>
@@ -247,73 +253,79 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../part2/review_neural_networks.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Review of Neural Networks</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Review of Neural Networks</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../part2/gen_models/intro_to_GANS.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Introduction to Push-Forward Generative Models – Generative Adversarial Networks (GANs)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Introduction to Push-Forward Generative Models – Generative Adversarial Networks (GANs)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../part2/gen_models/GAN_pitfalls.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">GAN Training Pitfalls</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">GAN Training Pitfalls</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../part2/gen_models/OT.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Optimal Transport for Generative Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Optimal Transport for Generative Models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../part2/gen_models/VAEs.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Variational Autoencoders (VAEs)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Variational Autoencoders (VAEs)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../part2/gen_models/normalizing_flows.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Normalizing Flows</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Normalizing Flows</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../part2/gen_models/continuous_flows.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">From Discrete Transformations to Continuous Flows</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">From Discrete Transformations to Continuous Flows</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../part2/gen_models/score_matching.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">From Continuous Flows to Score Matching</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">From Continuous Flows to Score Matching</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../part2/gen_models/diffusion_models.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">From Score Matching to Diffusion Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">From Score Matching to Diffusion Models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../part2/gen_models/flow_matching.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Flow Matching</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Flow Matching</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../part2/gen_models/latent_generative_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Latent Generative Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Latent Generative Models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../part2/introduction_to_reinforcement_learning.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Introduction to Deep Reinforcement Learning</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Introduction to Deep Reinforcement Learning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../part2/gen_models/transformers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Introduction to Transformers</span></span></a>
   </div>
 </li>
       </ul>
@@ -336,13 +348,13 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../problems/ps1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Problem Set 1</span></span></a>
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Problem Set 1</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../problems/ps2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Problem Set 2</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Problem Set 2</span></span></a>
   </div>
 </li>
       </ul>
@@ -359,7 +371,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../notebooks/california_housing_visualization.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Housing Price Data Visualization In-Class Exercise</span></span></a>
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Housing Price Data Visualization In-Class Exercise</span></span></a>
   </div>
 </li>
       </ul>
@@ -409,31 +421,31 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives"><span class="header-section-number">16.1</span> Learning Objectives</a></li>
-  <li><a href="#why-go-beyond-single-noise-score-matching" id="toc-why-go-beyond-single-noise-score-matching" class="nav-link" data-scroll-target="#why-go-beyond-single-noise-score-matching"><span class="header-section-number">16.2</span> Why Go Beyond Single-Noise Score Matching?</a></li>
-  <li><a href="#the-forward-diffusion-process-qx_tx_0" id="toc-the-forward-diffusion-process-qx_tx_0" class="nav-link" data-scroll-target="#the-forward-diffusion-process-qx_tx_0"><span class="header-section-number">16.3</span> The Forward Diffusion Process <span class="math inline">\(q(x_t|x_0)\)</span></a></li>
-  <li><a href="#the-reverse-process-and-multi-scale-score-estimation" id="toc-the-reverse-process-and-multi-scale-score-estimation" class="nav-link" data-scroll-target="#the-reverse-process-and-multi-scale-score-estimation"><span class="header-section-number">16.4</span> The Reverse Process and Multi-Scale Score Estimation</a></li>
-  <li><a href="#how-training-works-denoising-score-matching-perspective" id="toc-how-training-works-denoising-score-matching-perspective" class="nav-link" data-scroll-target="#how-training-works-denoising-score-matching-perspective"><span class="header-section-number">16.5</span> How Training Works (Denoising Score Matching Perspective)</a>
+  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives"><span class="header-section-number">17.1</span> Learning Objectives</a></li>
+  <li><a href="#why-go-beyond-single-noise-score-matching" id="toc-why-go-beyond-single-noise-score-matching" class="nav-link" data-scroll-target="#why-go-beyond-single-noise-score-matching"><span class="header-section-number">17.2</span> Why Go Beyond Single-Noise Score Matching?</a></li>
+  <li><a href="#the-forward-diffusion-process-qx_tx_0" id="toc-the-forward-diffusion-process-qx_tx_0" class="nav-link" data-scroll-target="#the-forward-diffusion-process-qx_tx_0"><span class="header-section-number">17.3</span> The Forward Diffusion Process <span class="math inline">\(q(x_t|x_0)\)</span></a></li>
+  <li><a href="#the-reverse-process-and-multi-scale-score-estimation" id="toc-the-reverse-process-and-multi-scale-score-estimation" class="nav-link" data-scroll-target="#the-reverse-process-and-multi-scale-score-estimation"><span class="header-section-number">17.4</span> The Reverse Process and Multi-Scale Score Estimation</a></li>
+  <li><a href="#how-training-works-denoising-score-matching-perspective" id="toc-how-training-works-denoising-score-matching-perspective" class="nav-link" data-scroll-target="#how-training-works-denoising-score-matching-perspective"><span class="header-section-number">17.5</span> How Training Works (Denoising Score Matching Perspective)</a>
   <ul class="collapse">
-  <li><a href="#the-training-pipeline" id="toc-the-training-pipeline" class="nav-link" data-scroll-target="#the-training-pipeline"><span class="header-section-number">16.5.1</span> The Training Pipeline</a></li>
+  <li><a href="#the-training-pipeline" id="toc-the-training-pipeline" class="nav-link" data-scroll-target="#the-training-pipeline"><span class="header-section-number">17.5.1</span> The Training Pipeline</a></li>
   </ul></li>
-  <li><a href="#generating-samples-via-reverse-sampling" id="toc-generating-samples-via-reverse-sampling" class="nav-link" data-scroll-target="#generating-samples-via-reverse-sampling"><span class="header-section-number">16.6</span> Generating Samples via Reverse Sampling</a></li>
-  <li><a href="#connection-to-langevin-dynamics" id="toc-connection-to-langevin-dynamics" class="nav-link" data-scroll-target="#connection-to-langevin-dynamics"><span class="header-section-number">16.7</span> Connection to Langevin Dynamics</a></li>
-  <li><a href="#conditional-generation-examples" id="toc-conditional-generation-examples" class="nav-link" data-scroll-target="#conditional-generation-examples"><span class="header-section-number">16.8</span> Conditional Generation Examples</a>
+  <li><a href="#generating-samples-via-reverse-sampling" id="toc-generating-samples-via-reverse-sampling" class="nav-link" data-scroll-target="#generating-samples-via-reverse-sampling"><span class="header-section-number">17.6</span> Generating Samples via Reverse Sampling</a></li>
+  <li><a href="#connection-to-langevin-dynamics" id="toc-connection-to-langevin-dynamics" class="nav-link" data-scroll-target="#connection-to-langevin-dynamics"><span class="header-section-number">17.7</span> Connection to Langevin Dynamics</a></li>
+  <li><a href="#conditional-generation-examples" id="toc-conditional-generation-examples" class="nav-link" data-scroll-target="#conditional-generation-examples"><span class="header-section-number">17.8</span> Conditional Generation Examples</a>
   <ul class="collapse">
-  <li><a href="#conditional-example-a-one-hot-mode-conditioning" id="toc-conditional-example-a-one-hot-mode-conditioning" class="nav-link" data-scroll-target="#conditional-example-a-one-hot-mode-conditioning"><span class="header-section-number">16.8.1</span> Conditional Example A — One-Hot Mode Conditioning</a></li>
-  <li><a href="#conditional-example-b-continuous-radius-conditioning" id="toc-conditional-example-b-continuous-radius-conditioning" class="nav-link" data-scroll-target="#conditional-example-b-continuous-radius-conditioning"><span class="header-section-number">16.8.2</span> Conditional Example B — Continuous Radius Conditioning</a></li>
+  <li><a href="#conditional-example-a-one-hot-mode-conditioning" id="toc-conditional-example-a-one-hot-mode-conditioning" class="nav-link" data-scroll-target="#conditional-example-a-one-hot-mode-conditioning"><span class="header-section-number">17.8.1</span> Conditional Example A — One-Hot Mode Conditioning</a></li>
+  <li><a href="#conditional-example-b-continuous-radius-conditioning" id="toc-conditional-example-b-continuous-radius-conditioning" class="nav-link" data-scroll-target="#conditional-example-b-continuous-radius-conditioning"><span class="header-section-number">17.8.2</span> Conditional Example B — Continuous Radius Conditioning</a></li>
   </ul></li>
-  <li><a href="#summary-and-next-steps" id="toc-summary-and-next-steps" class="nav-link" data-scroll-target="#summary-and-next-steps"><span class="header-section-number">16.9</span> Summary and Next Steps</a></li>
+  <li><a href="#summary-and-next-steps" id="toc-summary-and-next-steps" class="nav-link" data-scroll-target="#summary-and-next-steps"><span class="header-section-number">17.9</span> Summary and Next Steps</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../part2/part2.html">Foundations of Generative Models</a></li><li class="breadcrumb-item"><a href="../../part2/gen_models/diffusion_models.html"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">From Score Matching to Diffusion Models</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../part2/part2.html">Foundations of Generative Models</a></li><li class="breadcrumb-item"><a href="../../part2/gen_models/diffusion_models.html"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">From Score Matching to Diffusion Models</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">From Score Matching to Diffusion Models</span></h1>
+<h1 class="title"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">From Score Matching to Diffusion Models</span></h1>
 </div>
 
 
@@ -465,8 +477,8 @@ window.Quarto = {
 <p>In the previous chapter, we introduced Denoising Score Matching (DSM) as a way to learn a generative vector field, the <strong>score function</strong> <span class="math inline">\(\nabla_x \log p(x)\)</span>, without the computationally expensive trace term that plagued Continuous Normalizing Flows. We used this learned score to generate samples via Langevin Dynamics, which follows the score field uphill while adding noise to explore the data distribution.</p>
 <p>However, this approach has its own limitations. The score function is only well-defined and easy to learn <em>near</em> the data. Far from the data manifold, where there are no samples, the score can be chaotic or undefined, making it difficult to initialize a generative process from random noise. Furthermore, we had to choose a single, fixed noise level <span class="math inline">\(\sigma\)</span> for training, which created a trade-off: too much noise and we lose important details; too little and the score is hard to learn.</p>
 <p>This chapter introduces <strong>Diffusion Models</strong>, which solve these problems by learning a score function not just for one noise level, but for a <em>continuum</em> of noise levels. This creates a robust, time-dependent vector field that can smoothly transform pure noise into structured data.</p>
-<section id="learning-objectives" class="level2" data-number="16.1">
-<h2 data-number="16.1" class="anchored" data-anchor-id="learning-objectives"><span class="header-section-number">16.1</span> Learning Objectives</h2>
+<section id="learning-objectives" class="level2" data-number="17.1">
+<h2 data-number="17.1" class="anchored" data-anchor-id="learning-objectives"><span class="header-section-number">17.1</span> Learning Objectives</h2>
 <p>By the end of this notebook, you should have a strong intuition for:</p>
 <ul>
 <li>Why diffusion models can be seen as “time-extended” score models.</li>
@@ -509,8 +521,8 @@ window.Quarto = {
 </div>
 </div>
 </section>
-<section id="why-go-beyond-single-noise-score-matching" class="level2" data-number="16.2">
-<h2 data-number="16.2" class="anchored" data-anchor-id="why-go-beyond-single-noise-score-matching"><span class="header-section-number">16.2</span> Why Go Beyond Single-Noise Score Matching?</h2>
+<section id="why-go-beyond-single-noise-score-matching" class="level2" data-number="17.2">
+<h2 data-number="17.2" class="anchored" data-anchor-id="why-go-beyond-single-noise-score-matching"><span class="header-section-number">17.2</span> Why Go Beyond Single-Noise Score Matching?</h2>
 <p>Let’s first revisit the limitations of the score model we trained in the previous chapter. That model learned the score function for a <em>single</em> noise level, <span class="math inline">\(\sigma\)</span>. This meant trading off detail and stability: a small <span class="math inline">\(\sigma\)</span> captures fine details but is hard to learn, while a large <span class="math inline">\(\sigma\)</span> smooths out the data but loses the ability to describe higher-frequency contours of the true log probability.</p>
 <p>The key idea behind diffusion models is that they fix this problem by defining a continuum of noisy data distributions <span class="math inline">\(p_t(x)\)</span>, which are smooth and well-behaved everywhere, even far from the data, yet can still create score functions that capture fine details when <span class="math inline">\(t\)</span> is small.</p>
 <div id="15370cc9" class="cell" data-execution_count="3">
@@ -594,8 +606,8 @@ window.Quarto = {
 </div>
 </div>
 </section>
-<section id="the-forward-diffusion-process-qx_tx_0" class="level2" data-number="16.3">
-<h2 data-number="16.3" class="anchored" data-anchor-id="the-forward-diffusion-process-qx_tx_0"><span class="header-section-number">16.3</span> The Forward Diffusion Process <span class="math inline">\(q(x_t|x_0)\)</span></h2>
+<section id="the-forward-diffusion-process-qx_tx_0" class="level2" data-number="17.3">
+<h2 data-number="17.3" class="anchored" data-anchor-id="the-forward-diffusion-process-qx_tx_0"><span class="header-section-number">17.3</span> The Forward Diffusion Process <span class="math inline">\(q(x_t|x_0)\)</span></h2>
 <p>The first key component of a diffusion model is the <strong>forward process</strong>, where we systematically destroy the structure in our data by gradually adding Gaussian noise over a series of timesteps. We define a “noise schedule” that controls how much noise is added at each step.</p>
 <p>Let <span class="math inline">\(x_0\)</span> be a sample from our data distribution. The forward process <span class="math inline">\(q(x_t|x_0)\)</span> defines a noisy version of this sample at time <span class="math inline">\(t\)</span>:</p>
 <p><span class="math display">\[ x_t = \sqrt{\bar{\alpha}_t} x_0 + \sqrt{1 - \bar{\alpha}_t} \epsilon, \quad \epsilon \sim \mathcal{N}(0, I) \]</span></p>
@@ -669,8 +681,8 @@ Ignoring fixed y limits to fulfill fixed data aspect with adjustable data limits
 </div>
 <p>As you can see, the forward process gradually transforms the structured ring of Gaussians into a fuzzy, isotropic Gaussian blob. At each intermediate step <span class="math inline">\(t\)</span>, we have a distribution <span class="math inline">\(p_t(x)\)</span> that is smoother and more spread out than the original data distribution. This gives us a family of intermediate densities where score estimation is much easier and better-behaved, which is the key insight we will leverage next.</p>
 </section>
-<section id="the-reverse-process-and-multi-scale-score-estimation" class="level2" data-number="16.4">
-<h2 data-number="16.4" class="anchored" data-anchor-id="the-reverse-process-and-multi-scale-score-estimation"><span class="header-section-number">16.4</span> The Reverse Process and Multi-Scale Score Estimation</h2>
+<section id="the-reverse-process-and-multi-scale-score-estimation" class="level2" data-number="17.4">
+<h2 data-number="17.4" class="anchored" data-anchor-id="the-reverse-process-and-multi-scale-score-estimation"><span class="header-section-number">17.4</span> The Reverse Process and Multi-Scale Score Estimation</h2>
 <p>The magic of diffusion models lies in the <strong>reverse process</strong>. If we can reverse the arrow of time, we can start from pure noise <span class="math inline">\(x_T \sim \mathcal{N}(0, I)\)</span> and gradually denoise it step-by-step to generate a clean sample <span class="math inline">\(x_0\)</span>.</p>
 <p>It turns out that the reverse of the diffusion process is also a diffusion, described by a stochastic differential equation (SDE). While the full derivation is beyond our scope, the key insight is that the “drift” of this reverse process depends on the score of the noisy data distribution at that time, <span class="math inline">\(\nabla_{x_t} \log p_t(x_t)\)</span>.</p>
 <p><span class="math display">\[
@@ -767,8 +779,8 @@ Ignoring fixed y limits to fulfill fixed data aspect with adjustable data limits
 </div>
 </div>
 </section>
-<section id="how-training-works-denoising-score-matching-perspective" class="level2" data-number="16.5">
-<h2 data-number="16.5" class="anchored" data-anchor-id="how-training-works-denoising-score-matching-perspective"><span class="header-section-number">16.5</span> How Training Works (Denoising Score Matching Perspective)</h2>
+<section id="how-training-works-denoising-score-matching-perspective" class="level2" data-number="17.5">
+<h2 data-number="17.5" class="anchored" data-anchor-id="how-training-works-denoising-score-matching-perspective"><span class="header-section-number">17.5</span> How Training Works (Denoising Score Matching Perspective)</h2>
 <p>Now that we understand the goal—learning a time-conditional score function—how do we train such a model? The answer is a natural extension of the Denoising Score Matching (DSM) objective we learned in the previous chapter.</p>
 <p>Instead of training on a single noise level, we train on <strong>all noise levels simultaneously</strong>. We’ll create a single neural network, <span class="math inline">\(s_\theta(x_t, t)\)</span>, that takes both the noisy data <span class="math inline">\(x_t\)</span> and the timestep <span class="math inline">\(t\)</span> as input. The network’s job is to predict the score of the noisy data distribution <span class="math inline">\(p_t(x)\)</span> at that specific time.</p>
 <p>The loss function is almost identical to the one for simple DSM from last chapter, but now we take the expectation over uniformly sampled time <span class="math inline">\(t\)</span> as well:</p>
@@ -784,8 +796,8 @@ L(\theta) = \mathbb{E}_{x_0, t, \epsilon} \left[ \left\| s_\theta(\sqrt{\bar{\al
 L(\theta) = \mathbb{E}_{x_0, t, \epsilon} \left[ \left\| \epsilon_\theta(\sqrt{\bar{\alpha}_t}x_0 + \sqrt{1-\bar{\alpha}_t}\epsilon, t) - \epsilon \right\|^2 \right]
 \]</span></p>
 <p>This is (again) just a simple L2 regression! The network takes a noisy sample <span class="math inline">\(x_t\)</span> and its corresponding time <span class="math inline">\(t\)</span> and learns to predict the exact noise <span class="math inline">\(\epsilon\)</span> that was added to the original sample <span class="math inline">\(x_0\)</span>.</p>
-<section id="the-training-pipeline" class="level3" data-number="16.5.1">
-<h3 data-number="16.5.1" class="anchored" data-anchor-id="the-training-pipeline"><span class="header-section-number">16.5.1</span> The Training Pipeline</h3>
+<section id="the-training-pipeline" class="level3" data-number="17.5.1">
+<h3 data-number="17.5.1" class="anchored" data-anchor-id="the-training-pipeline"><span class="header-section-number">17.5.1</span> The Training Pipeline</h3>
 <p>The training process looks like this for each step:</p>
 <ol type="1">
 <li><strong>Sample Data:</strong> Pick a clean sample <span class="math inline">\(x_0\)</span> from the training data (our ring of Gaussians).</li>
@@ -919,8 +931,8 @@ Training complete.</code></pre>
 </div>
 </section>
 </section>
-<section id="generating-samples-via-reverse-sampling" class="level2" data-number="16.6">
-<h2 data-number="16.6" class="anchored" data-anchor-id="generating-samples-via-reverse-sampling"><span class="header-section-number">16.6</span> Generating Samples via Reverse Sampling</h2>
+<section id="generating-samples-via-reverse-sampling" class="level2" data-number="17.6">
+<h2 data-number="17.6" class="anchored" data-anchor-id="generating-samples-via-reverse-sampling"><span class="header-section-number">17.6</span> Generating Samples via Reverse Sampling</h2>
 <p>With our time-conditional noise predictor <span class="math inline">\(\epsilon_\theta(x_t, t)\)</span> fully trained, we can now perform the reverse process to generate new data. This is the most intuitive and visually satisfying part of diffusion models.</p>
 <p>We start with pure Gaussian noise, <span class="math inline">\(x_T \sim \mathcal{N}(0, I)\)</span>, and then iteratively “denoise” it by stepping backward in time from <span class="math inline">\(t=T-1\)</span> down to <span class="math inline">\(t=0\)</span>. Each reverse step updates the sample’s position based on the predicted noise (which is related to the score as we saw above).</p>
 <p>The update rule for a single reverse step (from <span class="math inline">\(t\)</span> to <span class="math inline">\(t-1\)</span>) is:</p>
@@ -95913,8 +95925,8 @@ RERERESmRgGIiIiIiIhMjQIQERERERGZmv8fz/Upq9hLHFQAAAAASUVORK5CYII=\
 </div>
 <p>The animation illustrates the generative process: the points start as a random cloud and are gradually “guided” by the learned, time-varying score field. As time decreases, the field becomes sharper, pulling the points onto the intricate structure of original data distribution.</p>
 </section>
-<section id="connection-to-langevin-dynamics" class="level2" data-number="16.7">
-<h2 data-number="16.7" class="anchored" data-anchor-id="connection-to-langevin-dynamics"><span class="header-section-number">16.7</span> Connection to Langevin Dynamics</h2>
+<section id="connection-to-langevin-dynamics" class="level2" data-number="17.7">
+<h2 data-number="17.7" class="anchored" data-anchor-id="connection-to-langevin-dynamics"><span class="header-section-number">17.7</span> Connection to Langevin Dynamics</h2>
 <p>How does this relate to the Langevin Dynamics we used in the previous chapter?</p>
 <p>You can think of the reverse diffusion process as a more sophisticated, “annealed” version of Langevin Dynamics.</p>
 <ul>
@@ -95923,13 +95935,13 @@ RERERESmRgGIiIiIiIhMjQIQERERERGZmv8fz/Upq9hLHFQAAAAASUVORK5CYII=\
 </ul>
 <p>At <span class="math inline">\(t \approx 0\)</span>, the reverse SDE step is mathematically very similar to a Langevin dynamics step on the true data score. So, diffusion models can be seen as a way to reliably initialize a sampler in a high-density region before switching to local exploration. This is why they are so effective at generating high-quality, diverse samples.</p>
 </section>
-<section id="conditional-generation-examples" class="level2" data-number="16.8">
-<h2 data-number="16.8" class="anchored" data-anchor-id="conditional-generation-examples"><span class="header-section-number">16.8</span> Conditional Generation Examples</h2>
+<section id="conditional-generation-examples" class="level2" data-number="17.8">
+<h2 data-number="17.8" class="anchored" data-anchor-id="conditional-generation-examples"><span class="header-section-number">17.8</span> Conditional Generation Examples</h2>
 <p>Diffusion models naturally extend to conditional generation by providing additional conditioning information to the denoising network. This is particularly powerful because the time-conditional architecture already accepts auxiliary inputs, making it straightforward to add class labels, continuous attributes, or even images as conditioning signals.</p>
 <p>The key modification is to pass both the noisy data <span class="math inline">\(x_t\)</span>, the timestep <span class="math inline">\(t\)</span>, and the conditioning variable <span class="math inline">\(y\)</span> to the denoising network: <span class="math inline">\(\epsilon_\theta(x_t, t, y)\)</span>. During training, we learn to predict noise conditioned on <span class="math inline">\(y\)</span>, and during sampling, we can specify <span class="math inline">\(y\)</span> to control what we generate.</p>
 <p>This approach has been used successfully in many applications, including class-conditional image generation (e.g., ImageNet), text-to-image synthesis (e.g., DALL-E 2, Stable Diffusion), and more.</p>
-<section id="conditional-example-a-one-hot-mode-conditioning" class="level3" data-number="16.8.1">
-<h3 data-number="16.8.1" class="anchored" data-anchor-id="conditional-example-a-one-hot-mode-conditioning"><span class="header-section-number">16.8.1</span> Conditional Example A — One-Hot Mode Conditioning</h3>
+<section id="conditional-example-a-one-hot-mode-conditioning" class="level3" data-number="17.8.1">
+<h3 data-number="17.8.1" class="anchored" data-anchor-id="conditional-example-a-one-hot-mode-conditioning"><span class="header-section-number">17.8.1</span> Conditional Example A — One-Hot Mode Conditioning</h3>
 <p>We’ll condition the diffusion model on the discrete mode index using one-hot encoding. The conditioning vector is concatenated with the noisy data and time embedding before passing through the network.</p>
 <div id="8cf29c6b" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gen_models_utilities <span class="im">import</span> make_conditional_loader_onehot, plot_conditional_samples_discrete</span>
@@ -96058,8 +96070,8 @@ Epoch 500, Loss: 0.2527</code></pre>
 </div>
 </div>
 </section>
-<section id="conditional-example-b-continuous-radius-conditioning" class="level3" data-number="16.8.2">
-<h3 data-number="16.8.2" class="anchored" data-anchor-id="conditional-example-b-continuous-radius-conditioning"><span class="header-section-number">16.8.2</span> Conditional Example B — Continuous Radius Conditioning</h3>
+<section id="conditional-example-b-continuous-radius-conditioning" class="level3" data-number="17.8.2">
+<h3 data-number="17.8.2" class="anchored" data-anchor-id="conditional-example-b-continuous-radius-conditioning"><span class="header-section-number">17.8.2</span> Conditional Example B — Continuous Radius Conditioning</h3>
 <p>Now let’s condition the diffusion model on a continuous scalar—the radius. We’ll embed the radius through a small MLP before concatenating it with the noisy data and time embedding.</p>
 <div id="b5301804" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gen_models_utilities <span class="im">import</span> make_conditional_loader_radius, plot_conditional_samples_continuous</span>
@@ -96185,8 +96197,8 @@ Epoch 500, Loss: 0.4312</code></pre>
 <p>Note that while these examples are simple, and thus work well for simple conditioning schemes where we just concatenate the conditioning vector, more complex conditioning (e.g., images or text) often requires specialized architectures like cross-attention layers or what are referred to as “guidance” methods (e.g., Classifier Guidance or Classifier-Free Guidance) to effectively incorporate the conditioning information. These techniques are beyond the scope of what I will cover in this introductory book but are important for state-of-the-art conditional diffusion models.</p>
 </section>
 </section>
-<section id="summary-and-next-steps" class="level2" data-number="16.9">
-<h2 data-number="16.9" class="anchored" data-anchor-id="summary-and-next-steps"><span class="header-section-number">16.9</span> Summary and Next Steps</h2>
+<section id="summary-and-next-steps" class="level2" data-number="17.9">
+<h2 data-number="17.9" class="anchored" data-anchor-id="summary-and-next-steps"><span class="header-section-number">17.9</span> Summary and Next Steps</h2>
 <ul>
 <li><strong>Diffusion Models as Time-Extended Score Models:</strong> Diffusion models solve the problems of single-noise score matching by learning a score function across a continuum of noise levels.</li>
 <li><strong>Forward Process:</strong> Data is gradually noised into an isotropic Gaussian distribution, creating a series of well-behaved intermediate distributions <span class="math inline">\(p_t(x)\)</span>.</li>
@@ -96602,12 +96614,12 @@ Epoch 500, Loss: 0.4312</code></pre>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="../../part2/gen_models/score_matching.html" class="pagination-link" aria-label="From Continuous Flows to Score Matching">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">From Continuous Flows to Score Matching</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">From Continuous Flows to Score Matching</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="../../part2/gen_models/flow_matching.html" class="pagination-link" aria-label="Flow Matching">
-        <span class="nav-page-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Flow Matching</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Flow Matching</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
