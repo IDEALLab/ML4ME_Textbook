@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Mark Fuge">
-<meta name="dcterms.date" content="2025-09-17">
 
-<title>Machine Learning for Mechanical Engineering</title>
+<title>Foundational Skills – Machine Learning for Mechanical Engineering</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -25,25 +23,26 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./intro.html" rel="next">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-0dd2bd5de344125cf763a379ddc3eb04.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../part1/reviewing_supervised_linear_models.html" rel="next">
+<link href="../intro.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-0dd2bd5de344125cf763a379ddc3eb04.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -84,7 +83,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Preface</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../part1/index.html">Foundational Skills</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -99,7 +98,7 @@ ul.task-list li input[type="checkbox"] {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Machine Learning for Mechanical Engineering</a> 
+      <a href="../">Machine Learning for Mechanical Engineering</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -111,19 +110,19 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Preface</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./intro.html" class="sidebar-item-text sidebar-link">
+  <a href="../intro.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="./part1/index.html" class="sidebar-item-text sidebar-link">
+            <a href="../part1/index.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Foundational Skills</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -132,49 +131,49 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./part1/reviewing_supervised_linear_models.html" class="sidebar-item-text sidebar-link">
+  <a href="../part1/reviewing_supervised_linear_models.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Reviewing Supervised Linear Models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./notebooks/cross_validation_linear_regression.html" class="sidebar-item-text sidebar-link">
+  <a href="../notebooks/cross_validation_linear_regression.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Evaluating Machine Learning Models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./notebooks/supervised_linear_models.html" class="sidebar-item-text sidebar-link">
+  <a href="../notebooks/supervised_linear_models.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Introduction to Gradient Descent</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./part1/linear_decompositions.html" class="sidebar-item-text sidebar-link">
+  <a href="../part1/linear_decompositions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Review of Linear Unsupervised Learning</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./part1/taking_derivatives.html" class="sidebar-item-text sidebar-link">
+  <a href="../part1/taking_derivatives.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Taking Derivatives with Automatic Differentiation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./part1/distribution_distance.html" class="sidebar-item-text sidebar-link">
+  <a href="../part1/distribution_distance.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Measuring Distribution Distances</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./part1/introduction_to_inference.html" class="sidebar-item-text sidebar-link">
+  <a href="../part1/introduction_to_inference.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Introduction to Inference</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./part1/introduction_to_probabilistic_programming.html" class="sidebar-item-text sidebar-link">
+  <a href="../part1/introduction_to_probabilistic_programming.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Introduction to Probabilistic Programming</span></span></a>
   </div>
 </li>
@@ -182,7 +181,7 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="./part2/part2.html" class="sidebar-item-text sidebar-link">
+            <a href="../part2/part2.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Foundations of Generative Models</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -191,79 +190,79 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./part2/review_neural_networks.html" class="sidebar-item-text sidebar-link">
+  <a href="../part2/review_neural_networks.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Review of Neural Networks</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./part2/gen_models/intro_to_GANS.html" class="sidebar-item-text sidebar-link">
+  <a href="../part2/gen_models/intro_to_GANS.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Introduction to Push-Forward Generative Models – Generative Adversarial Networks (GANs)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./part2/gen_models/GAN_pitfalls.html" class="sidebar-item-text sidebar-link">
+  <a href="../part2/gen_models/GAN_pitfalls.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">GAN Training Pitfalls</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./part2/gen_models/OT.html" class="sidebar-item-text sidebar-link">
+  <a href="../part2/gen_models/OT.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Optimal Transport for Generative Models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./part2/gen_models/VAEs.html" class="sidebar-item-text sidebar-link">
+  <a href="../part2/gen_models/VAEs.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Variational Autoencoders (VAEs)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./part2/gen_models/normalizing_flows.html" class="sidebar-item-text sidebar-link">
+  <a href="../part2/gen_models/normalizing_flows.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Normalizing Flows</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./part2/gen_models/continuous_flows.html" class="sidebar-item-text sidebar-link">
+  <a href="../part2/gen_models/continuous_flows.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">From Discrete Transformations to Continuous Flows</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./part2/gen_models/score_matching.html" class="sidebar-item-text sidebar-link">
+  <a href="../part2/gen_models/score_matching.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">From Continuous Flows to Score Matching</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./part2/gen_models/diffusion_models.html" class="sidebar-item-text sidebar-link">
+  <a href="../part2/gen_models/diffusion_models.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">From Score Matching to Diffusion Models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./part2/gen_models/flow_matching.html" class="sidebar-item-text sidebar-link">
+  <a href="../part2/gen_models/flow_matching.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Flow Matching</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./part2/gen_models/latent_generative_models.html" class="sidebar-item-text sidebar-link">
+  <a href="../part2/gen_models/latent_generative_models.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Latent Generative Models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./part2/introduction_to_reinforcement_learning.html" class="sidebar-item-text sidebar-link">
+  <a href="../part2/introduction_to_reinforcement_learning.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Introduction to Deep Reinforcement Learning</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./part2/gen_models/transformers.html" class="sidebar-item-text sidebar-link">
+  <a href="../part2/gen_models/transformers.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Introduction to Transformers</span></span></a>
   </div>
 </li>
@@ -271,13 +270,13 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./references.html" class="sidebar-item-text sidebar-link">
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="./problems/problems.html" class="sidebar-item-text sidebar-link">
+            <a href="../problems/problems.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Problems</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -286,13 +285,13 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./problems/ps1.html" class="sidebar-item-text sidebar-link">
+  <a href="../problems/ps1.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Problem Set 1</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./problems/ps2.html" class="sidebar-item-text sidebar-link">
+  <a href="../problems/ps2.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Problem Set 2</span></span></a>
   </div>
 </li>
@@ -300,7 +299,7 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="./notebooks/notebooks.html" class="sidebar-item-text sidebar-link">
+            <a href="../notebooks/notebooks.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">In-Class Notebooks</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -309,7 +308,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./notebooks/california_housing_visualization.html" class="sidebar-item-text sidebar-link">
+  <a href="../notebooks/california_housing_visualization.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Housing Price Data Visualization In-Class Exercise</span></span></a>
   </div>
 </li>
@@ -326,25 +325,25 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./appendices/helpful_tooling.html" class="sidebar-item-text sidebar-link">
+  <a href="../appendices/helpful_tooling.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Helpful Tooling for Working with and Debugging Machine Learning Models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./appendices/course_progression.html" class="sidebar-item-text sidebar-link">
+  <a href="../appendices/course_progression.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Course Lecture Progression</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./appendices/review_of_singular_value_decomposition.html" class="sidebar-item-text sidebar-link">
+  <a href="../appendices/review_of_singular_value_decomposition.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Review of Matrices and the Singular Value Decomposition</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./appendices/review_of_math_and_computing_foundations.html" class="sidebar-item-text sidebar-link">
+  <a href="../appendices/review_of_math_and_computing_foundations.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Reviewing Mathematical and Computational Foundations for Machine Learning</span></span></a>
   </div>
 </li>
@@ -355,48 +354,22 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table of contents</h2>
-   
-  <ul>
-  <li><a href="#preface" id="toc-preface" class="nav-link active" data-scroll-target="#preface">Preface</a></li>
-  <li><a href="#pre-requisites" id="toc-pre-requisites" class="nav-link" data-scroll-target="#pre-requisites">Pre-Requisites</a></li>
-  <li><a href="#how-this-book-is-structured" id="toc-how-this-book-is-structured" class="nav-link" data-scroll-target="#how-this-book-is-structured">How This Book is Structured</a></li>
-  <li><a href="#elements-within-the-book" id="toc-elements-within-the-book" class="nav-link" data-scroll-target="#elements-within-the-book">Elements within the Book</a>
-  <ul class="collapse">
-  <li><a href="#runnable-and-interactive-code-elements" id="toc-runnable-and-interactive-code-elements" class="nav-link" data-scroll-target="#runnable-and-interactive-code-elements">Runnable and Interactive Code Elements</a></li>
-  <li><a href="#callouts-with-notes-and-experiments" id="toc-callouts-with-notes-and-experiments" class="nav-link" data-scroll-target="#callouts-with-notes-and-experiments">Callouts with Notes and Experiments</a></li>
-  </ul></li>
-  <li><a href="#sec-contributors" id="toc-sec-contributors" class="nav-link" data-scroll-target="#sec-contributors">Contributors</a></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Machine Learning for Mechanical Engineering</h1>
+<h1 class="title">Foundational Skills</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Mark Fuge </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">September 17, 2025</p>
-    </div>
-  </div>
   
     
   </div>
@@ -406,75 +379,9 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="preface" class="level1 unnumbered">
-<h1 class="unnumbered">Preface</h1>
-<p>This is an open textbook to accompany my course notes for “Machine Learning for Mechanical Engineering” at ETH Zürich in the Department of Mechanical and Process Engineering (D-MAVT).</p>
-</section>
-<section id="pre-requisites" class="level1">
-<h1>Pre-Requisites</h1>
-<p>This course was designed as an introductory course in Machine Learning (ML) focused on applications within Mechanical Engineering. However, it is also designed as follow on course from ETHZ’s “Stochastics and Machine Learning” course which is required of all D-MAVT students, and therefore, I assume familiarity with the topics covered in that course.</p>
-<p>This book is also designed with several executable code sections that allow you to interactively experiment with the course materials using Python. For this, we have tried to keep the required packages as close as possible to the default Anacoda Package structure in Python 3.12, but will place any additional requirements in a requirements file to enable easy creation of Virtual Environments if you want to run the code in this book.</p>
-</section>
-<section id="how-this-book-is-structured" class="level1">
-<h1>How This Book is Structured</h1>
-<p>This book is designed to map to a one semester course at the advanced Undergraduate level (although early Masters students may still find it useful), and essentially features three parts:</p>
-<ol type="1">
-<li><strong>Part 1: Foundational Skills</strong> – These chapters cover skills that cut across different ML approaches and that should serve you well in the future regardless of which models are “state-of-the-art” at the time. We will revisit these skills throughout the course, but I wanted to separate them into distinct chapters to (1) highlight/elevate their critical importance as independent skills worthy of your learning, and (2) enable a certain amount of depth and self-learning on these skills beyond what we can draw out during individual course modules or later chapters.</li>
-<li><strong>Part 2: Model-Specific Approaches</strong> – These chapters look more like a “traditional” textbook, in the sense that they cover individual techniques or concepts that I thought were maximally relevant to Mechanical Engineers at the time that I wrote the book. These chapters will be most immediately useful in terms of getting up to speed with specific types of models, but they are also the most likely to become out of date quickly as newer/better models are invented.</li>
-<li><strong>Part 3: Engineering-Specific Considerations</strong> – These chapters deal with issues that are particularly prevalent in Mechanical Engineering contexts and may cut across specific models mentioned in Part 2. These are likely to persist over time, even as new models or approaches are invented, although they will likely get easier to address as research fields expand.</li>
-<li><strong>Appendix: Useful Background Information</strong> – I will reserve the Appendix for useful background knowledge that either should have been covered in prior courses, or which is of an implementation nature beyond what is practical to include the earlier chapters. I anticipate that this part of the book will initially be very empty, but that I will add to it as needed over future course semesters.</li>
-</ol>
-</section>
-<section id="elements-within-the-book" class="level1">
-<h1>Elements within the Book</h1>
-<section id="runnable-and-interactive-code-elements" class="level2">
-<h2 class="anchored" data-anchor-id="runnable-and-interactive-code-elements">Runnable and Interactive Code Elements</h2>
-<p>Many of the elements of this book involve runnable code elements in Python, or interactive experiments that you can conduct or visualize while you are reading. These will appear largely static in the rendered book, since some may have long run-times, but you can download and run the corresponding notebook in a browser-based environment (<em>e.g.</em>, CoLab) to be able to run the experiments. Most experiments in the book are designed to be run in class in the span of a few minutes, so browser-based environments should work well for this.</p>
-</section>
-<section id="callouts-with-notes-and-experiments" class="level2">
-<h2 class="anchored" data-anchor-id="callouts-with-notes-and-experiments">Callouts with Notes and Experiments</h2>
-<p>Through the book, I will occasionally use callouts like the one demonstrated below for a couple of use cases:</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Example Collapsed Note, <em>e.g.</em>, for a Derivation
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-1" class="callout-1-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>Here is what a note with a collapsable block structure will look like. We will also use this type of structure to hide details of long derivations, either so you can work them out on your own first, or because the details are not immediately central to following what comes next in the chapter or lecture.</p>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Example Experiment
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Here is an example where we might pose an experiment or task for you to do on your own or in class. Often wrestling with these experiments is a good way to build intuitive understanding and integrate some of the material into practice. When you see this type of callout, you should pause and do the exercise at this point in the chapter, rather than reading ahead, as it may build intuition which is useful later in the chapter.</p>
-</div>
-</div>
-</section>
-</section>
-<section id="sec-contributors" class="level1">
-<h1>Contributors</h1>
-<p>I (Mark Fuge) originally created many of the foundational notebooks included in this book over around 8 years of teaching, mostly as separate Jupyter notebooks I used in my class, and which I now am compiling and extending here in a more coherent and organized form. At the request of others, I have decided to make this content open and extendable by others under a suitable license (<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>). In addition, below I acknowledge the help and additions of others who have contributed elements to these notes:</p>
-<ul>
-<li>Matthew Keeler: Helped reformat many of my existing notebooks into a format that made this online version possible.</li>
-<li>Dr.&nbsp;Florian Felten: Created <a href="appendices/helpful_tooling.html" class="quarto-xref"><span>Appendix A — Helpful Tooling for Working with and Debugging Machine Learning Models</span></a>.</li>
-</ul>
+<p>This part of the book covers useful foundational skills that should serve you well regardless of which model is State-of-the-Art at the time. We will use them throughout the book, but it is helpful to have some material and exercises together in a cohesive whole.</p>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -879,10 +786,13 @@ ul.task-list li input[type="checkbox"] {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="../intro.html" class="pagination-link" aria-label="Introduction">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./intro.html" class="pagination-link" aria-label="Introduction">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../part1/reviewing_supervised_linear_models.html" class="pagination-link" aria-label="Reviewing Supervised Linear Models">
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Reviewing Supervised Linear Models</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -893,7 +803,7 @@ ul.task-list li input[type="checkbox"] {
       &nbsp;
     </div>   
     <div class="nav-footer-center">
-<p>Machine Learning for Mechanical Engineers © 2025 by <a href="./index.html#sec-contributors">Mark Fuge and IDEAL Lab Contributors</a> is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></p>
+<p>Machine Learning for Mechanical Engineers © 2025 by <a href="../part1/index.html#sec-contributors">Mark Fuge and IDEAL Lab Contributors</a> is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></p>
 </div>
     <div class="nav-footer-right">
       &nbsp;
