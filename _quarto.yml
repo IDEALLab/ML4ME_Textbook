@@ -37,9 +37,9 @@ book:
         - part2/gen_models/latent_generative_models.ipynb
         - part2/introduction_to_reinforcement_learning.ipynb
         - part2/gen_models/transformers.ipynb
-    # - part: part3/part3.qmd
-    #   chapters: 
-        #- part3/transfer_learning.qmd
+    - part: part3/part3.qmd
+      chapters: 
+      - part3/active_and_semisupervised_learning.ipynb
     #- looking_forward.qmd
     - references.qmd
     - part: problems/problems.qmd
