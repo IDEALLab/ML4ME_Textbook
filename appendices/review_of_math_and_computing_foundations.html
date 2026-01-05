@@ -9,7 +9,7 @@
 <meta name="author" content="Mark Fuge">
 <meta name="dcterms.date" content="2025-10-26">
 
-<title>Appendix D — Reviewing Mathematical and Computational Foundations for Machine Learning – Machine Learning for Mechanical Engineering</title>
+<title>Appendix C — Reviewing Mathematical and Computational Foundations for Machine Learning – Machine Learning for Mechanical Engineering</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -148,7 +148,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../appendices/helpful_tooling.html">Appendices</a></li><li class="breadcrumb-item"><a href="../appendices/review_of_math_and_computing_foundations.html"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Reviewing Mathematical and Computational Foundations for Machine Learning</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../appendices/helpful_tooling.html">Appendices</a></li><li class="breadcrumb-item"><a href="../appendices/review_of_math_and_computing_foundations.html"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Reviewing Mathematical and Computational Foundations for Machine Learning</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -413,20 +413,14 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../appendices/course_progression.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Course Lecture Progression</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="../appendices/review_of_singular_value_decomposition.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Review of Matrices and the Singular Value Decomposition</span></span></a>
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Review of Matrices and the Singular Value Decomposition</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../appendices/review_of_math_and_computing_foundations.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Reviewing Mathematical and Computational Foundations for Machine Learning</span></span></a>
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Reviewing Mathematical and Computational Foundations for Machine Learning</span></span></a>
   </div>
 </li>
       </ul>
@@ -441,44 +435,44 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#random-variables-monte-carlo-and-concentration-inequalities" id="toc-random-variables-monte-carlo-and-concentration-inequalities" class="nav-link active" data-scroll-target="#random-variables-monte-carlo-and-concentration-inequalities"><span class="header-section-number">D.1</span> Random Variables, Monte Carlo, and Concentration Inequalities</a>
+  <li><a href="#random-variables-monte-carlo-and-concentration-inequalities" id="toc-random-variables-monte-carlo-and-concentration-inequalities" class="nav-link active" data-scroll-target="#random-variables-monte-carlo-and-concentration-inequalities"><span class="header-section-number">C.1</span> Random Variables, Monte Carlo, and Concentration Inequalities</a>
   <ul class="collapse">
-  <li><a href="#concepts" id="toc-concepts" class="nav-link" data-scroll-target="#concepts"><span class="header-section-number">D.1.1</span> Concepts:</a></li>
-  <li><a href="#key-equations" id="toc-key-equations" class="nav-link" data-scroll-target="#key-equations"><span class="header-section-number">D.1.2</span> Key Equations:</a></li>
-  <li><a href="#monte-carlo-mean-estimation" id="toc-monte-carlo-mean-estimation" class="nav-link" data-scroll-target="#monte-carlo-mean-estimation"><span class="header-section-number">D.1.3</span> Monte Carlo Mean Estimation</a></li>
-  <li><a href="#expectation-of-a-nonlinear-function" id="toc-expectation-of-a-nonlinear-function" class="nav-link" data-scroll-target="#expectation-of-a-nonlinear-function"><span class="header-section-number">D.1.4</span> Expectation of a Nonlinear Function</a></li>
+  <li><a href="#concepts" id="toc-concepts" class="nav-link" data-scroll-target="#concepts"><span class="header-section-number">C.1.1</span> Concepts:</a></li>
+  <li><a href="#key-equations" id="toc-key-equations" class="nav-link" data-scroll-target="#key-equations"><span class="header-section-number">C.1.2</span> Key Equations:</a></li>
+  <li><a href="#monte-carlo-mean-estimation" id="toc-monte-carlo-mean-estimation" class="nav-link" data-scroll-target="#monte-carlo-mean-estimation"><span class="header-section-number">C.1.3</span> Monte Carlo Mean Estimation</a></li>
+  <li><a href="#expectation-of-a-nonlinear-function" id="toc-expectation-of-a-nonlinear-function" class="nav-link" data-scroll-target="#expectation-of-a-nonlinear-function"><span class="header-section-number">C.1.4</span> Expectation of a Nonlinear Function</a></li>
   </ul></li>
-  <li><a href="#change-of-variables-jacobians" id="toc-change-of-variables-jacobians" class="nav-link" data-scroll-target="#change-of-variables-jacobians"><span class="header-section-number">D.2</span> Change of Variables &amp; Jacobians</a>
+  <li><a href="#change-of-variables-jacobians" id="toc-change-of-variables-jacobians" class="nav-link" data-scroll-target="#change-of-variables-jacobians"><span class="header-section-number">C.2</span> Change of Variables &amp; Jacobians</a>
   <ul class="collapse">
-  <li><a href="#concepts-1" id="toc-concepts-1" class="nav-link" data-scroll-target="#concepts-1"><span class="header-section-number">D.2.1</span> Concepts:</a></li>
-  <li><a href="#key-equations-1" id="toc-key-equations-1" class="nav-link" data-scroll-target="#key-equations-1"><span class="header-section-number">D.2.2</span> Key Equations:</a></li>
-  <li><a href="#example-linear-transformation-1d" id="toc-example-linear-transformation-1d" class="nav-link" data-scroll-target="#example-linear-transformation-1d"><span class="header-section-number">D.2.3</span> Example: Linear Transformation (1D)</a></li>
-  <li><a href="#example-nonlinear-transformation" id="toc-example-nonlinear-transformation" class="nav-link" data-scroll-target="#example-nonlinear-transformation"><span class="header-section-number">D.2.4</span> Example: Nonlinear Transformation</a></li>
-  <li><a href="#example-2d-transformation-and-grid-deformation" id="toc-example-2d-transformation-and-grid-deformation" class="nav-link" data-scroll-target="#example-2d-transformation-and-grid-deformation"><span class="header-section-number">D.2.5</span> Example: 2D Transformation and Grid Deformation</a></li>
-  <li><a href="#example-computing-jacobians-with-pytorch" id="toc-example-computing-jacobians-with-pytorch" class="nav-link" data-scroll-target="#example-computing-jacobians-with-pytorch"><span class="header-section-number">D.2.6</span> Example: Computing Jacobians with PyTorch</a></li>
+  <li><a href="#concepts-1" id="toc-concepts-1" class="nav-link" data-scroll-target="#concepts-1"><span class="header-section-number">C.2.1</span> Concepts:</a></li>
+  <li><a href="#key-equations-1" id="toc-key-equations-1" class="nav-link" data-scroll-target="#key-equations-1"><span class="header-section-number">C.2.2</span> Key Equations:</a></li>
+  <li><a href="#example-linear-transformation-1d" id="toc-example-linear-transformation-1d" class="nav-link" data-scroll-target="#example-linear-transformation-1d"><span class="header-section-number">C.2.3</span> Example: Linear Transformation (1D)</a></li>
+  <li><a href="#example-nonlinear-transformation" id="toc-example-nonlinear-transformation" class="nav-link" data-scroll-target="#example-nonlinear-transformation"><span class="header-section-number">C.2.4</span> Example: Nonlinear Transformation</a></li>
+  <li><a href="#example-2d-transformation-and-grid-deformation" id="toc-example-2d-transformation-and-grid-deformation" class="nav-link" data-scroll-target="#example-2d-transformation-and-grid-deformation"><span class="header-section-number">C.2.5</span> Example: 2D Transformation and Grid Deformation</a></li>
+  <li><a href="#example-computing-jacobians-with-pytorch" id="toc-example-computing-jacobians-with-pytorch" class="nav-link" data-scroll-target="#example-computing-jacobians-with-pytorch"><span class="header-section-number">C.2.6</span> Example: Computing Jacobians with PyTorch</a></li>
   </ul></li>
-  <li><a href="#linear-algebra-spectral-norms" id="toc-linear-algebra-spectral-norms" class="nav-link" data-scroll-target="#linear-algebra-spectral-norms"><span class="header-section-number">D.3</span> Linear Algebra &amp; Spectral Norms</a>
+  <li><a href="#linear-algebra-spectral-norms" id="toc-linear-algebra-spectral-norms" class="nav-link" data-scroll-target="#linear-algebra-spectral-norms"><span class="header-section-number">C.3</span> Linear Algebra &amp; Spectral Norms</a>
   <ul class="collapse">
-  <li><a href="#concepts-2" id="toc-concepts-2" class="nav-link" data-scroll-target="#concepts-2"><span class="header-section-number">D.3.1</span> Concepts:</a></li>
-  <li><a href="#key-equations-2" id="toc-key-equations-2" class="nav-link" data-scroll-target="#key-equations-2"><span class="header-section-number">D.3.2</span> Key Equations:</a></li>
-  <li><a href="#example-2d-linear-transform-visualization" id="toc-example-2d-linear-transform-visualization" class="nav-link" data-scroll-target="#example-2d-linear-transform-visualization"><span class="header-section-number">D.3.3</span> Example: 2D Linear Transform Visualization</a></li>
-  <li><a href="#example-spectral-norms-and-condition-numbers-of-different-matrices" id="toc-example-spectral-norms-and-condition-numbers-of-different-matrices" class="nav-link" data-scroll-target="#example-spectral-norms-and-condition-numbers-of-different-matrices"><span class="header-section-number">D.3.4</span> Example: Spectral Norms and Condition Numbers of Different Matrices</a></li>
-  <li><a href="#example-neural-network-jacobian-and-local-geometry" id="toc-example-neural-network-jacobian-and-local-geometry" class="nav-link" data-scroll-target="#example-neural-network-jacobian-and-local-geometry"><span class="header-section-number">D.3.5</span> Example: Neural Network Jacobian and Local Geometry</a></li>
-  <li><a href="#example-spectral-normalization" id="toc-example-spectral-normalization" class="nav-link" data-scroll-target="#example-spectral-normalization"><span class="header-section-number">D.3.6</span> Example: Spectral Normalization</a></li>
+  <li><a href="#concepts-2" id="toc-concepts-2" class="nav-link" data-scroll-target="#concepts-2"><span class="header-section-number">C.3.1</span> Concepts:</a></li>
+  <li><a href="#key-equations-2" id="toc-key-equations-2" class="nav-link" data-scroll-target="#key-equations-2"><span class="header-section-number">C.3.2</span> Key Equations:</a></li>
+  <li><a href="#example-2d-linear-transform-visualization" id="toc-example-2d-linear-transform-visualization" class="nav-link" data-scroll-target="#example-2d-linear-transform-visualization"><span class="header-section-number">C.3.3</span> Example: 2D Linear Transform Visualization</a></li>
+  <li><a href="#example-spectral-norms-and-condition-numbers-of-different-matrices" id="toc-example-spectral-norms-and-condition-numbers-of-different-matrices" class="nav-link" data-scroll-target="#example-spectral-norms-and-condition-numbers-of-different-matrices"><span class="header-section-number">C.3.4</span> Example: Spectral Norms and Condition Numbers of Different Matrices</a></li>
+  <li><a href="#example-neural-network-jacobian-and-local-geometry" id="toc-example-neural-network-jacobian-and-local-geometry" class="nav-link" data-scroll-target="#example-neural-network-jacobian-and-local-geometry"><span class="header-section-number">C.3.5</span> Example: Neural Network Jacobian and Local Geometry</a></li>
+  <li><a href="#example-spectral-normalization" id="toc-example-spectral-normalization" class="nav-link" data-scroll-target="#example-spectral-normalization"><span class="header-section-number">C.3.6</span> Example: Spectral Normalization</a></li>
   </ul></li>
-  <li><a href="#differentiation-curvature" id="toc-differentiation-curvature" class="nav-link" data-scroll-target="#differentiation-curvature"><span class="header-section-number">D.4</span> Differentiation &amp; Curvature</a>
+  <li><a href="#differentiation-curvature" id="toc-differentiation-curvature" class="nav-link" data-scroll-target="#differentiation-curvature"><span class="header-section-number">C.4</span> Differentiation &amp; Curvature</a>
   <ul class="collapse">
-  <li><a href="#concepts-3" id="toc-concepts-3" class="nav-link" data-scroll-target="#concepts-3"><span class="header-section-number">D.4.1</span> Concepts:</a></li>
-  <li><a href="#key-equations-3" id="toc-key-equations-3" class="nav-link" data-scroll-target="#key-equations-3"><span class="header-section-number">D.4.2</span> Key Equations:</a></li>
-  <li><a href="#example-gradient-and-hessian-visualization" id="toc-example-gradient-and-hessian-visualization" class="nav-link" data-scroll-target="#example-gradient-and-hessian-visualization"><span class="header-section-number">D.4.3</span> Example: Gradient and Hessian Visualization</a></li>
-  <li><a href="#example-reducing-computational-cost-using-jvps-and-hvps" id="toc-example-reducing-computational-cost-using-jvps-and-hvps" class="nav-link" data-scroll-target="#example-reducing-computational-cost-using-jvps-and-hvps"><span class="header-section-number">D.4.4</span> Example: Reducing Computational Cost using JVPs and HVPs</a></li>
+  <li><a href="#concepts-3" id="toc-concepts-3" class="nav-link" data-scroll-target="#concepts-3"><span class="header-section-number">C.4.1</span> Concepts:</a></li>
+  <li><a href="#key-equations-3" id="toc-key-equations-3" class="nav-link" data-scroll-target="#key-equations-3"><span class="header-section-number">C.4.2</span> Key Equations:</a></li>
+  <li><a href="#example-gradient-and-hessian-visualization" id="toc-example-gradient-and-hessian-visualization" class="nav-link" data-scroll-target="#example-gradient-and-hessian-visualization"><span class="header-section-number">C.4.3</span> Example: Gradient and Hessian Visualization</a></li>
+  <li><a href="#example-reducing-computational-cost-using-jvps-and-hvps" id="toc-example-reducing-computational-cost-using-jvps-and-hvps" class="nav-link" data-scroll-target="#example-reducing-computational-cost-using-jvps-and-hvps"><span class="header-section-number">C.4.4</span> Example: Reducing Computational Cost using JVPs and HVPs</a></li>
   </ul></li>
-  <li><a href="#marginalization-of-probability-distributions" id="toc-marginalization-of-probability-distributions" class="nav-link" data-scroll-target="#marginalization-of-probability-distributions"><span class="header-section-number">D.5</span> Marginalization of Probability Distributions</a>
+  <li><a href="#marginalization-of-probability-distributions" id="toc-marginalization-of-probability-distributions" class="nav-link" data-scroll-target="#marginalization-of-probability-distributions"><span class="header-section-number">C.5</span> Marginalization of Probability Distributions</a>
   <ul class="collapse">
-  <li><a href="#concepts-4" id="toc-concepts-4" class="nav-link" data-scroll-target="#concepts-4"><span class="header-section-number">D.5.1</span> Concepts:</a></li>
-  <li><a href="#key-equations-4" id="toc-key-equations-4" class="nav-link" data-scroll-target="#key-equations-4"><span class="header-section-number">D.5.2</span> Key Equations:</a></li>
-  <li><a href="#example-2d-gaussian-marginalization" id="toc-example-2d-gaussian-marginalization" class="nav-link" data-scroll-target="#example-2d-gaussian-marginalization"><span class="header-section-number">D.5.3</span> Example: 2D Gaussian Marginalization</a></li>
-  <li><a href="#example-conditional-sampling-and-the-joint-distribution" id="toc-example-conditional-sampling-and-the-joint-distribution" class="nav-link" data-scroll-target="#example-conditional-sampling-and-the-joint-distribution"><span class="header-section-number">D.5.4</span> Example: Conditional Sampling and the Joint Distribution</a></li>
+  <li><a href="#concepts-4" id="toc-concepts-4" class="nav-link" data-scroll-target="#concepts-4"><span class="header-section-number">C.5.1</span> Concepts:</a></li>
+  <li><a href="#key-equations-4" id="toc-key-equations-4" class="nav-link" data-scroll-target="#key-equations-4"><span class="header-section-number">C.5.2</span> Key Equations:</a></li>
+  <li><a href="#example-2d-gaussian-marginalization" id="toc-example-2d-gaussian-marginalization" class="nav-link" data-scroll-target="#example-2d-gaussian-marginalization"><span class="header-section-number">C.5.3</span> Example: 2D Gaussian Marginalization</a></li>
+  <li><a href="#example-conditional-sampling-and-the-joint-distribution" id="toc-example-conditional-sampling-and-the-joint-distribution" class="nav-link" data-scroll-target="#example-conditional-sampling-and-the-joint-distribution"><span class="header-section-number">C.5.4</span> Example: Conditional Sampling and the Joint Distribution</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -486,9 +480,9 @@ window.Quarto = {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../appendices/helpful_tooling.html">Appendices</a></li><li class="breadcrumb-item"><a href="../appendices/review_of_math_and_computing_foundations.html"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Reviewing Mathematical and Computational Foundations for Machine Learning</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../appendices/helpful_tooling.html">Appendices</a></li><li class="breadcrumb-item"><a href="../appendices/review_of_math_and_computing_foundations.html"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Reviewing Mathematical and Computational Foundations for Machine Learning</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Appendix D — Reviewing Mathematical and Computational Foundations for Machine Learning</h1>
+<h1 class="title">Appendix C — Reviewing Mathematical and Computational Foundations for Machine Learning</h1>
 </div>
 
 
@@ -550,10 +544,10 @@ window.Quarto = {
 <span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>plt.rcParams[<span class="st">'lines.linewidth'</span>] <span class="op">=</span> <span class="dv">2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<section id="random-variables-monte-carlo-and-concentration-inequalities" class="level2" data-number="D.1">
-<h2 data-number="D.1" class="anchored" data-anchor-id="random-variables-monte-carlo-and-concentration-inequalities"><span class="header-section-number">D.1</span> Random Variables, Monte Carlo, and Concentration Inequalities</h2>
-<section id="concepts" class="level3" data-number="D.1.1">
-<h3 data-number="D.1.1" class="anchored" data-anchor-id="concepts"><span class="header-section-number">D.1.1</span> Concepts:</h3>
+<section id="random-variables-monte-carlo-and-concentration-inequalities" class="level2" data-number="C.1">
+<h2 data-number="C.1" class="anchored" data-anchor-id="random-variables-monte-carlo-and-concentration-inequalities"><span class="header-section-number">C.1</span> Random Variables, Monte Carlo, and Concentration Inequalities</h2>
+<section id="concepts" class="level3" data-number="C.1.1">
+<h3 data-number="C.1.1" class="anchored" data-anchor-id="concepts"><span class="header-section-number">C.1.1</span> Concepts:</h3>
 <ul>
 <li>Random variables are functions that map outcomes to numerical values</li>
 <li><strong>Expectations</strong> represent the average value of a function over a probability distribution</li>
@@ -563,8 +557,8 @@ window.Quarto = {
 <li>Finite samples introduce uncertainty that decreases with more data and <strong>Concentration Inequalities</strong> (Chebyshev, Hoeffding) bound the probability of large deviations, which can help us understand real-world machine learning behavior</li>
 </ul>
 </section>
-<section id="key-equations" class="level3" data-number="D.1.2">
-<h3 data-number="D.1.2" class="anchored" data-anchor-id="key-equations"><span class="header-section-number">D.1.2</span> Key Equations:</h3>
+<section id="key-equations" class="level3" data-number="C.1.2">
+<h3 data-number="C.1.2" class="anchored" data-anchor-id="key-equations"><span class="header-section-number">C.1.2</span> Key Equations:</h3>
 <p><strong>Expectation via Monte Carlo:</strong> <span class="math display">\[\mathbb{E}_{p(x)}[f(X)] = \int f(x) p(x) dx \approx \frac{1}{N} \sum_{i=1}^{N} f(x_i), \quad x_i \sim p(x)\]</span></p>
 <p><strong>Intuition:</strong> If we can sample from a distribution, we can approximate any expectation by averaging function values over those samples. The approximation improves as we collect more samples.</p>
 <p><strong>Law of Large Numbers:</strong> <span class="math display">\[\bar{X}_N = \frac{1}{N} \sum_{i=1}^{N} X_i \xrightarrow{N \to \infty} \mathbb{E}[X]\]</span></p>
@@ -573,8 +567,8 @@ window.Quarto = {
 <p>Understanding convergence of statistical estimates of various functions will end up being foundational to many aspects of Machine Learning, so it is useful for us to build intuition about it ahead of time.</p>
 <p><strong>Intuition:</strong> These inequalities tell us how confident we can be that our sample mean is close to the true mean. They guarantee exponential or polynomial concentration as <span class="math inline">\(N\)</span> grows.</p>
 </section>
-<section id="monte-carlo-mean-estimation" class="level3" data-number="D.1.3">
-<h3 data-number="D.1.3" class="anchored" data-anchor-id="monte-carlo-mean-estimation"><span class="header-section-number">D.1.3</span> Monte Carlo Mean Estimation</h3>
+<section id="monte-carlo-mean-estimation" class="level3" data-number="C.1.3">
+<h3 data-number="C.1.3" class="anchored" data-anchor-id="monte-carlo-mean-estimation"><span class="header-section-number">C.1.3</span> Monte Carlo Mean Estimation</h3>
 <p>We’ll sample from a standard normal distribution <span class="math inline">\(\mathcal{N}(0, 1)\)</span> and watch how the sample mean converges to the true mean (which is 0) as we increase the number of samples.</p>
 <div id="12715535" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set seed for reproducibility</span></span>
@@ -660,8 +654,8 @@ window.Quarto = {
 </ul>
 <p>Why do you think the convergence is so slow? What does this tell you about the computational cost of Monte Carlo methods, in general?</p>
 </section>
-<section id="expectation-of-a-nonlinear-function" class="level3" data-number="D.1.4">
-<h3 data-number="D.1.4" class="anchored" data-anchor-id="expectation-of-a-nonlinear-function"><span class="header-section-number">D.1.4</span> Expectation of a Nonlinear Function</h3>
+<section id="expectation-of-a-nonlinear-function" class="level3" data-number="C.1.4">
+<h3 data-number="C.1.4" class="anchored" data-anchor-id="expectation-of-a-nonlinear-function"><span class="header-section-number">C.1.4</span> Expectation of a Nonlinear Function</h3>
 <p>So far we’ve estimated the mean of a simple identity function. But Monte Carlo really shines when computing expectations of complex, nonlinear functions. Let’s estimate <span class="math inline">\(\mathbb{E}[X^2]\)</span> where <span class="math inline">\(X \sim \mathcal{N}(0, 1)\)</span>.</p>
 <div id="e4658769" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># For a standard normal, E[X^2] = Var(X) + E[X]^2 = 1 + 0 = 1</span></span>
@@ -730,10 +724,10 @@ window.Quarto = {
 </div>
 </section>
 </section>
-<section id="change-of-variables-jacobians" class="level2" data-number="D.2">
-<h2 data-number="D.2" class="anchored" data-anchor-id="change-of-variables-jacobians"><span class="header-section-number">D.2</span> Change of Variables &amp; Jacobians</h2>
-<section id="concepts-1" class="level3" data-number="D.2.1">
-<h3 data-number="D.2.1" class="anchored" data-anchor-id="concepts-1"><span class="header-section-number">D.2.1</span> Concepts:</h3>
+<section id="change-of-variables-jacobians" class="level2" data-number="C.2">
+<h2 data-number="C.2" class="anchored" data-anchor-id="change-of-variables-jacobians"><span class="header-section-number">C.2</span> Change of Variables &amp; Jacobians</h2>
+<section id="concepts-1" class="level3" data-number="C.2.1">
+<h3 data-number="C.2.1" class="anchored" data-anchor-id="concepts-1"><span class="header-section-number">C.2.1</span> Concepts:</h3>
 <ul>
 <li>When you transform a random variable, the probability density changes</li>
 <li>The <strong>Jacobian matrix</strong> captures how a transformation stretches or compresses space</li>
@@ -742,15 +736,15 @@ window.Quarto = {
 <li>In 1D: <span class="math inline">\(|\frac{dy}{dx}|\)</span> tells us how density scales; in higher dimensions we use <span class="math inline">\(|\det J|\)</span></li>
 </ul>
 </section>
-<section id="key-equations-1" class="level3" data-number="D.2.2">
-<h3 data-number="D.2.2" class="anchored" data-anchor-id="key-equations-1"><span class="header-section-number">D.2.2</span> Key Equations:</h3>
+<section id="key-equations-1" class="level3" data-number="C.2.2">
+<h3 data-number="C.2.2" class="anchored" data-anchor-id="key-equations-1"><span class="header-section-number">C.2.2</span> Key Equations:</h3>
 <p><strong>Change of Variables Formula (1D):</strong> <span class="math display">\[p_Y(y) = p_X(x) \left| \frac{dx}{dy} \right| = p_X(g^{-1}(y)) \left| \frac{dg^{-1}}{dy} \right|\]</span></p>
 <p>where <span class="math inline">\(y = g(x)\)</span> is a transformation.</p>
 <p><strong>Change of Variables Formula (Multidimensional):</strong> <span class="math display">\[p_Y(y) = p_X(x) \left| \det \frac{\partial x}{\partial y} \right| = p_X(g^{-1}(y)) \left| \det J_{g^{-1}}(y) \right|\]</span></p>
 <p><strong>Intuition:</strong> When you transform a random variable, the probability density must be adjusted by how much the transformation stretches or compresses space. Think of it like this: if a transformation spreads points apart (stretches), the density must decrease to keep total probability = 1.</p>
 </section>
-<section id="example-linear-transformation-1d" class="level3" data-number="D.2.3">
-<h3 data-number="D.2.3" class="anchored" data-anchor-id="example-linear-transformation-1d"><span class="header-section-number">D.2.3</span> Example: Linear Transformation (1D)</h3>
+<section id="example-linear-transformation-1d" class="level3" data-number="C.2.3">
+<h3 data-number="C.2.3" class="anchored" data-anchor-id="example-linear-transformation-1d"><span class="header-section-number">C.2.3</span> Example: Linear Transformation (1D)</h3>
 <p>Let’s start with a simple linear transformation: <span class="math inline">\(y = 2x + 1\)</span>. We’ll sample from a standard normal and see how the distribution changes. Recall that for a normal distribution <span class="math inline">\(\mathcal{N}(\mu, \sigma^2)\)</span>, a linear transformation <span class="math inline">\(y = ax + b\)</span> results in <span class="math inline">\(y \sim \mathcal{N}(a\mu + b, (a\sigma)^2)\)</span>.</p>
 <p>In this example, we should expect the expected mean of Y to be 1 and the standard deviation to be 2. Moreover, we should expect the density scaling factor from the Jacobian to be:</p>
 <p><span class="math display">\[
@@ -852,8 +846,8 @@ Density is compressed by factor of 2</code></pre>
 <p>Notice how the transformation <span class="math inline">\(y = 2x + 1\)</span> shifts the mean (the <span class="math inline">\(+1\)</span> part) and stretches the distribution (the <span class="math inline">\(2\)</span> x part). The density gets compressed because the same probability mass is now spread over a wider range.</p>
 <p>The Jacobian factor <span class="math inline">\(|dx/dy| = 1/2\)</span> tells us exactly how much to scale the density.</p>
 </section>
-<section id="example-nonlinear-transformation" class="level3" data-number="D.2.4">
-<h3 data-number="D.2.4" class="anchored" data-anchor-id="example-nonlinear-transformation"><span class="header-section-number">D.2.4</span> Example: Nonlinear Transformation</h3>
+<section id="example-nonlinear-transformation" class="level3" data-number="C.2.4">
+<h3 data-number="C.2.4" class="anchored" data-anchor-id="example-nonlinear-transformation"><span class="header-section-number">C.2.4</span> Example: Nonlinear Transformation</h3>
 <p>Linear transformations are straightforward, but what about nonlinear ones? Let’s try <span class="math inline">\(y = \tanh(x)\)</span>, which squashes values into the range <span class="math inline">\((-1, 1)\)</span>.</p>
 <div id="04d7af4e" class="cell" data-execution_count="26">
 <details class="code-fold">
@@ -936,8 +930,8 @@ Density is compressed by factor of 2</code></pre>
 <p>The <span class="math inline">\(\tanh\)</span> function compresses the tails of the Gaussian distribution into a bounded range. Notice how the Jacobian factor <span class="math inline">\(|dz/dy| = 1/(1-y^2)\)</span> grows very large near <span class="math inline">\(y = \pm 1\)</span>. This creates the characteristic “U-shaped” density—probability piles up where the transformation compresses most severely.</p>
 <p>This type of transformation is common in neural networks (e.g., in activation functions). What do you think would happen if we used a transformation that wasn’t invertible?</p>
 </section>
-<section id="example-2d-transformation-and-grid-deformation" class="level3" data-number="D.2.5">
-<h3 data-number="D.2.5" class="anchored" data-anchor-id="example-2d-transformation-and-grid-deformation"><span class="header-section-number">D.2.5</span> Example: 2D Transformation and Grid Deformation</h3>
+<section id="example-2d-transformation-and-grid-deformation" class="level3" data-number="C.2.5">
+<h3 data-number="C.2.5" class="anchored" data-anchor-id="example-2d-transformation-and-grid-deformation"><span class="header-section-number">C.2.5</span> Example: 2D Transformation and Grid Deformation</h3>
 <p>In higher dimensions, the Jacobian is a matrix, and its determinant tells us about volume changes. Let’s visualize this with a 2D linear transformation.</p>
 <div id="9bab12ca" class="cell">
 <details class="code-fold">
@@ -1066,8 +1060,8 @@ This means density must be scaled by 0.5000 to preserve probability mass</code><
 </div>
 </div>
 </section>
-<section id="example-computing-jacobians-with-pytorch" class="level3" data-number="D.2.6">
-<h3 data-number="D.2.6" class="anchored" data-anchor-id="example-computing-jacobians-with-pytorch"><span class="header-section-number">D.2.6</span> Example: Computing Jacobians with PyTorch</h3>
+<section id="example-computing-jacobians-with-pytorch" class="level3" data-number="C.2.6">
+<h3 data-number="C.2.6" class="anchored" data-anchor-id="example-computing-jacobians-with-pytorch"><span class="header-section-number">C.2.6</span> Example: Computing Jacobians with PyTorch</h3>
 <p>Let’s use PyTorch’s automatic differentiation to compute Jacobians for us. This is especially useful for complex non-linear functions for which writing out the analytical gradients might not be practical.</p>
 <div id="2a953feb" class="cell" data-execution_count="29">
 <details class="code-fold">
@@ -1147,10 +1141,10 @@ This means density must be scaled by 0.5000 to preserve probability mass</code><
 <p>Can you think of why we need the transformation to be invertible for normalizing flows? How would you chain multiple transformations together? What happens to the overall Jacobian determinant? (We will revisit these in the relevant generative models chapter.)</p>
 </section>
 </section>
-<section id="linear-algebra-spectral-norms" class="level2" data-number="D.3">
-<h2 data-number="D.3" class="anchored" data-anchor-id="linear-algebra-spectral-norms"><span class="header-section-number">D.3</span> Linear Algebra &amp; Spectral Norms</h2>
-<section id="concepts-2" class="level3" data-number="D.3.1">
-<h3 data-number="D.3.1" class="anchored" data-anchor-id="concepts-2"><span class="header-section-number">D.3.1</span> Concepts:</h3>
+<section id="linear-algebra-spectral-norms" class="level2" data-number="C.3">
+<h2 data-number="C.3" class="anchored" data-anchor-id="linear-algebra-spectral-norms"><span class="header-section-number">C.3</span> Linear Algebra &amp; Spectral Norms</h2>
+<section id="concepts-2" class="level3" data-number="C.3.1">
+<h3 data-number="C.3.1" class="anchored" data-anchor-id="concepts-2"><span class="header-section-number">C.3.1</span> Concepts:</h3>
 <ul>
 <li>Matrices represent <strong>linear transformations</strong> that stretch, rotate, and compress space</li>
 <li><strong>Singular values</strong> measure how much a matrix stretches along different directions</li>
@@ -1159,15 +1153,15 @@ This means density must be scaled by 0.5000 to preserve probability mass</code><
 <li>Understanding these geometric properties is essential for analyzing neural networks and optimization</li>
 </ul>
 </section>
-<section id="key-equations-2" class="level3" data-number="D.3.2">
-<h3 data-number="D.3.2" class="anchored" data-anchor-id="key-equations-2"><span class="header-section-number">D.3.2</span> Key Equations:</h3>
+<section id="key-equations-2" class="level3" data-number="C.3.2">
+<h3 data-number="C.3.2" class="anchored" data-anchor-id="key-equations-2"><span class="header-section-number">C.3.2</span> Key Equations:</h3>
 <p><strong>Singular Value Decomposition:</strong> <span class="math display">\[A = U \Sigma V^T\]</span> where <span class="math inline">\(U, V\)</span> are orthogonal and <span class="math inline">\(\Sigma\)</span> contains singular values <span class="math inline">\(\sigma_1 \geq \sigma_2 \geq \ldots \geq 0\)</span></p>
 <p><strong>Spectral Norm (Matrix 2-norm):</strong> <span class="math display">\[\|A\|_2 = \sigma_{\max}(A) = \max_{\|x\|=1} \|Ax\|\]</span></p>
 <p><strong>Condition Number:</strong> <span class="math display">\[\kappa(A) = \frac{\sigma_{\max}(A)}{\sigma_{\min}(A)}\]</span></p>
 <p><strong>Intuition:</strong> The spectral norm tells you “how much can this transformation amplify a vector?” Large spectral norms mean the transformation can greatly magnify small changes in input—this is crucial for understanding gradient flow in deep networks.</p>
 </section>
-<section id="example-2d-linear-transform-visualization" class="level3" data-number="D.3.3">
-<h3 data-number="D.3.3" class="anchored" data-anchor-id="example-2d-linear-transform-visualization"><span class="header-section-number">D.3.3</span> Example: 2D Linear Transform Visualization</h3>
+<section id="example-2d-linear-transform-visualization" class="level3" data-number="C.3.3">
+<h3 data-number="C.3.3" class="anchored" data-anchor-id="example-2d-linear-transform-visualization"><span class="header-section-number">C.3.3</span> Example: 2D Linear Transform Visualization</h3>
 <p>Let’s see how a matrix transforms space by watching what it does to a regular grid. This gives us intuition for singular values and the spectral norm.</p>
 <div id="2670ca7e" class="cell" data-execution_count="31">
 <details class="code-fold">
@@ -1305,8 +1299,8 @@ Condition number: 2.4839</code></pre>
 </div>
 <p>The transformation turns a circle into an ellipse. The singular values tell us exactly how much the matrix stretches in its principal directions. The spectral norm is the maximum stretching factor, which in the above example is 2.1436 and the same as the ellipse’s semi-major axis length, with 0.863 being the semi-minor axis length. This is crucial for understanding how errors propagate through linear transformations. For example, in deep learning, if weight matrices have large spectral norms, small input perturbations can get amplified dramatically. What problems do you think this might cause?</p>
 </section>
-<section id="example-spectral-norms-and-condition-numbers-of-different-matrices" class="level3" data-number="D.3.4">
-<h3 data-number="D.3.4" class="anchored" data-anchor-id="example-spectral-norms-and-condition-numbers-of-different-matrices"><span class="header-section-number">D.3.4</span> Example: Spectral Norms and Condition Numbers of Different Matrices</h3>
+<section id="example-spectral-norms-and-condition-numbers-of-different-matrices" class="level3" data-number="C.3.4">
+<h3 data-number="C.3.4" class="anchored" data-anchor-id="example-spectral-norms-and-condition-numbers-of-different-matrices"><span class="header-section-number">C.3.4</span> Example: Spectral Norms and Condition Numbers of Different Matrices</h3>
 <p>Let’s explore how different matrices have different spectral properties and what that means for numerical stability.</p>
 <div id="9f80aecc" class="cell" data-execution_count="32">
 <details class="code-fold">
@@ -1422,8 +1416,8 @@ Nearly singular      2.0005       4002.00         0.001000    </code></pre>
 </div>
 <p>We see that for well-conditioned matrices, they have a small condition number that barely amplifies or stretches the origina data. As we increase the condition number, small perturbations in the input can cause large changes in the output matrix. However, even if the spectral norm is small, the matrix can still have a large condition number, which can make the matrix difficult to invert or compute stable gradients with respect to.</p>
 </section>
-<section id="example-neural-network-jacobian-and-local-geometry" class="level3" data-number="D.3.5">
-<h3 data-number="D.3.5" class="anchored" data-anchor-id="example-neural-network-jacobian-and-local-geometry"><span class="header-section-number">D.3.5</span> Example: Neural Network Jacobian and Local Geometry</h3>
+<section id="example-neural-network-jacobian-and-local-geometry" class="level3" data-number="C.3.5">
+<h3 data-number="C.3.5" class="anchored" data-anchor-id="example-neural-network-jacobian-and-local-geometry"><span class="header-section-number">C.3.5</span> Example: Neural Network Jacobian and Local Geometry</h3>
 <p>Neural networks are compositions of nonlinear transformations. At any point, the local behavior is captured by the Jacobian matrix. Let’s visualize how a simple neural network transforms space locally.</p>
 <div id="b665ba10" class="cell" data-execution_count="37">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a simple 2-layer neural network: R^2 -&gt; R^2</span></span>
@@ -1582,8 +1576,8 @@ Condition number: 26.9721</code></pre>
 </div>
 <p>We can see that the neural network’s Jacobian is changing across the input space. The Jacobian tells us how the neural network behaves locally—like a linear approximation at each point. The red curve shows the actual transformation of a small circle, while the green dashed line shows what the Jacobian predicts. When they match well, the network is locally linear; when they diverge, the nonlinearity is strong.</p>
 </section>
-<section id="example-spectral-normalization" class="level3" data-number="D.3.6">
-<h3 data-number="D.3.6" class="anchored" data-anchor-id="example-spectral-normalization"><span class="header-section-number">D.3.6</span> Example: Spectral Normalization</h3>
+<section id="example-spectral-normalization" class="level3" data-number="C.3.6">
+<h3 data-number="C.3.6" class="anchored" data-anchor-id="example-spectral-normalization"><span class="header-section-number">C.3.6</span> Example: Spectral Normalization</h3>
 <p>Spectral normalization is a technique to control the Lipschitz constant of neural networks by constraining weight matrices to have spectral norm <span class="math inline">\(\leq 1\)</span>. Let’s see how this affects the transformation.</p>
 <div id="f17fab6b" class="cell" data-execution_count="39">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to apply spectral normalization to a weight matrix</span></span>
@@ -1704,10 +1698,10 @@ Spectral norm: 1.0000</code></pre>
 <p>Spectral normalization ensures that no input vector gets amplified by more than a factor of 1. This is useful for training stability in deep networks since repeated multiplications by weight matrices with large spectral norms can cause gradients to explode. It can also have benefits in cases where we might wish to bound the amount that a given input perturbation can affect a network (e.g., for adversarial robustness).</p>
 </section>
 </section>
-<section id="differentiation-curvature" class="level2" data-number="D.4">
-<h2 data-number="D.4" class="anchored" data-anchor-id="differentiation-curvature"><span class="header-section-number">D.4</span> Differentiation &amp; Curvature</h2>
-<section id="concepts-3" class="level3" data-number="D.4.1">
-<h3 data-number="D.4.1" class="anchored" data-anchor-id="concepts-3"><span class="header-section-number">D.4.1</span> Concepts:</h3>
+<section id="differentiation-curvature" class="level2" data-number="C.4">
+<h2 data-number="C.4" class="anchored" data-anchor-id="differentiation-curvature"><span class="header-section-number">C.4</span> Differentiation &amp; Curvature</h2>
+<section id="concepts-3" class="level3" data-number="C.4.1">
+<h3 data-number="C.4.1" class="anchored" data-anchor-id="concepts-3"><span class="header-section-number">C.4.1</span> Concepts:</h3>
 <ul>
 <li><strong>Gradients</strong> point in the direction of steepest ascent and guide first-order optimization</li>
 <li><strong>Hessians</strong> capture curvature (second-order information) about the function’s shape</li>
@@ -1716,14 +1710,14 @@ Spectral norm: 1.0000</code></pre>
 <li>Understanding higher-order structure is useful for advanced optimization and model analysis</li>
 </ul>
 </section>
-<section id="key-equations-3" class="level3" data-number="D.4.2">
-<h3 data-number="D.4.2" class="anchored" data-anchor-id="key-equations-3"><span class="header-section-number">D.4.2</span> Key Equations:</h3>
+<section id="key-equations-3" class="level3" data-number="C.4.2">
+<h3 data-number="C.4.2" class="anchored" data-anchor-id="key-equations-3"><span class="header-section-number">C.4.2</span> Key Equations:</h3>
 <p><strong>Gradient (First derivative):</strong> <span class="math display">\[\nabla f(x) = \begin{bmatrix} \frac{\partial f}{\partial x_1} \\ \vdots \\ \frac{\partial f}{\partial x_n} \end{bmatrix}\]</span></p>
 <p><strong>Hessian (Second derivative matrix):</strong> <span class="math display">\[H(f)(x) = \begin{bmatrix} \frac{\partial^2 f}{\partial x_i \partial x_j} \end{bmatrix}\]</span></p>
 <p><strong>Intuition:</strong> The gradient tells you which way is “downhill,” but the Hessian tells you how quickly the slope is changing. Various optimizers like Newton’s method or L-BFGS can use curvature to take smarter steps than simple gradient descent.</p>
 </section>
-<section id="example-gradient-and-hessian-visualization" class="level3" data-number="D.4.3">
-<h3 data-number="D.4.3" class="anchored" data-anchor-id="example-gradient-and-hessian-visualization"><span class="header-section-number">D.4.3</span> Example: Gradient and Hessian Visualization</h3>
+<section id="example-gradient-and-hessian-visualization" class="level3" data-number="C.4.3">
+<h3 data-number="C.4.3" class="anchored" data-anchor-id="example-gradient-and-hessian-visualization"><span class="header-section-number">C.4.3</span> Example: Gradient and Hessian Visualization</h3>
 <p>Let’s visualize how the gradient (slope) and Hessian (curvature) change at different points along a function. We’ll use <span class="math inline">\(f(x) = x^3 - 3x\)</span> and detect different gradient and curvature regions.</p>
 <div id="329b9cb3" class="cell" data-execution_count="44">
 <details class="code-fold">
@@ -1819,8 +1813,8 @@ Spectral norm: 1.0000</code></pre>
 </div>
 <p>The gradient tells you the instantaneous rate of change (the slope of the tangent line), while the Hessian tells you how fast that slope is changing (the curvature). When the Hessian is positive, the function curves upward like a bowl—this is where gradient descent naturally converges. When it’s negative, the function curves downward—a local maximum. At the inflection point (x=0), the curvature is zero.</p>
 </section>
-<section id="example-reducing-computational-cost-using-jvps-and-hvps" class="level3" data-number="D.4.4">
-<h3 data-number="D.4.4" class="anchored" data-anchor-id="example-reducing-computational-cost-using-jvps-and-hvps"><span class="header-section-number">D.4.4</span> Example: Reducing Computational Cost using JVPs and HVPs</h3>
+<section id="example-reducing-computational-cost-using-jvps-and-hvps" class="level3" data-number="C.4.4">
+<h3 data-number="C.4.4" class="anchored" data-anchor-id="example-reducing-computational-cost-using-jvps-and-hvps"><span class="header-section-number">C.4.4</span> Example: Reducing Computational Cost using JVPs and HVPs</h3>
 <p>Jacobian-vector products (JVPs) and Hessian-vector products (HVPs) let us compute directional derivatives efficiently without forming the full Jacobian or Hessian matrix. This is crucial for large-scale problems. We will first see how this works on a simple 2D function, and then later move to a more realistic case of a Neural Network.</p>
 <div id="f9628a84" class="cell" data-execution_count="57">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># A simple 2D function f(x, y)</span></span>
@@ -1974,10 +1968,10 @@ Layer 3 | Param shape (1,) | JVP contrib norm=0.027 | HVP norm=nan</code></pre>
 <p>The full Hessian of a neural network with <span class="math inline">\(p\)</span> parameters is a <span class="math inline">\(p \times p\)</span> matrix, and for modern networks with millions of parameters, this is completely infeasible. JVPs and HVPs give us access to gradient and curvature information, respectively. along specific directions at a fraction of the cost.</p>
 </section>
 </section>
-<section id="marginalization-of-probability-distributions" class="level2" data-number="D.5">
-<h2 data-number="D.5" class="anchored" data-anchor-id="marginalization-of-probability-distributions"><span class="header-section-number">D.5</span> Marginalization of Probability Distributions</h2>
-<section id="concepts-4" class="level3" data-number="D.5.1">
-<h3 data-number="D.5.1" class="anchored" data-anchor-id="concepts-4"><span class="header-section-number">D.5.1</span> Concepts:</h3>
+<section id="marginalization-of-probability-distributions" class="level2" data-number="C.5">
+<h2 data-number="C.5" class="anchored" data-anchor-id="marginalization-of-probability-distributions"><span class="header-section-number">C.5</span> Marginalization of Probability Distributions</h2>
+<section id="concepts-4" class="level3" data-number="C.5.1">
+<h3 data-number="C.5.1" class="anchored" data-anchor-id="concepts-4"><span class="header-section-number">C.5.1</span> Concepts:</h3>
 <ul>
 <li><strong>Joint distributions</strong> <span class="math inline">\(p(x, z)\)</span> describe the probability of multiple variables together</li>
 <li><strong>Marginal distributions</strong> <span class="math inline">\(p(x)\)</span> are obtained by integrating (or summing) out other variables</li>
@@ -1987,15 +1981,15 @@ Layer 3 | Param shape (1,) | JVP contrib norm=0.027 | HVP norm=nan</code></pre>
 <li>This operation removes nuisance variables and reveals the distribution of the variable we care about</li>
 </ul>
 </section>
-<section id="key-equations-4" class="level3" data-number="D.5.2">
-<h3 data-number="D.5.2" class="anchored" data-anchor-id="key-equations-4"><span class="header-section-number">D.5.2</span> Key Equations:</h3>
+<section id="key-equations-4" class="level3" data-number="C.5.2">
+<h3 data-number="C.5.2" class="anchored" data-anchor-id="key-equations-4"><span class="header-section-number">C.5.2</span> Key Equations:</h3>
 <p><strong>Marginalization (continuous):</strong> <span class="math display">\[p(x) = \int p(x, z) \, dz\]</span></p>
 <p><strong>Law of Total Probability:</strong> <span class="math display">\[p(x) = \int p(x | z) p(z) \, dz = \mathbb{E}_Z[p(x|Z)]\]</span></p>
 <p><strong>Conditional Distribution:</strong> <span class="math display">\[p(x | z) = \frac{p(x, z)}{p(z)}\]</span></p>
 <p><strong>Intuition:</strong> Marginalization asks “what’s the probability of <span class="math inline">\(x\)</span>, averaging over all possible values of <span class="math inline">\(z\)</span>?” It’s like projecting a 2D distribution onto a 1D axis: you’re summing up all the probability mass along one direction.</p>
 </section>
-<section id="example-2d-gaussian-marginalization" class="level3" data-number="D.5.3">
-<h3 data-number="D.5.3" class="anchored" data-anchor-id="example-2d-gaussian-marginalization"><span class="header-section-number">D.5.3</span> Example: 2D Gaussian Marginalization</h3>
+<section id="example-2d-gaussian-marginalization" class="level3" data-number="C.5.3">
+<h3 data-number="C.5.3" class="anchored" data-anchor-id="example-2d-gaussian-marginalization"><span class="header-section-number">C.5.3</span> Example: 2D Gaussian Marginalization</h3>
 <p>Let’s visualize a 2D Gaussian distribution and see what happens when we marginalize out one variable. This is the foundation for understanding latent variable models.</p>
 <div id="7497309c" class="cell" data-execution_count="76">
 <details class="code-fold">
@@ -2089,8 +2083,8 @@ Layer 3 | Param shape (1,) | JVP contrib norm=0.027 | HVP norm=nan</code></pre>
 <p>Marginalization “collapses” the joint distribution onto one axis by integrating out the other variable. Think of it as viewing the shadow of a 3D object—you lose information about one dimension but get a simpler view.</p>
 <p>The marginal distributions don’t tell you anything about the correlation between <span class="math inline">\(x\)</span> and <span class="math inline">\(z\)</span>. If you only observe <span class="math inline">\(p(x)\)</span> and <span class="math inline">\(p(z)\)</span> separately, could you reconstruct <span class="math inline">\(p(x, z)\)</span>?</p>
 </section>
-<section id="example-conditional-sampling-and-the-joint-distribution" class="level3" data-number="D.5.4">
-<h3 data-number="D.5.4" class="anchored" data-anchor-id="example-conditional-sampling-and-the-joint-distribution"><span class="header-section-number">D.5.4</span> Example: Conditional Sampling and the Joint Distribution</h3>
+<section id="example-conditional-sampling-and-the-joint-distribution" class="level3" data-number="C.5.4">
+<h3 data-number="C.5.4" class="anchored" data-anchor-id="example-conditional-sampling-and-the-joint-distribution"><span class="header-section-number">C.5.4</span> Example: Conditional Sampling and the Joint Distribution</h3>
 <p>The joint distribution can be decomposed as <span class="math inline">\(p(x, z) = p(x|z) p(z)\)</span>. Let’s visualize how conditionals <span class="math inline">\(p(x|z)\)</span> for different values of <span class="math inline">\(z\)</span> shape the joint distribution.</p>
 <div id="0dba11cd" class="cell" data-execution_count="78">
 <details class="code-fold">
@@ -2630,7 +2624,7 @@ Layer 3 | Param shape (1,) | JVP contrib norm=0.027 | HVP norm=nan</code></pre>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="../appendices/review_of_singular_value_decomposition.html" class="pagination-link" aria-label="Review of Matrices and the Singular Value Decomposition">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Review of Matrices and the Singular Value Decomposition</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Review of Matrices and the Singular Value Decomposition</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

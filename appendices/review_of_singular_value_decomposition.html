@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Appendix C — Review of Matrices and the Singular Value Decomposition – Machine Learning for Mechanical Engineering</title>
+<title>Appendix B — Review of Matrices and the Singular Value Decomposition – Machine Learning for Mechanical Engineering</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -66,7 +66,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
 <link href="../appendices/review_of_math_and_computing_foundations.html" rel="next">
-<link href="../appendices/course_progression.html" rel="prev">
+<link href="../appendices/helpful_tooling.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -151,7 +151,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../appendices/helpful_tooling.html">Appendices</a></li><li class="breadcrumb-item"><a href="../appendices/review_of_singular_value_decomposition.html"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Review of Matrices and the Singular Value Decomposition</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../appendices/helpful_tooling.html">Appendices</a></li><li class="breadcrumb-item"><a href="../appendices/review_of_singular_value_decomposition.html"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Review of Matrices and the Singular Value Decomposition</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -416,20 +416,14 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../appendices/course_progression.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Course Lecture Progression</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="../appendices/review_of_singular_value_decomposition.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Review of Matrices and the Singular Value Decomposition</span></span></a>
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Review of Matrices and the Singular Value Decomposition</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../appendices/review_of_math_and_computing_foundations.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Reviewing Mathematical and Computational Foundations for Machine Learning</span></span></a>
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Reviewing Mathematical and Computational Foundations for Machine Learning</span></span></a>
   </div>
 </li>
       </ul>
@@ -444,17 +438,17 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#the-singular-value-decomposition" id="toc-the-singular-value-decomposition" class="nav-link active" data-scroll-target="#the-singular-value-decomposition"><span class="header-section-number">D</span> The Singular Value Decomposition</a></li>
-  <li><a href="#what-about-different-dimensions" id="toc-what-about-different-dimensions" class="nav-link" data-scroll-target="#what-about-different-dimensions"><span class="header-section-number">E</span> What about different dimensions?</a></li>
+  <li><a href="#the-singular-value-decomposition" id="toc-the-singular-value-decomposition" class="nav-link active" data-scroll-target="#the-singular-value-decomposition"><span class="header-section-number">C</span> The Singular Value Decomposition</a></li>
+  <li><a href="#what-about-different-dimensions" id="toc-what-about-different-dimensions" class="nav-link" data-scroll-target="#what-about-different-dimensions"><span class="header-section-number">D</span> What about different dimensions?</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../appendices/helpful_tooling.html">Appendices</a></li><li class="breadcrumb-item"><a href="../appendices/review_of_singular_value_decomposition.html"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Review of Matrices and the Singular Value Decomposition</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../appendices/helpful_tooling.html">Appendices</a></li><li class="breadcrumb-item"><a href="../appendices/review_of_singular_value_decomposition.html"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Review of Matrices and the Singular Value Decomposition</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Appendix C — Review of Matrices and the Singular Value Decomposition</h1>
+<h1 class="title">Appendix B — Review of Matrices and the Singular Value Decomposition</h1>
 </div>
 
 
@@ -634,8 +628,8 @@ Transformed:
 </div>
 </div>
 </div>
-<section id="the-singular-value-decomposition" class="level1" data-number="D">
-<h1 data-number="D"><span class="header-section-number">D</span> <a href="https://en.wikipedia.org/wiki/Singular_value_decomposition">The Singular Value Decomposition</a></h1>
+<section id="the-singular-value-decomposition" class="level1" data-number="C">
+<h1 data-number="C"><span class="header-section-number">C</span> <a href="https://en.wikipedia.org/wiki/Singular_value_decomposition">The Singular Value Decomposition</a></h1>
 <p>For <span class="math inline">\(N\)</span> data points of <span class="math inline">\(d\)</span> dimensions: <span class="math display">\[
 X_{d\times N} = U_{d\times d}  \Sigma_{d\times N} V^*_{N\times N}
 \]</span> Where <span class="math inline">\(U\)</span>, <span class="math inline">\(V\)</span> are <a href="https://en.wikipedia.org/wiki/Orthogonal_matrix">orthogonal</a> (<span class="math inline">\(UU^T=I\)</span>), and <span class="math inline">\(\Sigma\)</span> is diagonal.</p>
@@ -742,8 +736,8 @@ U*U.T =
 </div>
 </div>
 </section>
-<section id="what-about-different-dimensions" class="level1" data-number="E">
-<h1 data-number="E"><span class="header-section-number">E</span> What about different dimensions?</h1>
+<section id="what-about-different-dimensions" class="level1" data-number="D">
+<h1 data-number="D"><span class="header-section-number">D</span> What about different dimensions?</h1>
 <div id="cell-20" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;slideshow&quot;,&quot;value&quot;:{&quot;slide_type&quot;:&quot;fragment&quot;}}" data-execution_count="16">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>M <span class="op">=</span> np.matrix([[<span class="dv">1</span>,<span class="dv">0</span>,],[<span class="dv">0</span>,<span class="dv">1</span>],[<span class="dv">2</span>,<span class="fl">0.5</span>]])</span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> np.matrix([[<span class="dv">1</span>],[<span class="dv">1</span>]])</span>
@@ -1559,13 +1553,13 @@ Are they equal?:  True</code></pre>
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../appendices/course_progression.html" class="pagination-link" aria-label="Course Lecture Progression">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Course Lecture Progression</span></span>
+      <a href="../appendices/helpful_tooling.html" class="pagination-link" aria-label="Helpful Tooling for Working with and Debugging Machine Learning Models">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Helpful Tooling for Working with and Debugging Machine Learning Models</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="../appendices/review_of_math_and_computing_foundations.html" class="pagination-link" aria-label="Reviewing Mathematical and Computational Foundations for Machine Learning">
-        <span class="nav-page-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Reviewing Mathematical and Computational Foundations for Machine Learning</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Reviewing Mathematical and Computational Foundations for Machine Learning</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
