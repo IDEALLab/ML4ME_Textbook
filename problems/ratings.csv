@@ -1,0 +1,22 @@
+movie,user,ratings
+The Avengers,Alex,3.0
+The Avengers,Priya,3.5
+The Avengers,Yichen,3.5
+When Harry Met Sally,Alex,3.0
+When Harry Met Sally,Sally,4.5
+When Harry Met Sally,Priya,3.0
+When Harry Met Sally,Yichen,3.0
+Silence of the Lambs,Alex,3.0
+Silence of the Lambs,Sally,4.0
+Silence of the Lambs,Juan,3.5
+Silence of the Lambs,Priya,3.0
+Silence of the Lambs,Yichen,2.5
+Shawshank Redemption,Juan,2.5
+Shawshank Redemption,Priya,4.0
+Shawshank Redemption,Yichen,4.0
+The Hangover,Alex,3.0
+The Hangover,Sally,3.5
+The Hangover,Priya,3.0
+The Hangover,Yichen,2.5
+The Godfather,Alex,3.0
+The Godfather,Priya,3.5
