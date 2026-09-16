@@ -4,5 +4,8 @@ channels:
 dependencies:
   - python=3.11.8
   - pip
-  - pip:
-      - geomloss>=0.2.6
+
+# Everything else is installed by bootstrap_env.py after this environment
+# exists: first the pinned PyTorch wheels, then the dependencies in
+# pyproject.toml. Adding a pip package that depends on torch here would pull a
+# default-PyPI torch that the pinned install then has to replace.

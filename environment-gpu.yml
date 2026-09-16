@@ -4,9 +4,9 @@ channels:
 dependencies:
   - python=3.11.8
   - pip
-  - pip:
-      - geomloss>=0.2.6
-  
-  # CUDA and cuDNN for GPU support
-  - conda-forge::cuda=12.8
-  - conda-forge::cudnn
+
+# Deliberately no conda cuda/cudnn packages. GPU support comes entirely from the
+# +cu128 PyTorch wheels, which bundle their own CUDA and cuDNN. Installing conda's
+# cuda/cudnn alongside them puts a second set of identically-named DLLs in
+# Library\bin, which torch adds to the Windows DLL search path (torch/__init__.py).
+# The wrong copy then wins and torch fails to import with WinError 127.
