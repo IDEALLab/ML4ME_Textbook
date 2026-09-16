@@ -1,0 +1,37 @@
+# Binder (mybinder.org) environment for the ML4ME Textbook.
+#
+# repo2docker uses the files in this binder/ directory INSTEAD of the repo-root
+# environment.yml / pyproject.toml, so the local install (bootstrap_env.py) is
+# unaffected. Keep this in sync with pyproject.toml and the torch pins in
+# bootstrap_env.py; run check_env.py inside a Binder session to verify.
+#
+# Binder has no GPU. With the PyTorch CPU index as an extra index, pip picks the
+# CPU-only wheel (torch 2.7.1+cpu) on x86_64, which keeps the image small.
+# Do not add the "+cpu" suffix to the pins: aarch64 wheels do not carry it.
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.7.1
+torchvision==0.22.1
+torchaudio==2.7.1
+
+# Same constraints as pyproject.toml [project.dependencies].
+# pyproject's `jupyter` and `notebook` are deliberately omitted: the Binder base
+# image already provides JupyterLab and Notebook, and pip-upgrading them there
+# breaks the image.
+numpy>=1.26.4
+matplotlib>=3.8.4
+seaborn>=0.13.2
+scikit-learn>=1.4.2
+pandas>=2.2.2
+scipy>=1.13.1
+geomloss>=0.2.6
+engibench>=0.0.1
+plotly>=5.20.0
+torchdiffeq>=0.2.4
+pyro-ppl>=1.9.0
+gymnasium[classic-control]>=0.29.0
+ipywidgets>=8.1.2
+Pillow>=10.3.0
+
+# Imported by notebooks but not declared in pyproject.toml (see check_env.py).
+tqdm
+requests
