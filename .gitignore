@@ -234,3 +234,7 @@ tmp/
 
 # GitHub
 .github/*.md
+# Claude
+.claude/
+
+notebooks/
