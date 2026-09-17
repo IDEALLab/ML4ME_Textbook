@@ -416,6 +416,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#exercise-1-visualize-the-relationship-between-features-and-price" id="toc-exercise-1-visualize-the-relationship-between-features-and-price" class="nav-link active" data-scroll-target="#exercise-1-visualize-the-relationship-between-features-and-price"><span class="header-section-number">26.1</span> Exercise 1: Visualize the relationship between features and price</a></li>
   <li><a href="#exercise-2-visualize-the-relationships-between-features" id="toc-exercise-2-visualize-the-relationships-between-features" class="nav-link" data-scroll-target="#exercise-2-visualize-the-relationships-between-features"><span class="header-section-number">26.2</span> Exercise 2: Visualize the relationships between features</a></li>
   <li><a href="#exercise-3-visualize-relationships-with-the-anomalies-removed" id="toc-exercise-3-visualize-relationships-with-the-anomalies-removed" class="nav-link" data-scroll-target="#exercise-3-visualize-relationships-with-the-anomalies-removed"><span class="header-section-number">26.3</span> Exercise 3: Visualize relationships with the Anomalies Removed</a></li>
+  <li><a href="#solutions" id="toc-solutions" class="nav-link" data-scroll-target="#solutions"><span class="header-section-number">26.4</span> Solutions</a></li>
   </ul>
 </nav>
     </div>
@@ -448,13 +449,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Interpret the visualizations and discuss what they mean for building ML models</li>
 </ol>
 <p>The below code is a useful starting point that should get you started with exploring the California Housing data.</p>
-<div id="cell-3" class="cell" data-execution_count="1">
+<div id="cell-3" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-17T07:25:26.848759Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-17T07:25:26.848474Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-17T07:25:27.491634Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-17T07:25:27.491351Z&quot;}}" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> fetch_california_housing</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>cal_housing <span class="op">=</span> fetch_california_housing(data_home<span class="op">=</span><span class="st">'.'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="cell-4" class="cell" data-execution_count="2">
+<div id="cell-4" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-17T07:25:27.493667Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-17T07:25:27.493514Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-17T07:25:27.495249Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-17T07:25:27.495060Z&quot;}}" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(cal_housing.DESCR)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>.. _california_housing_dataset:
@@ -506,13 +507,13 @@ It can be downloaded/loaded using the
 </code></pre>
 </div>
 </div>
-<div id="cell-5" class="cell" data-execution_count="3">
+<div id="cell-5" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-17T07:25:27.510733Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-17T07:25:27.510602Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-17T07:25:27.513478Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-17T07:25:27.513254Z&quot;}}" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cal_housing.target</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <pre><code>array([4.526, 3.585, 3.521, ..., 0.923, 0.847, 0.894])</code></pre>
 </div>
 </div>
-<div id="cell-6" class="cell" data-execution_count="4">
+<div id="cell-6" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-17T07:25:27.514797Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-17T07:25:27.514705Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-17T07:25:27.516574Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-17T07:25:27.516369Z&quot;}}" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> cal_housing.data</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>avg_price <span class="op">=</span> cal_housing.target</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>feature_names <span class="op">=</span> cal_housing.feature_names</span>
@@ -528,37 +529,31 @@ It can be downloaded/loaded using the
  'Longitude']</code></pre>
 </div>
 </div>
-<div id="cell-7" class="cell" data-execution_count="5">
+<div id="cell-7" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-17T07:25:27.521062Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-17T07:25:27.520929Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-17T07:25:27.523188Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-17T07:25:27.522912Z&quot;}}" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>X[:,<span class="dv">0</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
 <pre><code>array([8.3252, 8.3014, 7.2574, ..., 1.7   , 1.8672, 2.3886])</code></pre>
 </div>
 </div>
-<div id="cell-8" class="cell" data-execution_count="6">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>cal_housing.target</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="6">
-<pre><code>array([4.526, 3.585, 3.521, ..., 0.923, 0.847, 0.894])</code></pre>
-</div>
-</div>
-<div id="cell-9" class="cell" data-execution_count="7">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>plt.scatter(X[:,<span class="dv">0</span>],cal_housing.target, alpha<span class="op">=</span><span class="fl">0.1</span>)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Median Income"</span>)</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"House Price"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="cell-8" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-17T07:25:27.524679Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-17T07:25:27.524548Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-17T07:25:27.620971Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-17T07:25:27.620727Z&quot;}}" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>plt.scatter(X[:,<span class="dv">1</span>], cal_housing.target, alpha<span class="op">=</span><span class="fl">0.1</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"House Age"</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"House Price"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="california_housing_visualization_files/figure-html/cell-8-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="california_housing_visualization_files/figure-html/cell-7-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Some people might find it useful to use a <a href="http://synesthesiam.com/posts/an-introduction-to-pandas.html">Pandas</a> <a href="http://www.gregreda.com/2013/10/26/intro-to-pandas-data-structures/">dataframe</a> to <a href="http://www.gregreda.com/2013/10/26/working-with-pandas-dataframes/">manipulate the data</a>, but that is not really required for basic plotting and visualization:</p>
-<div id="cell-11" class="cell" data-execution_count="8">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>df<span class="op">=</span>pd.DataFrame(np.hstack([X,avg_price[:,np.newaxis]]),columns<span class="op">=</span>np.hstack([feature_names,<span class="st">'price'</span>]))</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Example of the first few rows of data (using the "head" command)</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>df</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="8">
+<div id="cell-10" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-17T07:25:27.623267Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-17T07:25:27.623186Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-17T07:25:27.942817Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-17T07:25:27.942580Z&quot;}}" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>df<span class="op">=</span>pd.DataFrame(np.hstack([X,avg_price[:,np.newaxis]]),columns<span class="op">=</span>np.hstack([feature_names,<span class="st">'price'</span>]))</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Example of the first few rows of data (using the "head" command)</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>df</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
 <div>
 
 
@@ -717,12 +712,12 @@ It can be downloaded/loaded using the
 </div>
 </div>
 </div>
-<div id="cell-12" class="cell" data-execution_count="9">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Below is how you might select only some columns from a dataframe.</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># This is just an illustrative example; you could select other columns</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>subdf <span class="op">=</span> df[[<span class="st">'MedInc'</span>,<span class="st">'HouseAge'</span>,<span class="st">'AveRooms'</span>,<span class="st">'AveBedrms'</span>,<span class="st">'Population'</span>,<span class="st">'AveOccup'</span>,<span class="st">'price'</span>]]</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>subdf.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="9">
+<div id="cell-11" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-17T07:25:27.944194Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-17T07:25:27.944092Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-17T07:25:27.947646Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-17T07:25:27.947453Z&quot;}}" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Below is how you might select only some columns from a dataframe.</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># This is just an illustrative example; you could select other columns</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>subdf <span class="op">=</span> df[[<span class="st">'MedInc'</span>,<span class="st">'HouseAge'</span>,<span class="st">'AveRooms'</span>,<span class="st">'AveBedrms'</span>,<span class="st">'Population'</span>,<span class="st">'AveOccup'</span>,<span class="st">'price'</span>]]</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>subdf.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
 <div>
 
 
@@ -796,6 +791,148 @@ It can be downloaded/loaded using the
 </div>
 </div>
 </div>
+<div id="cell-12" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-17T07:25:27.948847Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-17T07:25:27.948788Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-17T07:25:27.957592Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-17T07:25:27.957396Z&quot;}}" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary statistics (count, mean, min, max, ...) for every column at once</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>df.describe()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">MedInc</th>
+<th data-quarto-table-cell-role="th">HouseAge</th>
+<th data-quarto-table-cell-role="th">AveRooms</th>
+<th data-quarto-table-cell-role="th">AveBedrms</th>
+<th data-quarto-table-cell-role="th">Population</th>
+<th data-quarto-table-cell-role="th">AveOccup</th>
+<th data-quarto-table-cell-role="th">Latitude</th>
+<th data-quarto-table-cell-role="th">Longitude</th>
+<th data-quarto-table-cell-role="th">price</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">count</th>
+<td>20640.000000</td>
+<td>20640.000000</td>
+<td>20640.000000</td>
+<td>20640.000000</td>
+<td>20640.000000</td>
+<td>20640.000000</td>
+<td>20640.000000</td>
+<td>20640.000000</td>
+<td>20640.000000</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">mean</th>
+<td>3.870671</td>
+<td>28.639486</td>
+<td>5.429000</td>
+<td>1.096675</td>
+<td>1425.476744</td>
+<td>3.070655</td>
+<td>35.631861</td>
+<td>-119.569704</td>
+<td>2.068558</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">std</th>
+<td>1.899822</td>
+<td>12.585558</td>
+<td>2.474173</td>
+<td>0.473911</td>
+<td>1132.462122</td>
+<td>10.386050</td>
+<td>2.135952</td>
+<td>2.003532</td>
+<td>1.153956</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">min</th>
+<td>0.499900</td>
+<td>1.000000</td>
+<td>0.846154</td>
+<td>0.333333</td>
+<td>3.000000</td>
+<td>0.692308</td>
+<td>32.540000</td>
+<td>-124.350000</td>
+<td>0.149990</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">25%</th>
+<td>2.563400</td>
+<td>18.000000</td>
+<td>4.440716</td>
+<td>1.006079</td>
+<td>787.000000</td>
+<td>2.429741</td>
+<td>33.930000</td>
+<td>-121.800000</td>
+<td>1.196000</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">50%</th>
+<td>3.534800</td>
+<td>29.000000</td>
+<td>5.229129</td>
+<td>1.048780</td>
+<td>1166.000000</td>
+<td>2.818116</td>
+<td>34.260000</td>
+<td>-118.490000</td>
+<td>1.797000</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">75%</th>
+<td>4.743250</td>
+<td>37.000000</td>
+<td>6.052381</td>
+<td>1.099526</td>
+<td>1725.000000</td>
+<td>3.282261</td>
+<td>37.710000</td>
+<td>-118.010000</td>
+<td>2.647250</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">max</th>
+<td>15.000100</td>
+<td>52.000000</td>
+<td>141.909091</td>
+<td>34.066667</td>
+<td>35682.000000</td>
+<td>1243.333333</td>
+<td>41.950000</td>
+<td>-114.310000</td>
+<td>5.000010</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="cell-13" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-17T07:25:27.958756Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-17T07:25:27.958695Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-17T07:25:27.960728Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-17T07:25:27.960550Z&quot;}}" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Looping over the columns of a dataframe.</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Useful when you want to repeat the same thing (e.g., a plot) for every feature.</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> column <span class="kw">in</span> df.columns:</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(column, df[column].mean())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>MedInc 3.8706710029069766
+HouseAge 28.639486434108527
+AveRooms 5.428999742190376
+AveBedrms 1.096675149606208
+Population 1425.4767441860465
+AveOccup 3.0706551594363742
+Latitude 35.63186143410853
+Longitude -119.56970445736432
+price 2.068558169089147</code></pre>
+</div>
+</div>
 <p>For the below tasks, you might want to try out some basic Python plotting libraries. I recommend:</p>
 <ul>
 <li><a href="http://matplotlib.org/">Matplotlib</a>: Fairly basic building block, but gets the job done, and widely used. This is the most complicated option, but gives you the most control.</li>
@@ -803,46 +940,51 @@ It can be downloaded/loaded using the
 <li><a href="https://stanford.edu/~mwaskom/software/seaborn/">Seaborn</a>: Probably the easiest to use to produce basic, common graphs and statistics.</li>
 </ul>
 <p>If you aren’t familiar with any of the above libraries, I would suggest starting with Seaborn, since it hides many of the complex features you might not need right away (check out their <a href="https://stanford.edu/~mwaskom/software/seaborn/tutorial/distributions.html">tutorial</a>). Bokeh also has a nice <a href="http://bokeh.pydata.org/en/latest/docs/user_guide/quickstart.html#userguide-quickstart">Quick Start guide</a> if you like having the ability to pan/zoom the data.</p>
-<div id="cell-14" class="cell" data-execution_count="10">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Matplotlib plotting example</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Below line tells the notebook to plots the images here</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co"># in the notebook, rather than separately as image files.</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>matplotlib inline </span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>plt.hist(df[<span class="st">'MedInc'</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="10">
-<pre><code>(array([2247., 7436., 6098., 2990., 1060.,  428.,  178.,   93.,   47.,
-          63.]),
- array([ 0.4999 ,  1.94992,  3.39994,  4.84996,  6.29998,  7.75   ,
-         9.20002, 10.65004, 12.10006, 13.55008, 15.0001 ]),
- &lt;BarContainer object of 10 artists&gt;)</code></pre>
+<div id="cell-15" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-17T07:25:27.961864Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-17T07:25:27.961807Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-17T07:25:27.992422Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-17T07:25:27.992220Z&quot;}}" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Matplotlib plotting example</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Below line tells the notebook to plots the images here</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co"># in the notebook, rather than separately as image files.</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>matplotlib inline </span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>plt.hist(df[<span class="st">'MedInc'</span>])</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="california_housing_visualization_files/figure-html/cell-12-output-1.png" class="img-fluid figure-img"></p>
+</figure>
 </div>
 </div>
-<div id="cell-15" class="cell" data-execution_count="11">
+</div>
+<div id="cell-16" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-17T07:25:27.993715Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-17T07:25:27.993651Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-17T07:25:27.995073Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-17T07:25:27.994888Z&quot;}}" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pandas Example- Uncomment below and run if you want</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Note, this is essentially just a shortcut to matplotlib</span></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co">#df['MedInc'].hist()</span></span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co"># or</span></span>
 <span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co">#df.plot(kind='scatter', x='MedInc', y='price')</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="cell-16" class="cell">
+<div id="cell-17" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-17T07:25:27.996223Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-17T07:25:27.996157Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-17T07:25:28.148879Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-17T07:25:28.148299Z&quot;}}" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Seaborn Example - Uncomment below and run if you want</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns  </span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Note, just importing seaborn changes the matplotlib default behavior</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>plt.figure()</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>sns.displot(df[<span class="st">'MedInc'</span>])</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>sns.displot(df[<span class="st">'MedInc'</span>])</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="california_housing_visualization_files/figure-html/cell-13-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="california_housing_visualization_files/figure-html/cell-14-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
+</div>
+<div id="cell-18" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-17T07:25:28.151972Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-17T07:25:28.151699Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-17T07:25:28.355669Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-17T07:25:28.355385Z&quot;}}" data-execution_count="14">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Seaborn 2D example: a scatter plot of two columns, with each column's 1D distribution along the sides</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>sns.jointplot(x<span class="op">=</span>df[<span class="st">'HouseAge'</span>], y<span class="op">=</span>df[<span class="st">'MedInc'</span>], alpha<span class="op">=</span><span class="fl">0.1</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="california_housing_visualization_files/figure-html/cell-13-output-2.png" class="img-fluid figure-img"></p>
+<p><img src="california_housing_visualization_files/figure-html/cell-15-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -851,314 +993,184 @@ It can be downloaded/loaded using the
 <h2 data-number="26.1" class="anchored" data-anchor-id="exercise-1-visualize-the-relationship-between-features-and-price"><span class="header-section-number">26.1</span> Exercise 1: Visualize the relationship between features and price</h2>
 <p>Visualize the 2D relationship between housing prices and the provided features of the data. You can choose how you want to do this.</p>
 <p>[Enter your code into the empty cell below to create the necessary visualizations. You can create multiple cells for code or Markdown code if that helps you.]</p>
-<div id="cell-18" class="cell" data-scrolled="false" data-execution_count="14">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>features <span class="op">=</span> [<span class="st">'MedInc'</span>,<span class="st">'HouseAge'</span>,<span class="st">'AveRooms'</span>,<span class="st">'AveBedrms'</span>,<span class="st">'Population'</span>,<span class="st">'AveOccup'</span>]</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i,feature <span class="kw">in</span> <span class="bu">enumerate</span>(features):</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    plt.figure()</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    sns.jointplot(x<span class="op">=</span>df[feature],y<span class="op">=</span>df[<span class="st">'price'</span>],alpha<span class="op">=</span><span class="fl">0.1</span>)</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display">
-<pre><code>&lt;Figure size 640x480 with 0 Axes&gt;</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="california_housing_visualization_files/figure-html/cell-14-output-2.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<pre><code>&lt;Figure size 640x480 with 0 Axes&gt;</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="california_housing_visualization_files/figure-html/cell-14-output-4.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<pre><code>&lt;Figure size 640x480 with 0 Axes&gt;</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="california_housing_visualization_files/figure-html/cell-14-output-6.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<pre><code>&lt;Figure size 640x480 with 0 Axes&gt;</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="california_housing_visualization_files/figure-html/cell-14-output-8.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<pre><code>&lt;Figure size 640x480 with 0 Axes&gt;</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="california_housing_visualization_files/figure-html/cell-14-output-10.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<pre><code>&lt;Figure size 640x480 with 0 Axes&gt;</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="california_housing_visualization_files/figure-html/cell-14-output-12.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
 <p><strong>Question</strong>: Do any of the features appear linearly correlated with price?</p>
+<div id="cell-21" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-17T07:25:28.357598Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-17T07:25:28.357496Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-17T07:25:28.359098Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-17T07:25:28.358812Z&quot;}}" data-execution_count="15">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Your code for Exercise 1 goes here</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </section>
 <section id="exercise-2-visualize-the-relationships-between-features" class="level2" data-number="26.2">
 <h2 data-number="26.2" class="anchored" data-anchor-id="exercise-2-visualize-the-relationships-between-features"><span class="header-section-number">26.2</span> Exercise 2: Visualize the relationships between features</h2>
 <p>Visualize the 1D and 2D relationships between the features in the dataset. For example, how are house ages distributed? What is the relationship between house age and the number of bedrooms? Feel free to explore different 1D and 2D options.</p>
-<div id="cell-21" class="cell" data-execution_count="15">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> feature <span class="kw">in</span> features:</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    plt.figure()</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    sns.displot(df[feature])</span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display">
-<pre><code>&lt;Figure size 640x480 with 0 Axes&gt;</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="california_housing_visualization_files/figure-html/cell-15-output-2.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<pre><code>&lt;Figure size 640x480 with 0 Axes&gt;</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="california_housing_visualization_files/figure-html/cell-15-output-4.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<pre><code>&lt;Figure size 640x480 with 0 Axes&gt;</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="california_housing_visualization_files/figure-html/cell-15-output-6.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<pre><code>&lt;Figure size 640x480 with 0 Axes&gt;</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="california_housing_visualization_files/figure-html/cell-15-output-8.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<pre><code>&lt;Figure size 640x480 with 0 Axes&gt;</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="california_housing_visualization_files/figure-html/cell-15-output-10.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<pre><code>&lt;Figure size 640x480 with 0 Axes&gt;</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="california_housing_visualization_files/figure-html/cell-15-output-12.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<div id="cell-22" class="cell" data-execution_count="17">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the pairwise distributions between each of the features:</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i,feature <span class="kw">in</span> <span class="bu">enumerate</span>(features):</span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j,feature2 <span class="kw">in</span> <span class="bu">enumerate</span>(features):</span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> j<span class="op">&gt;</span>i:</span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>            plt.figure()</span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>            sns.jointplot(x<span class="op">=</span>df[feature],y<span class="op">=</span>df[feature2],alpha<span class="op">=</span><span class="fl">1.0</span>)</span>
-<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>            plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display">
-<pre><code>&lt;Figure size 640x480 with 0 Axes&gt;</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="california_housing_visualization_files/figure-html/cell-16-output-2.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<pre><code>&lt;Figure size 640x480 with 0 Axes&gt;</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="california_housing_visualization_files/figure-html/cell-16-output-4.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<pre><code>&lt;Figure size 640x480 with 0 Axes&gt;</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="california_housing_visualization_files/figure-html/cell-16-output-6.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<pre><code>&lt;Figure size 640x480 with 0 Axes&gt;</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="california_housing_visualization_files/figure-html/cell-16-output-8.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<pre><code>&lt;Figure size 640x480 with 0 Axes&gt;</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="california_housing_visualization_files/figure-html/cell-16-output-10.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<pre><code>&lt;Figure size 640x480 with 0 Axes&gt;</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="california_housing_visualization_files/figure-html/cell-16-output-12.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<pre><code>&lt;Figure size 640x480 with 0 Axes&gt;</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="california_housing_visualization_files/figure-html/cell-16-output-14.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<pre><code>&lt;Figure size 640x480 with 0 Axes&gt;</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="california_housing_visualization_files/figure-html/cell-16-output-16.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<pre><code>&lt;Figure size 640x480 with 0 Axes&gt;</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="california_housing_visualization_files/figure-html/cell-16-output-18.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<pre><code>&lt;Figure size 640x480 with 0 Axes&gt;</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="california_housing_visualization_files/figure-html/cell-16-output-20.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<pre><code>&lt;Figure size 640x480 with 0 Axes&gt;</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="california_housing_visualization_files/figure-html/cell-16-output-22.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<pre><code>&lt;Figure size 640x480 with 0 Axes&gt;</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="california_housing_visualization_files/figure-html/cell-16-output-24.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<pre><code>&lt;Figure size 640x480 with 0 Axes&gt;</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="california_housing_visualization_files/figure-html/cell-16-output-26.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<pre><code>&lt;Figure size 640x480 with 0 Axes&gt;</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="california_housing_visualization_files/figure-html/cell-16-output-28.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-display">
-<pre><code>&lt;Figure size 640x480 with 0 Axes&gt;</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="california_housing_visualization_files/figure-html/cell-16-output-30.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
 <p><strong>Question</strong>: Are there any anomalies that look strange in the data, and which visualization helped you identify them (hint: there should be several)?</p>
+<div id="cell-24" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-17T07:25:28.360518Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-17T07:25:28.360445Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-17T07:25:28.361962Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-17T07:25:28.361697Z&quot;}}" data-execution_count="16">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Your code for Exercise 2 goes here</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </section>
 <section id="exercise-3-visualize-relationships-with-the-anomalies-removed" class="level2" data-number="26.3">
 <h2 data-number="26.3" class="anchored" data-anchor-id="exercise-3-visualize-relationships-with-the-anomalies-removed"><span class="header-section-number">26.3</span> Exercise 3: Visualize relationships with the Anomalies Removed</h2>
 <p>Using your knowledge of the anomalies you found above, remove those anomalies using appropriate code below (either by removing the entire data record, or just the specific values that were anomalous, if you prefer to be more surgical) and replot the Task 1 and Task 2 plots you produced above.</p>
-<div id="cell-25" class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Code goes here for dealing with outliers</span></span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="co"># You can copy/paste some of your plotting code from above, if that is helpful.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
 <p><strong>Question</strong>: Does this change your answer to the original Task 1 or Task 2 questions?</p>
+<div id="cell-27" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-17T07:25:28.363369Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-17T07:25:28.363275Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-17T07:25:28.368495Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-17T07:25:28.368270Z&quot;}}" data-execution_count="17">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Selecting only the rows of a dataframe that satisfy a condition (a "boolean mask")</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>old_houses <span class="op">=</span> df[df[<span class="st">'HouseAge'</span>] <span class="op">&gt;</span> <span class="dv">40</span>]</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(df), <span class="bu">len</span>(old_houses))</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Combining conditions: &amp; means "and", | means "or"</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>old_and_expensive <span class="op">=</span> df[(df[<span class="st">'HouseAge'</span>] <span class="op">&gt;</span> <span class="dv">40</span>) <span class="op">&amp;</span> (df[<span class="st">'price'</span>] <span class="op">&gt;</span> <span class="dv">3</span>)]</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(old_and_expensive))</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>old_and_expensive.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>20640 3878
+1030</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="17">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">MedInc</th>
+<th data-quarto-table-cell-role="th">HouseAge</th>
+<th data-quarto-table-cell-role="th">AveRooms</th>
+<th data-quarto-table-cell-role="th">AveBedrms</th>
+<th data-quarto-table-cell-role="th">Population</th>
+<th data-quarto-table-cell-role="th">AveOccup</th>
+<th data-quarto-table-cell-role="th">Latitude</th>
+<th data-quarto-table-cell-role="th">Longitude</th>
+<th data-quarto-table-cell-role="th">price</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>8.3252</td>
+<td>41.0</td>
+<td>6.984127</td>
+<td>1.023810</td>
+<td>322.0</td>
+<td>2.555556</td>
+<td>37.88</td>
+<td>-122.23</td>
+<td>4.52600</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">2</th>
+<td>7.2574</td>
+<td>52.0</td>
+<td>8.288136</td>
+<td>1.073446</td>
+<td>496.0</td>
+<td>2.802260</td>
+<td>37.85</td>
+<td>-122.24</td>
+<td>3.52100</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">3</th>
+<td>5.6431</td>
+<td>52.0</td>
+<td>5.817352</td>
+<td>1.073059</td>
+<td>558.0</td>
+<td>2.547945</td>
+<td>37.85</td>
+<td>-122.25</td>
+<td>3.41300</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">4</th>
+<td>3.8462</td>
+<td>52.0</td>
+<td>6.281853</td>
+<td>1.081081</td>
+<td>565.0</td>
+<td>2.181467</td>
+<td>37.85</td>
+<td>-122.25</td>
+<td>3.42200</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">89</th>
+<td>1.2434</td>
+<td>52.0</td>
+<td>2.929412</td>
+<td>0.917647</td>
+<td>396.0</td>
+<td>4.658824</td>
+<td>37.80</td>
+<td>-122.27</td>
+<td>5.00001</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="cell-28" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-17T07:25:28.369963Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-17T07:25:28.369890Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-17T07:25:28.371468Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-17T07:25:28.371160Z&quot;}}" data-execution_count="18">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Code goes here for dealing with outliers</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co"># You can copy/paste some of your plotting code from above, if that is helpful.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="solutions" class="level2" data-number="26.4">
+<h2 data-number="26.4" class="anchored" data-anchor-id="solutions"><span class="header-section-number">26.4</span> Solutions</h2>
+<details>
+<summary>
+<b>Solution: Exercise 1</b> (click to expand)
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>features <span class="op">=</span> [<span class="st">'MedInc'</span>,<span class="st">'HouseAge'</span>,<span class="st">'AveRooms'</span>,<span class="st">'AveBedrms'</span>,<span class="st">'Population'</span>,<span class="st">'AveOccup'</span>]</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> feature <span class="kw">in</span> features:</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    sns.jointplot(x<span class="op">=</span>df[feature], y<span class="op">=</span>df[<span class="st">'price'</span>], alpha<span class="op">=</span><span class="fl">0.1</span>)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<details>
+<summary>
+<b>Solution: Exercise 2</b> (click to expand)
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1D distribution of each feature</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> feature <span class="kw">in</span> features:</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    sns.displot(df[feature])</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 2D relationship between each pair of features</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, feature <span class="kw">in</span> <span class="bu">enumerate</span>(features):</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j, feature2 <span class="kw">in</span> <span class="bu">enumerate</span>(features):</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> j <span class="op">&gt;</span> i:</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>            sns.jointplot(x<span class="op">=</span>df[feature], y<span class="op">=</span>df[feature2], alpha<span class="op">=</span><span class="fl">1.0</span>)</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>            plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<details>
+<summary>
+<b>Solution: Exercise 3</b> (click to expand)
+</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Anomalies found above: price is capped at 5 (i.e. $500k), HouseAge is capped at 52,</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co"># and a handful of records have extreme values of AveRooms, AveBedrms, Population and AveOccup.</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>clean_df <span class="op">=</span> df[(df[<span class="st">'price'</span>] <span class="op">&lt;</span> <span class="dv">5</span>) <span class="op">&amp;</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>              (df[<span class="st">'HouseAge'</span>] <span class="op">&lt;</span> <span class="dv">52</span>) <span class="op">&amp;</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>              (df[<span class="st">'AveRooms'</span>] <span class="op">&lt;</span> <span class="dv">20</span>) <span class="op">&amp;</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>              (df[<span class="st">'AveBedrms'</span>] <span class="op">&lt;</span> <span class="dv">5</span>) <span class="op">&amp;</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>              (df[<span class="st">'Population'</span>] <span class="op">&lt;</span> <span class="dv">10000</span>) <span class="op">&amp;</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>              (df[<span class="st">'AveOccup'</span>] <span class="op">&lt;</span> <span class="dv">20</span>)]</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(df), <span class="bu">len</span>(clean_df))</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Exercise 1 plots, repeated on the cleaned data</span></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> feature <span class="kw">in</span> features:</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>    sns.jointplot(x<span class="op">=</span>clean_df[feature], y<span class="op">=</span>clean_df[<span class="st">'price'</span>], alpha<span class="op">=</span><span class="fl">0.1</span>)</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Exercise 2 plots, repeated on the cleaned data</span></span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> feature <span class="kw">in</span> features:</span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>    sns.displot(clean_df[feature])</span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, feature <span class="kw">in</span> <span class="bu">enumerate</span>(features):</span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j, feature2 <span class="kw">in</span> <span class="bu">enumerate</span>(features):</span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> j <span class="op">&gt;</span> i:</span>
+<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a>            sns.jointplot(x<span class="op">=</span>clean_df[feature], y<span class="op">=</span>clean_df[feature2], alpha<span class="op">=</span><span class="fl">1.0</span>)</span>
+<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a>            plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 
 
 </section>
