@@ -4,7 +4,7 @@ Worked solutions for the end-of-chapter exercises in Part 1. Each section follow
 
 ## Reviewing Supervised Linear Models
 
-<!-- {{< embed ../solutions/reviewing_supervised_linear_models_solutions.ipynb echo=true >}} -->
+{{< embed ../solutions/reviewing_supervised_linear_models_solutions.ipynb echo=true >}}
 
 ## Evaluating Machine Learning Models
 
