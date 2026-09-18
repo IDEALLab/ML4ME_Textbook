@@ -52,6 +52,7 @@ book:
     
   appendices:
     - appendices/helpful_tooling.qmd
+    - appendices/exercise_solutions.qmd
     #- appendices/data_preparation.qmd
     #- appendices/course_progression.qmd
     - appendices/review_of_singular_value_decomposition.ipynb

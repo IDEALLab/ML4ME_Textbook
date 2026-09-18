@@ -37,6 +37,11 @@ Here is what a note with a collapsable block structure will look like. We will a
 Here is an example where we might pose an experiment or task for you to do on your own or in class. Often wrestling with these experiments is a good way to build intuitive understanding and integrate some of the material into practice. When you see this type of callout, you should pause and do the exercise at this point in the chapter, rather than reading ahead, as it may build intuition which is useful later in the chapter.
 :::
 
+::: {.callout-note appearance="simple" icon=false}
+### Example Exercise (~5 min)
+Here is what an end-of-chapter exercise looks like. Each chapter in Part 1 closes with a short set of these. They reuse the chapter's own data and code, carry a rough time estimate in the title, and range from quick recall checks to small open-ended modeling tasks. Worked solutions are collected in @sec-exercise-solutions, but you will get far more out of the exercises if you attempt them before looking.
+:::
+
 
 # Contributors {#sec-contributors}
 
