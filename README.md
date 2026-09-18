@@ -2,13 +2,42 @@
 
 This is a textbook repository for the ETHZ Machine Learning for Mechanical Engineering course.
 
+[![Launch on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/IDEALLab/ML4ME_Textbook/main?urlpath=lab/tree/part1)
+
 ---
 
 ## 📚 For Students: Setup Guide
 
 This guide provides step-by-step instructions to set up the machine learning environment required for this course. No prior Python experience is required.
 
-### 🌟 Alternative: Google Colab (No Setup Required)
+### ☁️ Fastest: Run in Your Browser with Binder (No Install, No Account)
+
+Click the badge below (or the one at the top of this page). After a short wait a JupyterLab
+session opens in your browser with every package this book needs already installed.
+
+[![Launch on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/IDEALLab/ML4ME_Textbook/main?urlpath=lab/tree/part1)
+
+1. **Click the badge.** The first launch after a repository update can take several minutes while
+   the environment builds. Later launches usually take under a minute.
+2. **Open a notebook** from the file browser on the left (start in the `part1/` folder).
+3. **Run cells** with `Shift+Enter`.
+
+**Good to know:**
+- **Your work is not saved on the server.** A session shuts down after about 10 minutes of
+  inactivity, and everything in it is discarded. To keep your changes, download the notebook
+  (right-click the file → *Download*) before you leave. You can upload it again next time.
+- Sessions are limited to roughly 1–2 GB of memory and have **no GPU**. That is plenty for Part 1
+  and most exercises. For the heavier generative-model notebooks in Part 2, use the local setup
+  or Colab (below).
+- If a launch fails with a capacity message, wait a minute and try again. Binder is a free,
+  shared service.
+
+The environment Binder builds is defined in [`binder/requirements.txt`](binder/requirements.txt).
+It is separate from the local setup below, so changing one does not affect the other.
+
+---
+
+### 🌟 Alternative: Google Colab (Requires a Google Account)
 
 **For students who prefer a cloud-based environment without local installation:**
 
@@ -16,10 +45,10 @@ This guide provides step-by-step instructions to set up the machine learning env
 2. **Sign in with your Google account**
 3. **Click "New Notebook"**
 4. **Upload any `.ipynb` file from this book** (from the `notebooks` folder)
-5. **Install required packages** by running this in the first cell:
+5. **Install the few packages Colab does not ship** by running this in the first cell
+   (PyTorch, NumPy, pandas, scikit-learn and matplotlib are already installed on Colab):
    ```python
-   !pip install torch torchvision torchaudio
-   !pip install numpy matplotlib seaborn scikit-learn pandas scipy
+   !pip install --quiet pyro-ppl torchdiffeq geomloss gymnasium engibench
    ```
 6. **Enable GPU (optional):** Runtime → Change runtime type → GPU → Save
 
@@ -27,7 +56,7 @@ This guide provides step-by-step instructions to set up the machine learning env
 - No local installation required
 - Free GPU access (CUDA automatically configured)
 - Runs entirely in your browser
-- All packages pre-installed except ML libraries
+- Most packages pre-installed
 
 **Note:** You will need to reinstall packages each time you start a new Colab session.
 
@@ -198,11 +227,23 @@ VS Code provides an integrated development environment with excellent Jupyter su
 #### GitHub: "Authentication failed" when cloning
 - **Solution:** Use Method B (Direct Download) instead, or create a free GitHub account if you want to use Git features
 
+#### Binder: launch is stuck on "Building" or "Launching"
+- **Solution:** The first launch after the book is updated rebuilds the environment, which can
+  take 5–15 minutes. Leave the tab open. If it fails outright, wait a minute and click the badge again.
+
+#### Binder: my changes are gone
+- **Solution:** Binder sessions are temporary and end after ~10 minutes of inactivity. Download your
+  notebook (right-click → *Download*) before leaving, and upload it into a new session to continue.
+  For work you want to keep long-term, use the local setup.
+
+#### Binder: kernel dies or "Kernel restarting" while training
+- **Solution:** The session ran out of memory (about 2 GB). Reduce the dataset or model size, or
+  run that notebook locally or on Colab.
+
 #### Colab: "Package not found" error
 - **Solution:** Run the package installation cell first:
   ```python
-  !pip install torch torchvision torchaudio
-  !pip install numpy matplotlib seaborn scikit-learn pandas scipy
+  !pip install --quiet pyro-ppl torchdiffeq geomloss gymnasium engibench
   ```
 
 #### Colab: "CUDA out of memory" error
