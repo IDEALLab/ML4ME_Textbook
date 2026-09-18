@@ -1,0 +1,35 @@
+# Exercise Solutions {#sec-exercise-solutions}
+
+Worked solutions for the end-of-chapter exercises in Part 1. Each section follows the numbering used in the corresponding chapter. Try the exercises before reading these; most of the value is in the attempt.
+
+## Reviewing Supervised Linear Models
+
+<!-- {{< embed ../solutions/reviewing_supervised_linear_models_solutions.ipynb echo=true >}} -->
+
+## Evaluating Machine Learning Models
+
+<!-- {{< embed ../solutions/cross_validation_linear_regression_solutions.ipynb echo=true >}} -->
+
+## Introduction to Gradient Descent
+
+<!-- {{< embed ../solutions/supervised_linear_models_solutions.ipynb echo=true >}} -->
+
+## Review of Linear Unsupervised Learning
+
+<!-- {{< embed ../solutions/linear_decompositions_solutions.ipynb echo=true >}} -->
+
+## Taking Derivatives with Automatic Differentiation
+
+<!-- {{< embed ../solutions/taking_derivatives_solutions.ipynb echo=true >}} -->
+
+## Measuring Distribution Distances
+
+<!-- {{< embed ../solutions/distribution_distance_solutions.ipynb echo=true >}} -->
+
+## Introduction to Probabilistic Inference
+
+<!-- {{< embed ../solutions/introduction_to_inference_solutions.ipynb echo=true >}} -->
+
+## Introduction to Probabilistic Programming
+
+<!-- {{< embed ../solutions/introduction_to_probabilistic_programming_solutions.ipynb echo=true >}} -->
