@@ -9,3 +9,4 @@ We use the following conventions:
 - One `## Exercise N` section per exercise, in the chapter's numbering.
 - Where possible we try to reuse the chapter's own code and data as much as possible with minimal new added code just for the exerises.
 - Notebooks are executed locally before committing (the site build does not run Python), and they contain no assertions or verification scaffolding.
+
