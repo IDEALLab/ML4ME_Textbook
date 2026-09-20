@@ -8,7 +8,7 @@ book:
   date: "09/17/2025"
   page-navigation: true
   page-footer: "Machine Learning for Mechanical Engineers © 2025 by [Mark Fuge and IDEAL Lab Contributors](./index.qmd#sec-contributors) is licensed under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)"
-  #downloads: [pdf]
+  downloads: [pdf]
   chapters:
     - index.qmd
     - part: part1/index.qmd
@@ -41,10 +41,16 @@ book:
       - part3/active_and_semisupervised_learning.ipynb
     #- looking_forward.qmd
     - references.qmd
+    # The problem-set notebooks are listed directly (not via {{< embed >}}):
+    # embedding a whole notebook mangles multi-line $$ display math in both
+    # the HTML and the PDF output (Quarto 1.7).
     - part: problems/problems.qmd
-      chapters: 
-        - problems/ps1.qmd
-        - problems/ps2.qmd
+      chapters:
+        - problems/ps1_part1.ipynb
+        - problems/ps1_part2.ipynb
+        - problems/ps1_part3.ipynb
+        - problems/ps2_part1_autodiff.ipynb
+        - problems/ps2_part2.ipynb
     - part: notebooks/notebooks.qmd
       number-sections: false
       chapters:
@@ -69,13 +75,26 @@ format:
     citation-location: margin
     footnote-location: margin
     notebook-links: true
-  # pdf:
-  #   documentclass: scrreprt
-  #   #cite-method: biblatex
-  #   include-in-header:
-  #     - text: |
-  #         \usepackage{amsmath}
-  #         \usepackage{mathtools}
+  pdf:
+    documentclass: scrreprt
+    pdf-engine: xelatex
+    toc: true
+    toc-depth: 2
+    number-depth: 2
+    colorlinks: true
+    # Latin Modern Mono has no Greek, subscript digits or block characters, which
+    # appear in printed outputs (mu, sigma, progress bars). DejaVu Sans Mono covers
+    # them; it comes from the TeX Live "dejavu" package, which Quarto installs
+    # automatically (or run: tlmgr install dejavu).
+    monofont: DejaVuSansMono.ttf
+    monofontoptions:
+      - BoldFont=DejaVuSansMono-Bold.ttf
+      - ItalicFont=DejaVuSansMono-Oblique.ttf
+      - BoldItalicFont=DejaVuSansMono-BoldOblique.ttf
+      - Scale=MatchLowercase
+    include-in-header:
+      - text: |
+          \usepackage{mathtools}
 format-links: [ipynb]
 editor:
   render-on-save: true

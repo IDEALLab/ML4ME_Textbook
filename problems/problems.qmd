@@ -1,3 +1,6 @@
 # Problems
 
-Here are the problem sets
+The problem sets for the course are collected here. Each problem set is split into parts, and each part is a self-contained notebook that you can download and run.
+
+- **Problem Set 1** covers linear models and validation (Part 1), unsupervised linear models (Part 2), and bilinear models with stochastic gradient descent (Part 3).
+- **Problem Set 2** covers automatic differentiation (Part 1) and improving GANs for airfoil generation (Part 2).

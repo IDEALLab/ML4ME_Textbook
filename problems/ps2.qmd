@@ -1,5 +1,0 @@
-# Problem Set 2
-
-{{< embed ps2_part1_autodiff.ipynb echo=true >}}
-
-{{< embed ps2_part2.ipynb echo=true >}}

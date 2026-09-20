@@ -1,7 +1,0 @@
-# Problem Set 1
-
-{{< embed ps1_part1.ipynb echo=true >}}
-
-{{< embed ps1_part2.ipynb echo=true >}}
-
-{{< embed ps1_part3.ipynb echo=true >}}
