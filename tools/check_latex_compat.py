@@ -112,6 +112,10 @@ def scan(path, findings, footnote_labels):
         for m in re.finditer(r"\$\$(.+?)\$\$", text, flags=re.S):
             if re.search(r"\n[ \t]*\n", m.group(1)):
                 findings["FATAL blank line inside $$ ... $$"].append(where)
+            # $$ becomes \[ ... \] in LaTeX, and a numbered environment cannot be nested in it
+            env = re.search(rf"\\begin\{{({ENVS})\*?\}}", m.group(1))
+            if env:
+                findings[f"FATAL \\begin{{{env.group(1)}}} inside $$ ... $$: use aligned/gathered/split"].append(where)
         no_display = blank_out(r"\$\$(.+?)\$\$", text, re.S)
         no_code = blank_out(r"`[^`\n]*`", blank_out(r"```.*?```", no_display, re.S))
         # Fatal: bare environments with blank lines
