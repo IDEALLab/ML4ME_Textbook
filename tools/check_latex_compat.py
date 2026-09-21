@@ -154,7 +154,12 @@ def scan(path, findings, footnote_labels):
     has_yaml_title = any(
         re.search(r"^---\s*\n.*?^title:.*?^---", t, flags=re.S | re.M) for _, t in cells[:2]
     )
-    h1s = [l for _, t in cells for l in t.splitlines() if re.match(r"^# (?!#)", l)]
+    h1s = [
+        l
+        for _, t in cells
+        for l in blank_out(r"```.*?```", t, re.S).splitlines()   # ignore comments in fenced code
+        if re.match(r"^# (?!#)", l)
+    ]
     if has_yaml_title and h1s:
         findings["FATAL YAML title plus a level-1 heading: remove one (duplicate chapter)"].append(f"{rel}: {h1s[0][:60]}")
     if len(h1s) > 1:
