@@ -1,0 +1,64 @@
+# Exercise solutions: a separate small book rendered into _book/solutions/.
+# Render it from the repo root with:   quarto render solutions
+# It is NOT rendered by the main `quarto render`, so publishing the solutions is
+# a deliberate step (see .github/workflows/publish.yml).
+project:
+  type: book
+  output-dir: ../_book/solutions
+
+book:
+  title: "Exercise Solutions"
+  subtitle: "Machine Learning for Mechanical Engineering"
+  author: "Mark Fuge"
+  downloads: [pdf]
+  chapters:
+    - index.qmd
+    - reviewing_supervised_linear_models_solutions.ipynb
+    # Add one notebook per chapter as the solutions are written:
+    # - cross_validation_linear_regression_solutions.ipynb
+    # - supervised_linear_models_solutions.ipynb
+    # - linear_decompositions_solutions.ipynb
+    # - taking_derivatives_solutions.ipynb
+    # - distribution_distance_solutions.ipynb
+    # - introduction_to_inference_solutions.ipynb
+    # - introduction_to_probabilistic_programming_solutions.ipynb
+
+bibliography: ../references.bib
+
+# Solutions are mostly code, so the PDF keeps all code (see tools/pdf-tweaks.lua).
+pdf-hide-code: false
+
+format:
+  html:
+    theme: cosmo
+  pdf:
+    documentclass: scrreprt
+    pdf-engine: xelatex
+    toc: true
+    toc-depth: 2
+    number-depth: 2
+    colorlinks: true
+    monofont: DejaVuSansMono.ttf
+    monofontoptions:
+      - BoldFont=DejaVuSansMono-Bold.ttf
+      - ItalicFont=DejaVuSansMono-Oblique.ttf
+      - BoldItalicFont=DejaVuSansMono-BoldOblique.ttf
+      - Scale=MatchLowercase
+    filters:
+      - ../tools/pdf-tweaks.lua
+    include-in-header:
+      - text: |
+          \usepackage{mathtools}
+    include-before-body:
+      - text: |
+          \makeatletter
+          \renewcommand*\pandocbounded[1]{%
+            \sbox\pandoc@box{#1}%
+            \Gscale@div\@tempa{0.4\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+            \Gscale@div\@tempb{0.72\linewidth}{\wd\pandoc@box}%
+            \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi
+            \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+            \else\usebox{\pandoc@box}%
+            \fi%
+          }
+          \makeatother

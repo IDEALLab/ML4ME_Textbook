@@ -41,21 +41,22 @@ book:
       - part3/active_and_semisupervised_learning.ipynb
     #- looking_forward.qmd
     - references.qmd
-    # The problem-set notebooks are listed directly (not via {{< embed >}}):
-    # embedding a whole notebook mangles multi-line $$ display math in both
-    # the HTML and the PDF output (Quarto 1.7).
-    - part: problems/problems.qmd
-      chapters:
-        - problems/ps1_part1.ipynb
-        - problems/ps1_part2.ipynb
-        - problems/ps1_part3.ipynb
-        - problems/ps2_part1_autodiff.ipynb
-        - problems/ps2_part2.ipynb
-    - part: notebooks/notebooks.qmd
-      number-sections: false
-      chapters:
-        - notebooks/california_housing_visualization.ipynb
-    
+    # Course material that is not part of the book itself (problem sets and
+    # in-class notebooks) is kept out of the render. To publish it again, list
+    # the notebooks directly as chapters (never via {{< embed >}}: embedding a
+    # whole notebook mangles multi-line $$ display math in HTML and PDF):
+    #- part: problems/problems.qmd
+    #  chapters:
+    #    - problems/ps1_part1.ipynb
+    #    - problems/ps1_part2.ipynb
+    #    - problems/ps1_part3.ipynb
+    #    - problems/ps2_part1_autodiff.ipynb
+    #    - problems/ps2_part2.ipynb
+    #- part: notebooks/notebooks.qmd
+    #  number-sections: false
+    #  chapters:
+    #    - notebooks/california_housing_visualization.ipynb
+
   appendices:
     - appendices/helpful_tooling.qmd
     - appendices/exercise_solutions.qmd
@@ -92,9 +93,28 @@ format:
       - ItalicFont=DejaVuSansMono-Oblique.ttf
       - BoldItalicFont=DejaVuSansMono-BoldOblique.ttf
       - Scale=MatchLowercase
+    # Hide code (except cells marked `#| code-fold: false`) and replace
+    # browser-only outputs (widgets, Plotly) with a short note.
+    filters:
+      - tools/pdf-tweaks.lua
     include-in-header:
       - text: |
           \usepackage{mathtools}
+    # Notebook figures are PNGs with no physical size, so pandoc scales each one
+    # to the full line width. Cap them at 72% of the width / 40% of the height.
+    include-before-body:
+      - text: |
+          \makeatletter
+          \renewcommand*\pandocbounded[1]{%
+            \sbox\pandoc@box{#1}%
+            \Gscale@div\@tempa{0.4\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+            \Gscale@div\@tempb{0.72\linewidth}{\wd\pandoc@box}%
+            \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi
+            \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+            \else\usebox{\pandoc@box}%
+            \fi%
+          }
+          \makeatother
 format-links: [ipynb]
 editor:
   render-on-save: true

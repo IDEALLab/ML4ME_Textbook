@@ -1,0 +1,9 @@
+# Preface {.unnumbered}
+
+These are worked solutions for the end-of-chapter exercises in *Machine Learning for Mechanical Engineering*. Each chapter here follows the numbering used in the corresponding chapter of the book, and reuses that chapter's data and code.
+
+Try the exercises before reading these. Most of the value is in the attempt, and the solutions are written to be compared against your own reasoning rather than read on their own.
+
+::: {.content-visible when-format="html"}
+The book itself is at [../index.html](../index.html). A PDF of these solutions is available from the download link in the sidebar.
+:::
