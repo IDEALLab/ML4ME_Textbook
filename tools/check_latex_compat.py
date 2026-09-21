@@ -148,6 +148,17 @@ def scan(path, findings, footnote_labels):
         # Footnote labels
         for lab in set(re.findall(r"\[\^([^\]]+)\]:", text)):
             footnote_labels[lab].append(rel)
+    # Chapter titles: a YAML `title:` plus a level-1 heading gives two chapters (one empty);
+    # more than one level-1 heading splits the notebook into several chapters.
+    cells = list(markdown_cells(path))
+    has_yaml_title = any(
+        re.search(r"^---\s*\n.*?^title:.*?^---", t, flags=re.S | re.M) for _, t in cells[:2]
+    )
+    h1s = [l for _, t in cells for l in t.splitlines() if re.match(r"^# (?!#)", l)]
+    if has_yaml_title and h1s:
+        findings["FATAL YAML title plus a level-1 heading: remove one (duplicate chapter)"].append(f"{rel}: {h1s[0][:60]}")
+    if len(h1s) > 1:
+        findings["FATAL more than one level-1 heading: extra chapters"].append(f"{rel}: {', '.join(h[:40] for h in h1s[1:])}")
 
 
 def main(argv):
