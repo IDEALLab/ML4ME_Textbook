@@ -174,6 +174,9 @@ window.Quarto = {
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="../">Machine Learning for Mechanical Engineering</a> 
+        <div class="sidebar-tools-main">
+    <a href="../Machine-Learning-for-Mechanical-Engineering.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -362,53 +365,13 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../problems/problems.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Problems</span></a>
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../problems/ps1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Problem Set 1</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../problems/ps2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Problem Set 2</span></span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a href="../notebooks/notebooks.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">In-Class Notebooks</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../notebooks/california_housing_visualization.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Housing Price Data Visualization In-Class Exercise</span></span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
- <span class="menu-text">Appendices</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../appendices/helpful_tooling.html" class="sidebar-item-text sidebar-link">
@@ -673,8 +636,8 @@ window.Quarto = {
 <p>We assume a linear relationship: <span class="math display">\[y = w_0 + w_1 x + \epsilon, \quad \epsilon \sim \mathcal{N}(0, \sigma^2)\]</span></p>
 <p>In Bayesian inference, we place a <strong>prior</strong> over the weights: <span class="math display">\[p(\mathbf{w}) = \mathcal{N}(\mathbf{0}, \alpha^{-1} \mathbf{I})\]</span></p>
 <p>After seeing data <span class="math inline">\((X, Y)\)</span>, the <strong>posterior</strong> over weights is: <span class="math display">\[p(\mathbf{w} | X, Y) = \mathcal{N}(\mathbf{m}_N, \mathbf{S}_N)\]</span></p>
-<p>where (for linear-Gaussian models, we can derive it exactly): <span class="math display">\[\mathbf{S}_N = (\alpha \mathbf{I} + \beta \mathbf{\Phi}^T \mathbf{\Phi})^{-1}\]</span> <span class="math display">\[\mathbf{m}_N = \beta \mathbf{S}_N \mathbf{\Phi}^T \mathbf{y}\]</span></p>
-<p>where <span class="math inline">\(\beta = 1/\sigma^2\)</span> is the noise precision and <span class="math inline">\(\mathbf{\Phi}\)</span> is the design matrix.</p>
+<p>where (for linear-Gaussian models, we can derive it exactly): <span class="math display">\[\mathbf{S}_N = (\alpha \mathbf{I} + \beta \boldsymbol{\Phi}^T \boldsymbol{\Phi})^{-1}\]</span> <span class="math display">\[\mathbf{m}_N = \beta \mathbf{S}_N \boldsymbol{\Phi}^T \mathbf{y}\]</span></p>
+<p>where <span class="math inline">\(\beta = 1/\sigma^2\)</span> is the noise precision and <span class="math inline">\(\boldsymbol{\Phi}\)</span> is the design matrix.</p>
 </section>
 <section id="the-posterior-predictive-distribution" class="level3" data-number="7.2.2">
 <h3 data-number="7.2.2" class="anchored" data-anchor-id="the-posterior-predictive-distribution"><span class="header-section-number">7.2.2</span> The Posterior Predictive Distribution</h3>
@@ -985,7 +948,7 @@ Parameter breakdown:
 <section id="note-on-implementation" class="level3 page-columns page-full" data-number="7.4.3">
 <h3 data-number="7.4.3" class="anchored" data-anchor-id="note-on-implementation"><span class="header-section-number">7.4.3</span> Note on Implementation</h3>
 <p>For this notebook, we’ll use a simple <strong>Metropolis-Hastings</strong> sampler, although many more advanced algorithms exist.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
-<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;There are some tricks to reduce the variance by subtracting a moving “baseline” average to the advantage term, which is implemented below, but we will not go into the details of this here.</p></div></div><section id="the-metropolis-hastings-algorithm" class="level4" data-number="7.4.3.1">
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;In practice, you’d use more sophisticated methods like: Hamiltonian Monte Carlo (HMC), the No-U-Turn Sampler (NUTS) or Stochastic Gradient Langevin Dynamics (SGLD), but these are beyond the scope of this notebook. For an interactive example of samplers, I highly recommend checking out the <a href="https://chi-feng.github.io/mcmc-demo/app.html">MCMC Interactive Gallery</a></p></div></div><section id="the-metropolis-hastings-algorithm" class="level4" data-number="7.4.3.1">
 <h4 data-number="7.4.3.1" class="anchored" data-anchor-id="the-metropolis-hastings-algorithm"><span class="header-section-number">7.4.3.1</span> The Metropolis-Hastings Algorithm</h4>
 <p>The algorithm works as follows:</p>
 <ol type="1">
@@ -1875,7 +1838,7 @@ f(\mathbb{E}[x]) \le \mathbb{E}[f(x)]
 <h3 data-number="7.5.7" class="anchored" data-anchor-id="monte-carlo-variational-inference"><span class="header-section-number">7.5.7</span> Monte Carlo Variational Inference</h3>
 <p>By assuming a certain form of the proposal distribution <span class="math inline">\(q_\phi(\mathbf{w})\)</span>, we were able to compute the KL divergence term in closed form and perform VI analytically. However, in more complex models (like neural networks), we often cannot compute these expectations exactly. In such cases, we can resort to using <strong>Monte Carlo Variational Inference</strong> to approximate the ELBO and its gradients.</p>
 <p>Instead of integrating analytically, we draw samples from our Gaussian variational family and use the <em>score-function identity</em> below to update the parameters. This reliance on Monte Carlo introduces sampling noise, so we will see below how the ELBO estimate bounces around and how the mean and covariance of <span class="math inline">\(q_\phi\)</span> drift across the banana distribution. The only change from the closed-form solution above is how we estimate expectations, where now our gradients still come from the “score function” of the Gaussian.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
-<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;There are some tricks to reduce the variance by subtracting a moving “baseline” average to the advantage term, which is implemented below, but we will not go into the details of this here.</p></div></div><p>The <strong>score-function identity</strong> states that for any distribution <span class="math inline">\(q_\phi(\mathbf{w})\)</span> parameterized by <span class="math inline">\(\phi\)</span>: <span class="math display">\[\nabla_\phi \mathbb{E}_{q_\phi} [f(\mathbf{w})] = \mathbb{E}_{q_\phi} [f(\mathbf{w}) \nabla_\phi \log q_\phi(\mathbf{w})]\]</span></p>
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;It is a little silly to resort to Monte Carlo here since we can compute the KL in closed form, but this is just for pedagogical purposes to show you the difference. In real applications with neural networks, we could not compute these expectations analytically.</p></div></div><p>The <strong>score-function identity</strong> states that for any distribution <span class="math inline">\(q_\phi(\mathbf{w})\)</span> parameterized by <span class="math inline">\(\phi\)</span>: <span class="math display">\[\nabla_\phi \mathbb{E}_{q_\phi} [f(\mathbf{w})] = \mathbb{E}_{q_\phi} [f(\mathbf{w}) \nabla_\phi \log q_\phi(\mathbf{w})]\]</span></p>
 <p>where in our case, <span class="math inline">\(f(\mathbf{w}) = \log p(Y|X, \mathbf{w}) + \log p(\mathbf{w}) - \log q_\phi(\mathbf{w}) = \log p(Y,\mathbf{w}|X) - \log q_\phi(\mathbf{w})\)</span>. (This allows us to compute gradients of the ELBO with respect to <span class="math inline">\(\phi\)</span> using samples from <span class="math inline">\(q_\phi\)</span>.)</p>
 <p>This score-function identity is also sometimes called the “REINFORCE” gradient estimator in the reinforcement learning literature, as it was first popularized there and uses something called the “log-derivative trick”<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> to move the gradient operator inside the expectation: <span class="math display">\[
 \begin{aligned}
@@ -3338,7 +3301,7 @@ We used a Mean-field Gaussian here, but are we limited to this?</p></li>
       &nbsp;
     </div>   
     <div class="nav-footer-center">
-<p>Machine Learning for Mechanical Engineers © 2025 by <a href="../part1/index.html#sec-contributors">Mark Fuge and IDEAL Lab Contributors</a> is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></p>
+<p>Machine Learning for Mechanical Engineers © 2025 by <a href="../index.html#sec-contributors">Mark Fuge and IDEAL Lab Contributors</a> is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></p>
 </div>
     <div class="nav-footer-right">
       &nbsp;

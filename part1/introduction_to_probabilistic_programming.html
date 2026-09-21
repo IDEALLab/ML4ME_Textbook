@@ -170,6 +170,9 @@ window.Quarto = {
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="../">Machine Learning for Mechanical Engineering</a> 
+        <div class="sidebar-tools-main">
+    <a href="../Machine-Learning-for-Mechanical-Engineering.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -358,53 +361,13 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../problems/problems.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Problems</span></a>
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../problems/ps1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Problem Set 1</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../problems/ps2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Problem Set 2</span></span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a href="../notebooks/notebooks.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">In-Class Notebooks</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../notebooks/california_housing_visualization.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Housing Price Data Visualization In-Class Exercise</span></span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
- <span class="menu-text">Appendices</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../appendices/helpful_tooling.html" class="sidebar-item-text sidebar-link">
@@ -536,9 +499,9 @@ window.Quarto = {
 </section>
 <section id="problem-setup-inferring-material-properties-from-stress-strain-data" class="level2" data-number="8.2">
 <h2 data-number="8.2" class="anchored" data-anchor-id="problem-setup-inferring-material-properties-from-stress-strain-data"><span class="header-section-number">8.2</span> Problem Setup: Inferring Material Properties from Stress-Strain Data</h2>
-<p>As the running example in this notebook, we will consider the problem of inferring material properties from observed stress-strain data. Specifically, we will assume that we have existing experimental data that relates stress (σ) to strain (ε) for a given material, and we wish to infer the underlying material parameters that govern this relationship. We will use a Ramberg-Osgood model to describe the stress-strain behavior of the material, which is given by the equation: <span class="math display">\[
+<p>As the running example in this notebook, we will consider the problem of inferring material properties from observed stress-strain data. Specifically, we will assume that we have existing experimental data that relates stress (<span class="math inline">\(\sigma\)</span>) to strain (<span class="math inline">\(\epsilon\)</span>) for a given material, and we wish to infer the underlying material parameters that govern this relationship. We will use a Ramberg-Osgood model to describe the stress-strain behavior of the material, which is given by the equation: <span class="math display">\[
 \epsilon = \frac{\sigma}{E} + \alpha \left(\frac{\sigma}{\sigma_0}\right)^n
-\]</span> where E is Young’s modulus, σ₀ is the yield stress, α is a material constant, and n is the strain hardening exponent. Our goal will be to infer the parameters E, σ₀, α, and n from observed stress-strain data using probabilistic programming. For our example below, we will use generic properties of a mild steel (e.g., S235) although this could be adapted to any material or to a different constitutive model. We will also add in a bit of measurement noise (which you can also feel free to update as you see fit to see how this changes the later uncertainty bounds). Let’s plot some example data:</p>
+\]</span> where E is Young’s modulus, <span class="math inline">\(\sigma_0\)</span> is the yield stress, <span class="math inline">\(\alpha\)</span> is a material constant, and n is the strain hardening exponent. Our goal will be to infer the parameters E, <span class="math inline">\(\sigma_0\)</span>, <span class="math inline">\(\alpha\)</span>, and n from observed stress-strain data using probabilistic programming. For our example below, we will use generic properties of a mild steel (e.g., S235) although this could be adapted to any material or to a different constitutive model. We will also add in a bit of measurement noise (which you can also feel free to update as you see fit to see how this changes the later uncertainty bounds). Let’s plot some example data:</p>
 <div id="dcf0dedb" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Show Code</summary>
@@ -1548,7 +1511,7 @@ n (hardening exp) |        8.0 |           6.07 | [5.41, 6.79]
       &nbsp;
     </div>   
     <div class="nav-footer-center">
-<p>Machine Learning for Mechanical Engineers © 2025 by <a href="../part1/index.html#sec-contributors">Mark Fuge and IDEAL Lab Contributors</a> is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></p>
+<p>Machine Learning for Mechanical Engineers © 2025 by <a href="../index.html#sec-contributors">Mark Fuge and IDEAL Lab Contributors</a> is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></p>
 </div>
     <div class="nav-footer-right">
       &nbsp;

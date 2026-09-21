@@ -168,6 +168,9 @@ window.Quarto = {
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="../">Machine Learning for Mechanical Engineering</a> 
+        <div class="sidebar-tools-main">
+    <a href="../Machine-Learning-for-Mechanical-Engineering.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -356,53 +359,13 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../problems/problems.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Problems</span></a>
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../problems/ps1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Problem Set 1</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../problems/ps2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Problem Set 2</span></span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a href="../notebooks/notebooks.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">In-Class Notebooks</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../notebooks/california_housing_visualization.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Housing Price Data Visualization In-Class Exercise</span></span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
- <span class="menu-text">Appendices</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../appendices/helpful_tooling.html" class="sidebar-item-text sidebar-link">
@@ -440,12 +403,10 @@ window.Quarto = {
    
   <ul>
   <li><a href="#experiment" id="toc-experiment" class="nav-link active" data-scroll-target="#experiment"><span class="header-section-number">3.1</span> Experiment:</a></li>
-  <li><a href="#stochastic-gradient-descent" id="toc-stochastic-gradient-descent" class="nav-link" data-scroll-target="#stochastic-gradient-descent"><span class="header-section-number">4</span> Stochastic Gradient Descent</a>
-  <ul class="collapse">
-  <li><a href="#experiment-1" id="toc-experiment-1" class="nav-link" data-scroll-target="#experiment-1"><span class="header-section-number">4.1</span> Experiment:</a></li>
-  <li><a href="#existing-implementations" id="toc-existing-implementations" class="nav-link" data-scroll-target="#existing-implementations"><span class="header-section-number">4.2</span> Existing Implementations</a></li>
-  <li><a href="#advanced-techniques" id="toc-advanced-techniques" class="nav-link" data-scroll-target="#advanced-techniques"><span class="header-section-number">4.3</span> Advanced Techniques</a></li>
-  </ul></li>
+  <li><a href="#stochastic-gradient-descent" id="toc-stochastic-gradient-descent" class="nav-link" data-scroll-target="#stochastic-gradient-descent"><span class="header-section-number">3.2</span> Stochastic Gradient Descent</a></li>
+  <li><a href="#experiment-1" id="toc-experiment-1" class="nav-link" data-scroll-target="#experiment-1"><span class="header-section-number">3.3</span> Experiment:</a></li>
+  <li><a href="#existing-implementations" id="toc-existing-implementations" class="nav-link" data-scroll-target="#existing-implementations"><span class="header-section-number">3.4</span> Existing Implementations</a></li>
+  <li><a href="#advanced-techniques" id="toc-advanced-techniques" class="nav-link" data-scroll-target="#advanced-techniques"><span class="header-section-number">3.5</span> Advanced Techniques</a></li>
   </ul>
 </nav>
     </div>
@@ -606,9 +567,9 @@ J(w,X) = \frac{1}{N}\Sigma_{i=1}^N \left(\mathbf{y}_i - \mathbf{w\cdot \mathbf{x
 <p><span class="math display">\[
 w_{t+1} = w_t - \alpha \frac{\partial J}{\partial w}
 \]</span></p>
-<p>Note: here we are just considering a single parameter (the slope, w), but this method extends to multiple parameters (<span class="math inline">\(\mathbf{\theta}\)</span>), via the gradient operator:</p>
+<p>Note: here we are just considering a single parameter (the slope, w), but this method extends to multiple parameters (<span class="math inline">\(\boldsymbol{\theta}\)</span>), via the gradient operator:</p>
 <p><span class="math display">\[
-\mathbf{\theta}_{t+1} = \mathbf{\theta}_t - \alpha \nabla_\theta J
+\boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_t - \alpha \nabla_\theta J
 \]</span></p>
 <div id="cell-10" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> grad_step(w, X, alpha):</span>
@@ -694,8 +655,8 @@ Compared to 42.57 from the Normal Equations</code></pre>
 </div>
 </div>
 </section>
-<section id="stochastic-gradient-descent" class="level1" data-number="4">
-<h1 data-number="4"><span class="header-section-number">4</span> Stochastic Gradient Descent</h1>
+<section id="stochastic-gradient-descent" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="stochastic-gradient-descent"><span class="header-section-number">3.2</span> Stochastic Gradient Descent</h2>
 <p>To perform Gradient Descent, we needed to sum the gradients across all data points (to compute <span class="math inline">\(\nabla J\)</span>). We may not want to do this, for many reasons: 1) we may not be able to iterate through all the data points easily (maybe the data are split across many computers or files), 2) we may not want to store the data at all after we are done with it (online learning), 3) maybe computing the gradient for one data point is difficult, and we would like to make forward progress on the model while computing gradients of other points, <em>etc.</em></p>
 <p>This is where <em>Stochastic</em> Gradient Descent comes it. Rather than Gradient Descent, which computes the gradient over all the data (<span class="math inline">\(\mathbf{X}\)</span>): <span class="math display">\[
 \mathbf{w}_{t+1} = \mathbf{w}_t - \alpha \frac{\partial J(\mathbf{w},\mathbf{X})}{\partial \mathbf{w}}
@@ -787,8 +748,9 @@ Compared to 42.57 (Normal Equations)</code></pre>
 </div>
 </div>
 </div>
-<section id="experiment-1" class="level2" data-number="4.1">
-<h2 data-number="4.1" class="anchored" data-anchor-id="experiment-1"><span class="header-section-number">4.1</span> Experiment:</h2>
+</section>
+<section id="experiment-1" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="experiment-1"><span class="header-section-number">3.3</span> Experiment:</h2>
 <p>What do you notice about the behavior of SGD? What happens when alpha is small vs large? What happens when you take multiple passes through the data? If I keep doing more passes, do I eventually converge?</p>
 <p>What you are seeing is a result of <a href="https://en.wikipedia.org/wiki/Stochastic_approximation">Stochastic Approximation</a> (trying to approximate a gradient of a function using noisy estimates of that gradient (where the noise here comes from evaluating the gradient using only one data point).</p>
 <p>This behavior was studied by multiple people in the 1950s and 60s, with one key result coming Herbert Robbins and Sutton Monro, in what is now called the <a href="https://en.wikipedia.org/wiki/Stochastic_approximation#Robbins.E2.80.93Monro_algorithm">Robbins-Monro Algorithm</a>. The central idea is rather than defining a <em>single</em> step size, we should let the step size decrease over time. Initially, we need to move the weights a lot, but as we get closer to the goal, they exert less influence so that we <em>settle</em> at some point. What they showed was that SGD would converge to the right estimator so long as the sequence satisfies the following properties:</p>
@@ -901,8 +863,8 @@ Compared to 42.57 (Normal Equations)</code></pre>
 </div>
 </div>
 </section>
-<section id="existing-implementations" class="level2" data-number="4.2">
-<h2 data-number="4.2" class="anchored" data-anchor-id="existing-implementations"><span class="header-section-number">4.2</span> Existing Implementations</h2>
+<section id="existing-implementations" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="existing-implementations"><span class="header-section-number">3.4</span> Existing Implementations</h2>
 <p>SGD is a fairly simple and popular technique for solving many problems where you can easily express the derivatives of those functions. For certain types of loss function (like the square error/L2 norm we discussed above), many folks have written optimized libraries for just that purpose, such as Scikit-Learn’s <a href="http://scikit-learn.org/stable/modules/sgd.html">SGD functions</a> including <a href="http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.SGDRegressor.html#sklearn.linear_model.SGDRegressor">SGDRegressor</a>.</p>
 <p>For reference, the SGD Regressor in ScikitLearn uses an update rule similar to: <span class="math display">\[
 \eta^{(t)} = \frac{eta_0}{t^{power_t}}
@@ -950,12 +912,11 @@ Compared to 42.57 (Normal Equations)</code></pre>
 </div>
 </div>
 </section>
-<section id="advanced-techniques" class="level2" data-number="4.3">
-<h2 data-number="4.3" class="anchored" data-anchor-id="advanced-techniques"><span class="header-section-number">4.3</span> Advanced Techniques</h2>
+<section id="advanced-techniques" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="advanced-techniques"><span class="header-section-number">3.5</span> Advanced Techniques</h2>
 <p>There are a variety of more advanced SGD techniques, most of which involve one or more of the following tricks: 1. Using “acceleration” procedures that leverage “momentum” of some type. You can read more about this phenomenon at: <a href="https://distill.pub/2017/momentum/">“Why Momentum Really Works”</a> 2. “Batching” the SGD updates: that is, taking steps that are considering <span class="math inline">\(N&gt;n&gt;1\)</span> in size (e.g., averaging the gradients of, say, 5 data points before taking a step). This can help stablize gradients and improve convergence. 3. “Normalizing” the gradient updates: that is, re-scaling the gradient updates at each step to achieve better convergence. This is commonly used in Neural Networks for things like <a href="https://en.wikipedia.org/wiki/Batch_normalization">Batch Normalization (Wikipedia)</a> (or, for a more advanced introduction, you can read the NeurIPS paper <a href="https://papers.nips.cc/paper/7996-understanding-batch-normalization.pdf">Understanding Batch Normalization</a>).</p>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
@@ -1378,7 +1339,7 @@ Compared to 42.57 (Normal Equations)</code></pre>
       &nbsp;
     </div>   
     <div class="nav-footer-center">
-<p>Machine Learning for Mechanical Engineers © 2025 by <a href="./index.qmd#sec-contributors">Mark Fuge and IDEAL Lab Contributors</a> is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></p>
+<p>Machine Learning for Mechanical Engineers © 2025 by <a href="../index.html#sec-contributors">Mark Fuge and IDEAL Lab Contributors</a> is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></p>
 </div>
     <div class="nav-footer-right">
       &nbsp;

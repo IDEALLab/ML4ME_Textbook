@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Mark Fuge">
 
-<title>Exercise Solutions: Reviewing Supervised Linear Models – Machine Learning for Mechanical Engineering</title>
+<title>Appendix B — Exercise Solutions – Machine Learning for Mechanical Engineering</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -26,41 +25,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -112,35 +76,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
@@ -169,6 +104,9 @@ window.Quarto = {
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="../">Machine Learning for Mechanical Engineering</a> 
+        <div class="sidebar-tools-main">
+    <a href="../Machine-Learning-for-Mechanical-Engineering.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -357,53 +295,13 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../problems/problems.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Problems</span></a>
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../problems/ps1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Problem Set 1</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../problems/ps2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Problem Set 2</span></span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a href="../notebooks/notebooks.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">In-Class Notebooks</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../notebooks/california_housing_visualization.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Housing Price Data Visualization In-Class Exercise</span></span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
- <span class="menu-text">Appendices</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../appendices/helpful_tooling.html" class="sidebar-item-text sidebar-link">
@@ -435,28 +333,15 @@ window.Quarto = {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table of contents</h2>
-   
-  <ul>
-  <li><a href="#reviewing-supervised-linear-models" id="toc-reviewing-supervised-linear-models" class="nav-link active" data-scroll-target="#reviewing-supervised-linear-models"><span class="header-section-number">B.1</span> Reviewing Supervised Linear Models</a></li>
-  <li><a href="#evaluating-machine-learning-models" id="toc-evaluating-machine-learning-models" class="nav-link" data-scroll-target="#evaluating-machine-learning-models"><span class="header-section-number">B.2</span> Evaluating Machine Learning Models</a></li>
-  <li><a href="#introduction-to-gradient-descent" id="toc-introduction-to-gradient-descent" class="nav-link" data-scroll-target="#introduction-to-gradient-descent"><span class="header-section-number">B.3</span> Introduction to Gradient Descent</a></li>
-  <li><a href="#review-of-linear-unsupervised-learning" id="toc-review-of-linear-unsupervised-learning" class="nav-link" data-scroll-target="#review-of-linear-unsupervised-learning"><span class="header-section-number">B.4</span> Review of Linear Unsupervised Learning</a></li>
-  <li><a href="#taking-derivatives-with-automatic-differentiation" id="toc-taking-derivatives-with-automatic-differentiation" class="nav-link" data-scroll-target="#taking-derivatives-with-automatic-differentiation"><span class="header-section-number">B.5</span> Taking Derivatives with Automatic Differentiation</a></li>
-  <li><a href="#measuring-distribution-distances" id="toc-measuring-distribution-distances" class="nav-link" data-scroll-target="#measuring-distribution-distances"><span class="header-section-number">B.6</span> Measuring Distribution Distances</a></li>
-  <li><a href="#introduction-to-probabilistic-inference" id="toc-introduction-to-probabilistic-inference" class="nav-link" data-scroll-target="#introduction-to-probabilistic-inference"><span class="header-section-number">B.7</span> Introduction to Probabilistic Inference</a></li>
-  <li><a href="#introduction-to-probabilistic-programming" id="toc-introduction-to-probabilistic-programming" class="nav-link" data-scroll-target="#introduction-to-probabilistic-programming"><span class="header-section-number">B.8</span> Introduction to Probabilistic Programming</a></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../appendices/helpful_tooling.html">Appendices</a></li><li class="breadcrumb-item"><a href="../appendices/exercise_solutions.html"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Exercise Solutions</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Exercise Solutions: Reviewing Supervised Linear Models</h1>
+<h1 class="title"><span id="sec-exercise-solutions" class="quarto-section-identifier">Appendix B — Exercise Solutions</span></h1>
 </div>
 
 
@@ -473,542 +358,16 @@ window.Quarto = {
 </header>
 
 
-<p>Worked solutions for the end-of-chapter exercises in Part 1. Each section follows the numbering used in the corresponding chapter. Try the exercises before reading these; most of the value is in the attempt.</p>
-<section id="reviewing-supervised-linear-models" class="level2" data-number="B.1">
-<h2 data-number="B.1" class="anchored" data-anchor-id="reviewing-supervised-linear-models"><span class="header-section-number">B.1</span> Reviewing Supervised Linear Models</h2>
-<div class="quarto-embed-nb-cell" data-notebook="/home/runner/work/ML4ME_Textbook/ML4ME_Textbook/solutions/reviewing_supervised_linear_models_solutions.ipynb" data-notebook-title="Exercise Solutions: Reviewing Supervised Linear Models" data-notebook-cellid="e27799ac">
-<p>These are worked solutions to the exercises at the end of the chapter <em>Reviewing Supervised Linear Models</em>. You should just be able to run this notebook in isolation, since we regenerate any necessary examples/data.</p>
-<div id="202cfc39" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-18T20:22:17.705101Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-18T20:22:17.705101Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-18T20:22:19.652579Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-18T20:22:19.651571Z&quot;}}">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy.linalg <span class="im">import</span> norm</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.optimize <span class="im">import</span> fmin</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> make_classification, make_moons, make_regression</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> HuberRegressor, LinearRegression, SGDClassifier, SGDRegressor</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> PolynomialFeatures, StandardScaler</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.svm <span class="im">import</span> LinearSVC</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>warnings.simplefilter(<span class="st">'ignore'</span>, <span class="pp">RuntimeWarning</span>)</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Outlier data from the robust-regression section (same seeds as the chapter) ---</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>n_samples <span class="op">=</span> <span class="dv">1000</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>n_outliers <span class="op">=</span> <span class="dv">50</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>Xr, yr, coef <span class="op">=</span> make_regression(n_samples<span class="op">=</span>n_samples, n_features<span class="op">=</span><span class="dv">1</span>, n_informative<span class="op">=</span><span class="dv">1</span>,</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>                               noise<span class="op">=</span><span class="dv">10</span>, coef<span class="op">=</span><span class="va">True</span>, random_state<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">0</span>)</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>Xr[:n_outliers] <span class="op">=</span> <span class="dv">3</span> <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> np.random.normal(size<span class="op">=</span>(n_outliers, <span class="dv">1</span>))</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>yr[:n_outliers] <span class="op">=</span> <span class="op">-</span><span class="dv">3</span> <span class="op">+</span> <span class="dv">10</span> <span class="op">*</span> np.random.normal(size<span class="op">=</span>n_outliers)</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>yr <span class="op">/=</span> <span class="dv">10</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>yr <span class="op">+=</span> <span class="dv">10</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>true_slope_outliers <span class="op">=</span> coef <span class="op">/</span> <span class="dv">10</span>   <span class="co"># the rescaling divides the true slope by 10 as well</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co"># --- 2D classification datasets from the classification section ---</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>X_sep, y_sep <span class="op">=</span> make_classification(n_features<span class="op">=</span><span class="dv">2</span>, n_redundant<span class="op">=</span><span class="dv">0</span>, n_informative<span class="op">=</span><span class="dv">2</span>, random_state<span class="op">=</span><span class="dv">1</span>,</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>                                   n_clusters_per_class<span class="op">=</span><span class="dv">1</span>, flip_y<span class="op">=</span><span class="fl">0.0</span>, class_sep<span class="op">=</span><span class="fl">0.7</span>)</span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>datasets <span class="op">=</span> [make_moons(noise<span class="op">=</span><span class="fl">0.3</span>, random_state<span class="op">=</span><span class="dv">0</span>), <span class="va">None</span>, (X_sep, y_sep)]</span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Line data from the penalty section (same generator and seed family as the chapter) ---</span></span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>w1_true, w0_true, noise <span class="op">=</span> <span class="dv">5</span>, <span class="dv">2</span>, <span class="fl">0.001</span></span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>num_samples <span class="op">=</span> <span class="dv">50</span></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">2</span>)   <span class="co"># same explicit seed as the chapter</span></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>x_line <span class="op">=</span> (np.random.rand(num_samples) <span class="op">-</span> <span class="fl">0.5</span>) <span class="op">*</span> <span class="dv">20</span></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>y_line <span class="op">=</span> w1_true <span class="op">*</span> x_line <span class="op">+</span> w0_true <span class="op">+</span> np.random.normal(scale<span class="op">=</span>noise, size<span class="op">=</span>num_samples)</span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> loss(a, b, alpha, order<span class="op">=</span><span class="dv">2</span>):</span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Training MSE of the line y = a x + b plus an L_order penalty of weight alpha."""</span></span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.average((y_line <span class="op">-</span> (a <span class="op">*</span> x_line <span class="op">+</span> b))<span class="op">**</span><span class="dv">2</span>) <span class="op">+</span> alpha <span class="op">*</span> norm([a, b], <span class="bu">ord</span><span class="op">=</span>order)</span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>A, B <span class="op">=</span> np.meshgrid(np.linspace(<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">201</span>), np.linspace(<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">201</span>))</span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>N, M <span class="op">=</span> A.shape</span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>floss <span class="op">=</span> np.vectorize(loss)</span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> generate_z_grid(alpha, order):</span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Objective on the (a, b) grid without and with the penalty, plus the grid minimum."""</span></span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>    Z_noalpha <span class="op">=</span> floss(A.flatten(), B.flatten(), <span class="dv">0</span>).reshape((N, M))</span>
-<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>    Z <span class="op">=</span> floss(A.flatten(), B.flatten(), alpha, order)</span>
-<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>    min_ind <span class="op">=</span> np.argmin(Z)</span>
-<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> Z_noalpha, Z.reshape((N, M)), A.flatten()[min_ind], B.flatten()[min_ind]</span>
-<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>get_levels <span class="op">=</span> <span class="kw">lambda</span> z: [np.percentile(z.flatten(), i) <span class="cf">for</span> i <span class="kw">in</span> [<span class="dv">0</span>, <span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">15</span>, <span class="dv">30</span>, <span class="dv">40</span>, <span class="dv">50</span>, <span class="dv">75</span>, <span class="dv">95</span>, <span class="dv">100</span>]]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<section id="exercise-1-is-it-linear" class="level3" data-number="B.1.1">
-<h3 data-number="B.1.1" class="anchored" data-anchor-id="exercise-1-is-it-linear"><span class="header-section-number">B.1.1</span> Exercise 1: Is it linear?</h3>
-<p>The test is always the same: hold the inputs fixed and ask whether the prediction is a weighted sum of known quantities with the unknown parameters as the weights.</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 33%">
-<col style="width: 33%">
-<col style="width: 33%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Model</th>
-<th>Verdict</th>
-<th>Why</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>(a) <span class="math inline">\(y = w_0 + w_1 x + w_2 x^2\)</span></td>
-<td>linear</td>
-<td>Features <span class="math inline">\([1, x, x^2]\)</span>, weights <span class="math inline">\([w_0, w_1, w_2]\)</span>.</td>
-</tr>
-<tr class="even">
-<td>(b) <span class="math inline">\(y = a\,e^{bx}\)</span></td>
-<td>linear after <span class="math inline">\(\log\)</span></td>
-<td><span class="math inline">\(\log y = \log a + b\,x\)</span>: features <span class="math inline">\([1, x]\)</span>, weights <span class="math inline">\([\log a, b]\)</span>.</td>
-</tr>
-<tr class="odd">
-<td>(c) <span class="math inline">\(y = w_0 + w_1 \log x + w_2 \sqrt{x}\)</span></td>
-<td>linear</td>
-<td>Features <span class="math inline">\([1, \log x, \sqrt{x}]\)</span>. The features are non-linear in <span class="math inline">\(x\)</span>, which is fine.</td>
-</tr>
-<tr class="even">
-<td>(d) <span class="math inline">\(y = w_1 \sin(w_2 x)\)</span></td>
-<td>not linear</td>
-<td><span class="math inline">\(w_2\)</span> sits inside the sine; no transformation of <span class="math inline">\(y\)</span> or <span class="math inline">\(x\)</span> pulls it out. (You could fix a grid of candidate frequencies and treat each <span class="math inline">\(\sin(\omega_k x)\)</span> as a feature, but that is a different model.)</td>
-</tr>
-<tr class="odd">
-<td>(e) <span class="math inline">\(y = a\,x^{b}\)</span></td>
-<td>linear after <span class="math inline">\(\log\)</span>–<span class="math inline">\(\log\)</span></td>
-<td><span class="math inline">\(\log y = \log a + b \log x\)</span>. This is exactly how S-N (Basquin) curves are fit on log-log paper.</td>
-</tr>
-<tr class="even">
-<td>(f) <span class="math inline">\(y = w_0 + w_1/(w_2 + x)\)</span></td>
-<td>not linear as written</td>
-<td><span class="math inline">\(w_2\)</span> sits inside the denominator. If <span class="math inline">\(w_2\)</span> were known you would have features <span class="math inline">\([1, 1/(w_2 + x)]\)</span>; in practice one can set or search through possible <span class="math inline">\(w_2\)</span>s and then you can solve a linear problem for each candidate.</td>
-</tr>
-<tr class="odd">
-<td>(g) <span class="math inline">\(y = 1/(w_0 + w_1 x)\)</span></td>
-<td>linear after reciprocal</td>
-<td><span class="math inline">\(1/y = w_0 + w_1 x\)</span>.</td>
-</tr>
-</tbody>
-</table>
-<p><strong>On the noise.</strong> If <span class="math inline">\(y\)</span> carries additive Gaussian noise, then <span class="math inline">\(\log y\)</span> or <span class="math inline">\(1/y\)</span> does not: the noise becomes multiplicative and skewed, and small values of <span class="math inline">\(y\)</span> get amplified enormously (a reading of <span class="math inline">\(y \approx 0\)</span> sends <span class="math inline">\(1/y\)</span> to infinity). Fitting the transformed model with the squared loss therefore weights the data points differently from fitting the original model, which is a good reason to at least look at the residuals afterwards.</p>
-</section>
-<section id="exercise-2-build-your-own-feature-expansion" class="level3" data-number="B.1.2">
-<h3 data-number="B.1.2" class="anchored" data-anchor-id="exercise-2-build-your-own-feature-expansion"><span class="header-section-number">B.1.2</span> Exercise 2: Build your own feature expansion</h3>
-<p>Each candidate is a sum of a few terms, so the “right” features are exactly those terms (plus a constant column if you want to also learn the intercept). Below, we construct each of the feature function by stacking columns of a numpy array, and then fitting that matrix is the same Linear Regression function.</p>
-<div id="fc648ecc" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-18T20:22:19.656161Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-18T20:22:19.655158Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-18T20:22:19.670448Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-18T20:22:19.670448Z&quot;}}">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>candidate_functions <span class="op">=</span> {</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"A"</span>: <span class="kw">lambda</span> x: <span class="fl">2.0</span> <span class="op">*</span> np.sqrt(x) <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> np.cos(<span class="fl">3.0</span> <span class="op">*</span> x),</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"B"</span>: <span class="kw">lambda</span> x: np.log(<span class="fl">1.0</span> <span class="op">+</span> x) <span class="op">+</span> <span class="fl">0.1</span> <span class="op">*</span> x<span class="op">**</span><span class="dv">2</span>,</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"C"</span>: <span class="kw">lambda</span> x: np.sin(x) <span class="op">+</span> x <span class="op">*</span> np.exp(<span class="op">-</span>x),</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"D"</span>: <span class="kw">lambda</span> x: <span class="fl">0.2</span> <span class="op">*</span> x<span class="op">**</span><span class="dv">2</span> <span class="op">-</span> <span class="fl">3.0</span> <span class="op">*</span> np.sqrt(x) <span class="op">+</span> np.cos(x),</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>true_weights <span class="op">=</span> {<span class="st">"A"</span>: [<span class="fl">2.0</span>, <span class="fl">0.5</span>], <span class="st">"B"</span>: [<span class="fl">1.0</span>, <span class="fl">0.1</span>], <span class="st">"C"</span>: [<span class="fl">1.0</span>, <span class="fl">1.0</span>], <span class="st">"D"</span>: [<span class="fl">0.2</span>, <span class="op">-</span><span class="fl">3.0</span>, <span class="fl">1.0</span>]}</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># One feature function per candidate: each column is one term of the candidate function</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>feature_functions <span class="op">=</span> {</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"A"</span>: <span class="kw">lambda</span> x: np.column_stack([np.sqrt(x), np.cos(<span class="fl">3.0</span> <span class="op">*</span> x)]),</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"B"</span>: <span class="kw">lambda</span> x: np.column_stack([np.log(<span class="fl">1.0</span> <span class="op">+</span> x), x<span class="op">**</span><span class="dv">2</span>]),</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"C"</span>: <span class="kw">lambda</span> x: np.column_stack([np.sin(x), x <span class="op">*</span> np.exp(<span class="op">-</span>x)]),</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"D"</span>: <span class="kw">lambda</span> x: np.column_stack([x<span class="op">**</span><span class="dv">2</span>, np.sqrt(x), np.cos(x)]),</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> sample_candidate(name, n_points<span class="op">=</span><span class="dv">60</span>, noise_std<span class="op">=</span><span class="fl">0.1</span>, seed<span class="op">=</span><span class="dv">0</span>):</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Return noisy samples (x, y) of one of the candidate functions on x in [0, 5]."""</span></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    rng <span class="op">=</span> np.random.default_rng(seed)</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> np.sort(rng.uniform(<span class="fl">0.0</span>, <span class="fl">5.0</span>, n_points))</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> candidate_functions[name](x) <span class="op">+</span> rng.normal(<span class="fl">0.0</span>, noise_std, n_points)</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> x, y</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>x_new <span class="op">=</span> np.array([<span class="fl">0.5</span>, <span class="fl">2.5</span>, <span class="fl">4.5</span>])</span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>fitted_models <span class="op">=</span> {}</span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name <span class="kw">in</span> candidate_functions.keys():</span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    x_ex, y_ex <span class="op">=</span> sample_candidate(name)</span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    model <span class="op">=</span> LinearRegression()</span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    model.fit(feature_functions[name](x_ex), y_ex)</span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>    fitted_models[name] <span class="op">=</span> model</span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Candidate </span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  fitted weights: </span><span class="sc">{</span>np<span class="sc">.</span><span class="bu">round</span>(model.coef_, <span class="dv">3</span>)<span class="sc">}</span><span class="ss">   true: </span><span class="sc">{</span>true_weights[name]<span class="sc">}</span><span class="ss">   intercept: </span><span class="sc">{</span>model<span class="sc">.</span>intercept_<span class="sc">:.3f}</span><span class="ss"> (true 0)"</span>)</span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  prediction at x_new: </span><span class="sc">{</span>np<span class="sc">.</span><span class="bu">round</span>(model.predict(feature_functions[name](x_new)), <span class="dv">3</span>)<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  true value at x_new: </span><span class="sc">{</span>np<span class="sc">.</span><span class="bu">round</span>(candidate_functions[name](x_new), <span class="dv">3</span>)<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Candidate A
-  fitted weights: [1.992 0.486]   true: [2.0, 0.5]   intercept: 0.022 (true 0)
-  prediction at x_new: [1.464 3.339 4.536]
-  true value at x_new: [1.45  3.336 4.54 ]
-Candidate B
-  fitted weights: [0.964 0.102]   true: [1.0, 0.1]   intercept: 0.031 (true 0)
-  prediction at x_new: [0.448 1.877 3.743]
-  true value at x_new: [0.43  1.878 3.73 ]
-Candidate C
-  fitted weights: [0.992 1.096]   true: [1.0, 1.0]   intercept: -0.008 (true 0)
-  prediction at x_new: [ 0.8    0.811 -0.922]
-  true value at x_new: [ 0.783  0.804 -0.928]
-Candidate D
-  fitted weights: [ 0.197 -2.923  1.051]   true: [0.2, -3.0, 1.0]   intercept: -0.070 (true 0)
-  prediction at x_new: [-1.166 -4.303 -2.502]
-  true value at x_new: [-1.194 -4.295 -2.525]</code></pre>
-</div>
-</div>
-<p>The fitted weights match the true coefficients fairly well with only 60 noisy points, because the model has exactly the right features and only two or three parameters to learn.</p>
-<p>For part (d), here is candidate A fit with the <em>wrong</em> features, a cubic polynomial. The polynomial can imitate the curve in the middle of the interval but has no way to reproduce <span class="math inline">\(\sqrt{x}\)</span> near <span class="math inline">\(x = 0\)</span> or the oscillation, and it drifts at the ends.</p>
-<div id="c303733e" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-18T20:22:19.673557Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-18T20:22:19.673557Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-18T20:22:19.787460Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-18T20:22:19.786943Z&quot;}}">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>x_ex, y_ex <span class="op">=</span> sample_candidate(<span class="st">"A"</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>x_dense <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">5</span>, <span class="dv">300</span>)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>poly_features <span class="op">=</span> PolynomialFeatures(degree<span class="op">=</span><span class="dv">3</span>, include_bias<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>wrong_model <span class="op">=</span> LinearRegression().fit(poly_features.fit_transform(x_ex[:, np.newaxis]), y_ex)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">9</span>, <span class="dv">5</span>))</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>plt.plot(x_dense, candidate_functions[<span class="st">"A"</span>](x_dense), <span class="st">'--'</span>, label<span class="op">=</span><span class="st">"True function A"</span>)</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>plt.scatter(x_ex, y_ex, label<span class="op">=</span><span class="st">"Noisy samples"</span>, alpha<span class="op">=</span><span class="fl">0.6</span>)</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>plt.plot(x_dense, fitted_models[<span class="st">"A"</span>].predict(feature_functions[<span class="st">"A"</span>](x_dense)), label<span class="op">=</span><span class="st">"Right features: sqrt(x), cos(3x)"</span>)</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>plt.plot(x_dense, wrong_model.predict(poly_features.transform(x_dense[:, np.newaxis])), label<span class="op">=</span><span class="st">"Wrong features: degree-3 polynomial"</span>)</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"x"</span>)</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"y"</span>)</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="exercise_solutions_files/figure-html/..-solutions-reviewing_supervised_linear_models_solutions-cell-4-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="exercise-3-match-the-shrinkage-path-to-the-norm" class="level3" data-number="B.1.3">
-<h3 data-number="B.1.3" class="anchored" data-anchor-id="exercise-3-match-the-shrinkage-path-to-the-norm"><span class="header-section-number">B.1.3</span> Exercise 3: Match the shrinkage path to the norm</h3>
-<p>The code below recomputes the four coefficient paths and prints which panel letter received which <span class="math inline">\(p\)</span> (the panel order was shuffled with a fixed seed in the chapter).</p>
-<div id="f5e00486" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-18T20:22:19.793469Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-18T20:22:19.793469Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-18T20:22:21.443905Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-18T20:22:21.441391Z&quot;}}">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>ex3_orders <span class="op">=</span> [<span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">100</span>]</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>ex3_alphas <span class="op">=</span> np.logspace(<span class="op">-</span><span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">30</span>)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>ex3_paths <span class="op">=</span> np.zeros((<span class="bu">len</span>(ex3_orders), <span class="bu">len</span>(ex3_alphas), <span class="dv">2</span>))</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> j, o <span class="kw">in</span> <span class="bu">enumerate</span>(ex3_orders):</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    prev_opt <span class="op">=</span> [<span class="dv">5</span>, <span class="dv">5</span>]</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, a <span class="kw">in</span> <span class="bu">enumerate</span>(ex3_alphas):</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        prev_opt <span class="op">=</span> fmin(<span class="kw">lambda</span> v: loss(v[<span class="dv">0</span>], v[<span class="dv">1</span>], alpha<span class="op">=</span>a, order<span class="op">=</span>o), prev_opt, disp<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        ex3_paths[j, i] <span class="op">=</span> prev_opt</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>ex3_panel_order <span class="op">=</span> np.random.default_rng(<span class="dv">3</span>).permutation(<span class="bu">len</span>(ex3_orders))</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Panel -&gt; p:"</span>, {letter: ex3_orders[j] <span class="cf">for</span> letter, j <span class="kw">in</span> <span class="bu">zip</span>(<span class="st">"ABCD"</span>, ex3_panel_order)})</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">14</span>, <span class="dv">9</span>), sharex<span class="op">=</span><span class="va">True</span>, sharey<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> panel, (ax, j) <span class="kw">in</span> <span class="bu">enumerate</span>(<span class="bu">zip</span>(axes.ravel(), ex3_panel_order)):</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    ax.semilogx(ex3_alphas, np.<span class="bu">abs</span>(ex3_paths[j, :, <span class="dv">0</span>]), <span class="st">'o-'</span>, label<span class="op">=</span><span class="st">"$|w_1|$ (slope)"</span>)</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    ax.semilogx(ex3_alphas, np.<span class="bu">abs</span>(ex3_paths[j, :, <span class="dv">1</span>]), <span class="st">'s-'</span>, label<span class="op">=</span><span class="st">"$|w_0|$ (intercept)"</span>)</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    ax.set_title(<span class="ss">f"Panel </span><span class="sc">{</span><span class="st">'ABCD'</span>[panel]<span class="sc">}</span><span class="ss">: p = </span><span class="sc">{</span>ex3_orders[j]<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>, <span class="dv">0</span>].legend()</span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Panel -&gt; p: {'A': 100, 'B': 2, 'C': 1, 'D': 0.5}</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="exercise_solutions_files/figure-html/..-solutions-reviewing_supervised_linear_models_solutions-cell-5-output-2.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p><strong>(a)</strong> The tell-tale features:</p>
-<ul>
-<li><span class="math inline">\(p = 100\)</span> (essentially <span class="math inline">\(L_\infty\)</span>): the penalty only cares about the <em>largest</em> coefficient, so at first the slope shrinks faster than the intercept (which shrinks, but more slowly). At the weight increases and the slope begins to contract even more aggressively, we counter-intuitively even see the intercept grow/increase again, in part to help counter-act the fact that the slope is flattening so quickly and inducing high MSE. Once the two magnitudes are equal they shrink together. This tendency to “equalize, then shrink together” is characteristic of <span class="math inline">\(L_\infty\)</span> penalties.</li>
-<li><span class="math inline">\(p = 2\)</span>: both coefficients shrink smoothly and neither reaches exactly zero until the penalty overwhelms the data term completely.</li>
-<li><span class="math inline">\(p = 1\)</span>: the intercept decays and hits <em>exactly</em> zero at a moderate <span class="math inline">\(\alpha\)</span>, then stays there while the slope is still near its true value. This “induced sparsity” is one of the hallmarks of <span class="math inline">\(L_1\)</span> norms.</li>
-<li><span class="math inline">\(p = 0.5\)</span>: the intercept jumps to exactly zero almost immediately, at a much smaller <span class="math inline">\(\alpha\)</span> than for <span class="math inline">\(p=1\)</span>, because a non-convex penalty rewards being exactly on an axis even more strongly than in the <span class="math inline">\(p=1\)</span> case. You can gain further intuition on this but trying other <span class="math inline">\(p\)</span> norms in the code cell above and testing your intuition about how they work and affect the linear model.</li>
-</ul>
-<p><strong>(b)</strong> The smaller coefficient is set to exactly zero while the other is still large only for <span class="math inline">\(p \le 1\)</span>. The reason is the shape of the penalty’s contours as we saw in the more visual example earlier in the notebook: for <span class="math inline">\(p \le 1\)</span> the penalty norm has corners on the axes, and while this doesn’t necessary guarentee a coefficient goes to zero, if the loss function itself is fairly smooth (as is the case with our example), this will generally encourage the lowest point on a given norm constraint to be touching one of the axes and thus inducing sparsity. In contrast, with <span class="math inline">\(p = 2\)</span> the contours were round, so if we look for the lowest loss function that constrained to one of the lines in the penalty function is almost never exactly touching an axis; the coefficient gets small but stays non-zero. This also makes sense from a gradient perspective, since as the weight becomes small the gradient also goes to zero and this means it has less incentive to shrink the weight further. For <span class="math inline">\(p = \infty\)</span> the corners are on the diagonals, which pushes the coefficients towards <em>equal</em> magnitude rather than towards zero.</p>
-</section>
-<section id="exercise-4-which-loss-made-this-fit" class="level3" data-number="B.1.4">
-<h3 data-number="B.1.4" class="anchored" data-anchor-id="exercise-4-which-loss-made-this-fit"><span class="header-section-number">B.1.4</span> Exercise 4: Which loss made this fit?</h3>
-<div id="e0a83843" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-18T20:22:21.448305Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-18T20:22:21.448305Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-18T20:22:22.465983Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-18T20:22:22.463764Z&quot;}}">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>ex4_losses <span class="op">=</span> [<span class="st">'squared_error'</span>, <span class="st">'huber'</span>, <span class="st">'epsilon_insensitive'</span>]</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>ex4_panel_order <span class="op">=</span> np.random.default_rng(<span class="dv">4</span>).permutation(<span class="bu">len</span>(ex4_losses))</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Fit -&gt; loss:"</span>, {letter: ex4_losses[j] <span class="cf">for</span> letter, j <span class="kw">in</span> <span class="bu">zip</span>(<span class="st">"ABC"</span>, ex4_panel_order)})</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"True slope of the bulk of the data: </span><span class="sc">{</span>true_slope_outliers<span class="sc">:.3f}</span><span class="ss">, true intercept: 10"</span>)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>ex4_line_X <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">50</span>)</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">18</span>, <span class="dv">10</span>))</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> panel, j <span class="kw">in</span> <span class="bu">enumerate</span>(ex4_panel_order):</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    ex4_model <span class="op">=</span> SGDRegressor(loss<span class="op">=</span>ex4_losses[j], fit_intercept<span class="op">=</span><span class="va">True</span>, max_iter<span class="op">=</span><span class="dv">20000</span>,</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>                             penalty<span class="op">=</span><span class="st">'l2'</span>, alpha<span class="op">=</span><span class="fl">.001</span>, epsilon<span class="op">=</span><span class="dv">1</span>, tol<span class="op">=</span><span class="fl">1e-5</span>, random_state<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    ex4_model.fit(Xr, yr)</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    residuals <span class="op">=</span> yr <span class="op">-</span> ex4_model.predict(Xr)</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Fit </span><span class="sc">{</span><span class="st">'ABC'</span>[panel]<span class="sc">}</span><span class="ss"> (</span><span class="sc">{</span>ex4_losses[j]<span class="sc">:&gt;20s}</span><span class="ss">): slope </span><span class="sc">{</span>ex4_model<span class="sc">.</span>coef_[<span class="dv">0</span>]<span class="sc">:.2f}</span><span class="ss">, intercept </span><span class="sc">{</span>ex4_model<span class="sc">.</span>intercept_[<span class="dv">0</span>]<span class="sc">:.2f}</span><span class="ss">, "</span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>          <span class="ss">f"median residual of the non-outliers </span><span class="sc">{</span>np<span class="sc">.</span>median(residuals[n_outliers:])<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    ax_fit, ax_hist <span class="op">=</span> axes[<span class="dv">0</span>, panel], axes[<span class="dv">1</span>, panel]</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    ax_fit.scatter(Xr, yr, facecolors<span class="op">=</span><span class="st">'None'</span>, edgecolors<span class="op">=</span><span class="st">'k'</span>, alpha<span class="op">=</span><span class="fl">0.4</span>)</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    ax_fit.plot(ex4_line_X, ex4_model.predict(ex4_line_X[:, np.newaxis]), <span class="st">'r-'</span>, lw<span class="op">=</span><span class="dv">3</span>)</span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    ax_fit.set_title(<span class="ss">f"Fit </span><span class="sc">{</span><span class="st">'ABC'</span>[panel]<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>ex4_losses[j]<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    ax_hist.hist(residuals, bins<span class="op">=</span><span class="dv">60</span>, <span class="bu">range</span><span class="op">=</span>(<span class="op">-</span><span class="dv">8</span>, <span class="dv">8</span>))</span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    ax_hist.axvline(<span class="dv">0</span>, color<span class="op">=</span><span class="st">'k'</span>, lw<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    ax_hist.set_xlabel(<span class="vs">r"residual </span><span class="dv">$</span><span class="vs">y - </span><span class="er">\</span><span class="vs">hat{y}</span><span class="dv">$</span><span class="vs">"</span>)</span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Fit -&gt; loss: {'A': 'squared_error', 'B': 'huber', 'C': 'epsilon_insensitive'}
-True slope of the bulk of the data: 8.219, true intercept: 10
-Fit A (       squared_error): slope 5.29, intercept 9.03, median residual of the non-outliers 0.84
-Fit B (               huber): slope 7.96, intercept 9.94, median residual of the non-outliers 0.04
-Fit C ( epsilon_insensitive): slope 7.82, intercept 9.90, median residual of the non-outliers 0.08</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="exercise_solutions_files/figure-html/..-solutions-reviewing_supervised_linear_models_solutions-cell-6-output-2.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p><strong>(a)</strong> The odd one out is the <strong>squared loss</strong>. There are two give-aways for this. First, in its residual histogram the bulk of the residuals are shifted away from zero (the line has been dragged towards the outlier cluster, so the good points are systematically mis-predicted), and the histogram is much <em>wider</em> than the others, because a tilted line produces residuals that grow with <span class="math inline">\(|x|\)</span>. Second, in the fit itself you can see the line cutting through the point cloud at the wrong angle, with the outliers rewarded by a smaller residual than they deserve.</p>
-<p><strong>(b)</strong> The Huber and epsilon-insensitive fits are practically identical, and you cannot tell them apart from these plots. Look at the loss-shape plot in the chapter: for large errors <em>both</em> losses grow linearly, so the fifty outliers exert the same constant pull under either loss. They only differ for errors smaller than about one unit (quadratic versus a flat dead band followed by a linear ramp), and inside the bulk of the data this difference would not produce a notable change in the line or fit.</p>
-<p><strong>(c)</strong> They would separate when the <em>small</em> errors matter: for example, with very few data points, with no outliers at all (the squared part of Huber then behaves like the ordinary squared loss, whereas a wide dead band makes the epsilon-insensitive fit indifferent to where exactly it sits inside the band), or when the noise is skewed so that the mean and the median of the bulk differ.</p>
-</section>
-<section id="exercise-5-where-do-these-points-sit-on-the-hinge-loss" class="level3" data-number="B.1.5">
-<h3 data-number="B.1.5" class="anchored" data-anchor-id="exercise-5-where-do-these-points-sit-on-the-hinge-loss"><span class="header-section-number">B.1.5</span> Exercise 5: Where do these points sit on the hinge loss?</h3>
-<p>The code recomputes the hinge-loss classifier, the six highlighted points and, for each, its class, decision value <span class="math inline">\(f(\mathbf{x})\)</span>, signed margin <span class="math inline">\(z = y\,f(\mathbf{x})\)</span> and hinge loss.</p>
-<div id="719ea739" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-18T20:22:22.470999Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-18T20:22:22.470999Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-18T20:22:22.491965Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-18T20:22:22.490950Z&quot;}}">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>X_moons, y_moons <span class="op">=</span> datasets[<span class="dv">0</span>]</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>X_moons <span class="op">=</span> StandardScaler().fit_transform(X_moons)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>y_moons_pm <span class="op">=</span> np.where(y_moons <span class="op">==</span> <span class="dv">1</span>, <span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>)</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>svm_moons <span class="op">=</span> LinearSVC(loss<span class="op">=</span><span class="st">'hinge'</span>, C<span class="op">=</span><span class="fl">1.0</span>, max_iter<span class="op">=</span><span class="dv">200000</span>, tol<span class="op">=</span><span class="fl">1e-8</span>)</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>svm_moons.fit(X_moons, y_moons)</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>f_moons <span class="op">=</span> svm_moons.decision_function(X_moons)</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>z_moons <span class="op">=</span> y_moons_pm <span class="op">*</span> f_moons</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> closest_point(target, exclude):</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Index of the point whose signed margin is closest to target, skipping excluded indices."""</span></span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    distance <span class="op">=</span> np.<span class="bu">abs</span>(z_moons <span class="op">-</span> target).astype(<span class="bu">float</span>)</span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    distance[<span class="bu">list</span>(exclude)] <span class="op">=</span> np.inf</span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">int</span>(np.argmin(distance))</span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>on_margin <span class="op">=</span> [<span class="bu">int</span>(i) <span class="cf">for</span> i <span class="kw">in</span> np.where(np.<span class="bu">abs</span>(z_moons <span class="op">-</span> <span class="dv">1</span>) <span class="op">&lt;</span> <span class="fl">1e-3</span>)[<span class="dv">0</span>][:<span class="dv">2</span>]]</span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>chosen <span class="op">=</span> <span class="bu">list</span>(on_margin)</span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> target <span class="kw">in</span> [<span class="fl">0.5</span>, <span class="fl">2.0</span>, <span class="op">-</span><span class="fl">1.0</span>, z_moons.<span class="bu">min</span>()]:</span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>    chosen.append(closest_point(target, chosen))</span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>ex5_points <span class="op">=</span> [chosen[i] <span class="cf">for</span> i <span class="kw">in</span> np.random.default_rng(<span class="dv">5</span>).permutation(<span class="bu">len</span>(chosen))]</span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>marks <span class="op">=</span> {<span class="st">"A"</span>: <span class="fl">1.0</span>, <span class="st">"B"</span>: <span class="fl">0.0</span>, <span class="st">"C"</span>: <span class="op">-</span><span class="fl">1.0</span>, <span class="st">"D"</span>: <span class="fl">2.0</span>}</span>
-<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">" point  class    f(x)      z   hinge loss  nearest mark"</span>)</span>
-<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> number, idx <span class="kw">in</span> <span class="bu">enumerate</span>(ex5_points, start<span class="op">=</span><span class="dv">1</span>):</span>
-<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>    z <span class="op">=</span> z_moons[idx]</span>
-<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="fl">0.05</span> <span class="op">&lt;</span> z <span class="op">&lt;</span> <span class="fl">0.95</span>:</span>
-<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>        nearest <span class="op">=</span> <span class="st">"between B and A"</span></span>
-<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>        nearest <span class="op">=</span> <span class="bu">min</span>(marks, key<span class="op">=</span><span class="kw">lambda</span> letter: <span class="bu">abs</span>(marks[letter] <span class="op">-</span> z))</span>
-<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"   </span><span class="sc">{</span>number<span class="sc">}</span><span class="ss">     </span><span class="sc">{</span>y_moons_pm[idx]<span class="sc">:+d}</span><span class="ss">   </span><span class="sc">{</span>f_moons[idx]<span class="sc">:6.2f}</span><span class="ss">  </span><span class="sc">{</span>z<span class="sc">:6.2f}</span><span class="ss">     </span><span class="sc">{</span><span class="bu">max</span>(<span class="dv">0</span>, <span class="dv">1</span> <span class="op">-</span> z)<span class="sc">:5.2f}</span><span class="ss">        </span><span class="sc">{</span>nearest<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> point  class    f(x)      z   hinge loss  nearest mark
-   1     +1     1.00    1.00      0.00        A
-   2     -1     1.08   -1.08      2.08        C
-   3     -1    -0.50    0.50      0.50        between B and A
-   4     -1    -2.01    2.01      0.00        D
-   5     -1     1.64   -1.64      2.64        C
-   6     -1    -1.00    1.00      0.00        A</code></pre>
-</div>
-</div>
-<p><strong>(a)</strong> Read the class from the marker and the position from the lines. A point is <em>correctly</em> classified when it lies on its own class’s side of the solid line, so a <span class="math inline">\(+\)</span> below the line or an <span class="math inline">\(\circ\)</span> above it has <span class="math inline">\(z &gt; 0\)</span>. A point exactly on a dashed line has <span class="math inline">\(|f| = 1\)</span>: on its own side that means <span class="math inline">\(z = 1\)</span> (mark A, the kink), on the wrong side <span class="math inline">\(z = -1\)</span> (mark C). A point beyond its own dashed line has <span class="math inline">\(z &gt; 1\)</span> (mark D), and a point between the solid and dashed lines on the correct side has <span class="math inline">\(0 &lt; z &lt; 1\)</span> (between B and A). The table above gives the exact values.</p>
-<p><strong>(b)</strong> Zero loss requires <span class="math inline">\(z \ge 1\)</span>: the two points sitting exactly on their own dashed line (mark A) and the point far beyond it (mark D). Only the two dashed-line points are <em>at the kink</em>.</p>
-<p><strong>(c)</strong> The point at mark D can be deleted (or moved a little) without changing anything: its loss is zero and it is not at the kink, so the optimum does not depend on it. The other five are support vectors: the two at the kink because they define where the margin sits, and the three with positive loss because they push on the boundary.</p>
-</section>
-<section id="exercise-6-name-the-classification-loss" class="level3" data-number="B.1.6">
-<h3 data-number="B.1.6" class="anchored" data-anchor-id="exercise-6-name-the-classification-loss"><span class="header-section-number">B.1.6</span> Exercise 6: Name the classification loss</h3>
-<div id="17c2bf36" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-18T20:22:22.495963Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-18T20:22:22.494963Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-18T20:22:22.509243Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-18T20:22:22.508228Z&quot;}}">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> modified_huber_loss(y_true, y_pred):</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Modified Huber loss from the chapter, as a function of the signed margin z = y_true * y_pred."""</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    z <span class="op">=</span> y_pred <span class="op">*</span> y_true</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    loss_values <span class="op">=</span> <span class="op">-</span><span class="dv">4</span> <span class="op">*</span> z</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    loss_values[z <span class="op">&gt;=</span> <span class="op">-</span><span class="dv">1</span>] <span class="op">=</span> (<span class="dv">1</span> <span class="op">-</span> z[z <span class="op">&gt;=</span> <span class="op">-</span><span class="dv">1</span>]) <span class="op">**</span> <span class="dv">2</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    loss_values[z <span class="op">&gt;=</span> <span class="fl">1.</span>] <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> loss_values</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>ex6_losses <span class="op">=</span> {</span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">'hinge'</span>: <span class="kw">lambda</span> z: np.where(z <span class="op">&lt;</span> <span class="dv">1</span>, <span class="dv">1</span> <span class="op">-</span> z, <span class="dv">0</span>),</span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">'perceptron'</span>: <span class="kw">lambda</span> z: <span class="op">-</span>np.minimum(z, <span class="dv">0</span>),</span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">'log_loss'</span>: <span class="kw">lambda</span> z: np.log2(<span class="dv">1</span> <span class="op">+</span> np.exp(<span class="op">-</span>z)),</span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">'modified_huber'</span>: <span class="kw">lambda</span> z: modified_huber_loss(z, np.ones_like(z)),</span>
-<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">'squared_hinge'</span>: <span class="kw">lambda</span> z: np.where(z <span class="op">&lt;</span> <span class="dv">1</span>, <span class="dv">1</span> <span class="op">-</span> z, <span class="dv">0</span>) <span class="op">**</span> <span class="dv">2</span>,</span>
-<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>ex6_names <span class="op">=</span> <span class="bu">list</span>(ex6_losses)</span>
-<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>ex6_label_order <span class="op">=</span> np.random.default_rng(<span class="dv">6</span>).permutation(<span class="bu">len</span>(ex6_names))</span>
-<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Loss letter -&gt; loss:"</span>, {letter: ex6_names[j] <span class="cf">for</span> letter, j <span class="kw">in</span> <span class="bu">zip</span>(<span class="st">"ABCDE"</span>, ex6_label_order)})</span>
-<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>ex6_point_order <span class="op">=</span> <span class="bu">sorted</span>(<span class="bu">range</span>(<span class="bu">len</span>(ex5_points)), key<span class="op">=</span><span class="kw">lambda</span> k: z_moons[ex5_points[k]])</span>
-<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>ex6_numbers <span class="op">=</span> [k <span class="op">+</span> <span class="dv">1</span> <span class="cf">for</span> k <span class="kw">in</span> ex6_point_order]</span>
-<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>ex6_z <span class="op">=</span> np.array([z_moons[ex5_points[k]] <span class="cf">for</span> k <span class="kw">in</span> ex6_point_order])</span>
-<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st"> point     z  "</span> <span class="op">+</span> <span class="st">""</span>.join(<span class="ss">f"</span><span class="sc">{</span>name<span class="sc">:&gt;16s}</span><span class="ss">"</span> <span class="cf">for</span> name <span class="kw">in</span> ex6_names))</span>
-<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> number, z <span class="kw">in</span> <span class="bu">zip</span>(ex6_numbers, ex6_z):</span>
-<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>    values <span class="op">=</span> <span class="st">""</span>.join(<span class="ss">f"</span><span class="sc">{</span>ex6_losses[name](np.array([z]))[<span class="dv">0</span>]<span class="sc">:16.2f}</span><span class="ss">"</span> <span class="cf">for</span> name <span class="kw">in</span> ex6_names)</span>
-<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"   </span><span class="sc">{</span>number<span class="sc">}</span><span class="ss">   </span><span class="sc">{</span>z<span class="sc">:5.2f}</span><span class="ss">"</span> <span class="op">+</span> values)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Loss letter -&gt; loss: {'A': 'log_loss', 'B': 'squared_hinge', 'C': 'hinge', 'D': 'modified_huber', 'E': 'perceptron'}
-
- point     z             hinge      perceptron        log_loss  modified_huber   squared_hinge
-   5   -1.64            2.64            1.64            2.62            6.57            6.98
-   2   -1.08            2.08            1.08            1.98            4.31            4.32
-   3    0.50            0.50           -0.00            0.68            0.25            0.25
-   1    1.00            0.00           -0.00            0.45            0.00            0.00
-   6    1.00            0.00           -0.00            0.45            0.00            0.00
-   4    2.01            0.00           -0.00            0.18            0.00            0.00</code></pre>
-</div>
-</div>
-<p><strong>(a)</strong> The identifying features, from the leftmost (most misclassified) point rightwards:</p>
-<ul>
-<li><strong>Log loss</strong> is the only curve that never reaches zero: even the most confidently classified point still contributes a little. It also grows only linearly on the left.</li>
-<li><strong>Hinge loss</strong> is a straight line on the left (<span class="math inline">\(1 - z\)</span>) and exactly zero for every point with <span class="math inline">\(z \ge 1\)</span>, including the two on the margin. Reading <span class="math inline">\(z = 1 - \text{hinge}\)</span> off this curve gives you the signed margin of every point.</li>
-<li><strong>Perceptron loss</strong> is zero for <em>every</em> correctly classified point, including the one inside the margin, and equals <span class="math inline">\(-z\)</span> for misclassified points, so it is the lowest curve on the left.</li>
-<li><strong>Squared hinge</strong> is the hinge value squared: it is the highest curve on the left (7 for <span class="math inline">\(z \approx -1.6\)</span>) and zero from the margin onwards.</li>
-<li><strong>Modified Huber</strong> agrees with squared hinge for <span class="math inline">\(z &gt; -1\)</span> but switches to the straight line <span class="math inline">\(-4z\)</span> below that, so it sits slightly <em>under</em> the squared hinge at the most misclassified point (6.6 versus 7.0). That small gap is the only place the two differ.</li>
-</ul>
-<p><strong>(b)</strong> The perceptron loss and the hinge loss give exactly zero for correctly classified points, but with an important difference: the perceptron is satisfied by <em>any</em> correctly classified point, however close to the boundary, while the hinge only switches off once the point is beyond the margin. That is why the perceptron has no preferred boundary and lands somewhere different every time you retrain it (the behaviour you saw in the chapter’s experiment), whereas the hinge loss keeps pushing until the boundary sits in the middle of the gap between the classes.</p>
-</section>
-<section id="exercise-7-choose-the-penalty" class="level3" data-number="B.1.7">
-<h3 data-number="B.1.7" class="anchored" data-anchor-id="exercise-7-choose-the-penalty"><span class="header-section-number">B.1.7</span> Exercise 7: Choose the penalty</h3>
-<p><strong>(a)</strong> An <span class="math inline">\(L_1\)</span> penalty (the LASSO). With 40 candidate features, you want most weights to be <em>exactly</em> zero, and only the <span class="math inline">\(L_1\)</span> penalty geometry will encourage that. Be aware of the catch with strongly correlated features: the LASSO tends to pick one of a correlated group more or less arbitrarily and zero the rest, so the “important” list can change if the data change slightly. If that matters, an Elastic Net (an <span class="math inline">\(L_1\)</span> plus a small <span class="math inline">\(L_2\)</span> term) keeps the sparsity while sharing weight among correlated features.</p>
-<p><strong>(b)</strong> An <span class="math inline">\(L_2\)</span> penalty (ridge regression). Nearly redundant inputs make the unpenalized problem ill-conditioned: many different weight vectors fit almost equally well, so small changes in the monthly data can cause the coefficients to swing wildly. The <span class="math inline">\(L_2\)</span> penalty makes the problem well-posed and spreads the weight smoothly across the redundant channels, which is exactly the stability the plant engineers were asking you for. An <span class="math inline">\(L_1\)</span> penalty would do the opposite here, flipping which redundant channel gets the weight from month to month.</p>
-</section>
-<section id="exercise-8-which-penalty-produced-this-path" class="level3" data-number="B.1.8">
-<h3 data-number="B.1.8" class="anchored" data-anchor-id="exercise-8-which-penalty-produced-this-path"><span class="header-section-number">B.1.8</span> Exercise 8: Which penalty produced this path?</h3>
-<div id="de402207" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-18T20:22:22.513242Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-18T20:22:22.513242Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-18T20:22:30.599078Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-18T20:22:30.595563Z&quot;}}">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>ex8_orders <span class="op">=</span> [<span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">100</span>]</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>ex8_path_p <span class="op">=</span> <span class="dv">1</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>ex8_path <span class="op">=</span> ex3_paths[ex3_orders.index(ex8_path_p)]</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Panel -&gt; p:"</span>, <span class="bu">dict</span>(<span class="bu">zip</span>(<span class="st">"ABCD"</span>, ex8_orders)))</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"The blue path was computed with p = </span><span class="sc">{</span>ex8_path_p<span class="sc">}</span><span class="ss">, so panel </span><span class="sc">{</span><span class="st">'ABCD'</span>[ex8_orders.index(ex8_path_p)]<span class="sc">}</span><span class="ss"> is the consistent one."</span>)</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">14</span>, <span class="dv">10</span>))</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> panel, (ax, o) <span class="kw">in</span> <span class="bu">enumerate</span>(<span class="bu">zip</span>(axes.ravel(), ex8_orders)):</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    Z_noalpha, Z, Amin, Bmin <span class="op">=</span> generate_z_grid(<span class="dv">10000</span>, o)</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    ax.contour(A, B, Z_noalpha, <span class="dv">10</span>, levels<span class="op">=</span>get_levels(Z_noalpha), linestyles<span class="op">=</span><span class="st">'solid'</span>, alpha<span class="op">=</span><span class="fl">0.3</span>, colors<span class="op">=</span><span class="st">'g'</span>)</span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    ax.contour(A, B, Z, <span class="dv">10</span>, levels<span class="op">=</span>get_levels(Z), linestyles<span class="op">=</span><span class="st">'solid'</span>, alpha<span class="op">=</span><span class="fl">0.3</span>, colors<span class="op">=</span><span class="st">'k'</span>)</span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    ax.plot(ex8_path[:, <span class="dv">0</span>], ex8_path[:, <span class="dv">1</span>], marker<span class="op">=</span><span class="st">'o'</span>, alpha<span class="op">=</span><span class="fl">0.8</span>, label<span class="op">=</span><span class="ss">f"path for p = </span><span class="sc">{</span>ex8_path_p<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    ax.plot(ex3_paths[j <span class="op">:=</span> ex3_orders.index(o)][:, <span class="dv">0</span>], ex3_paths[j][:, <span class="dv">1</span>], marker<span class="op">=</span><span class="st">'.'</span>, alpha<span class="op">=</span><span class="fl">0.8</span>,</span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>            color<span class="op">=</span><span class="st">'C3'</span>, label<span class="op">=</span><span class="ss">f"path for p = </span><span class="sc">{</span>o<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    ax.scatter([w1_true], [w0_true], marker<span class="op">=</span><span class="st">'*'</span>, s<span class="op">=</span><span class="dv">300</span>, zorder<span class="op">=</span><span class="dv">5</span>)</span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>    ax.set_title(<span class="ss">f"Panel </span><span class="sc">{</span><span class="st">'ABCD'</span>[panel]<span class="sc">}</span><span class="ss">: p = </span><span class="sc">{</span>o<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">"$w_1$ (slope)"</span>)</span>
-<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(<span class="st">"$w_0$ (intercept)"</span>)</span>
-<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>    ax.set_xlim([<span class="op">-</span><span class="dv">1</span>, <span class="dv">6</span>])</span>
-<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>    ax.set_ylim([<span class="op">-</span><span class="dv">1</span>, <span class="dv">3</span>])</span>
-<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>    ax.set_aspect(<span class="st">'equal'</span>, adjustable<span class="op">=</span><span class="st">'box'</span>)</span>
-<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>    ax.legend(loc<span class="op">=</span><span class="st">'upper left'</span>)</span>
-<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Panel -&gt; p: {'A': 0.5, 'B': 1, 'C': 2, 'D': 100}
-The blue path was computed with p = 1, so panel B is the consistent one.</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="exercise_solutions_files/figure-html/..-solutions-reviewing_supervised_linear_models_solutions-cell-9-output-2.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p><strong>(a)</strong> The grey contours give the norm away: the star-shaped, inward-curving contours are <span class="math inline">\(p = 0.5\)</span>; the diamond is <span class="math inline">\(p = 1\)</span>; the circle is <span class="math inline">\(p = 2\)</span>; the rounded square is <span class="math inline">\(p = 100\)</span>.</p>
-<p><strong>(b)</strong> The blue path was computed with <span class="math inline">\(p = 1\)</span>, and only the diamond panel is consistent with how the path should intersect the norm constraint with the lowest value in the loss function. The path first runs straight down to the axis <span class="math inline">\(w_0 = 0\)</span> and then slides along the axis towards the origin. Sliding <em>along an axis</em> means the optimum sits at a corner of the penalty contour, and only the diamond (and the star) have corners on the axes. The star can be ruled out because its optimum would jump to the axis abruptly at a much smaller penalty rather than descend gradually, and the circle and the square have no axis corners at all: the circle would bend the path smoothly towards the origin without ever touching the axis until the very end, and the square would first shrink the <em>larger</em> coefficient until the two were equal.</p>
-<p><strong>(c)</strong> The red paths in the figure show what actually happens for each <span class="math inline">\(p\)</span>: the abrupt jump for <span class="math inline">\(p = 0.5\)</span>, the smooth curve for <span class="math inline">\(p = 2\)</span> that keeps <span class="math inline">\(w_0 &gt; 0\)</span>, and the “shrink the slope first, then both together” path for <span class="math inline">\(p = 100\)</span>.</p>
-</section>
-<section id="exercise-9-tracking-a-thrown-object-with-a-flaky-lidar" class="level3" data-number="B.1.9">
-<h3 data-number="B.1.9" class="anchored" data-anchor-id="exercise-9-tracking-a-thrown-object-with-a-flaky-lidar"><span class="header-section-number">B.1.9</span> Exercise 9: Tracking a thrown object with a flaky lidar</h3>
-<p><strong>(a)</strong> A ball in free flight follows <span class="math inline">\(h(t) = h_0 + v_0 t - \tfrac{1}{2} g t^2\)</span>. That is a linear model in the parameters <span class="math inline">\((h_0, v_0, -g/2)\)</span> with features <span class="math inline">\([1, t, t^2]\)</span>: the launch height, the launch speed, and minus half the gravitational acceleration.</p>
-<p><strong>(b)</strong> The dropped readings are outliers with a very specific structure: they all sit at exactly zero, far below the trajectory, and they are about one reading in eight. A squared loss squares those huge errors and lets them dominate the fit. A <strong>Huber loss</strong> (or an absolute loss) grows only linearly for large errors, so the dropouts pull with a bounded, constant force and the many good readings win. <code>HuberRegressor</code> fits the Huber loss directly and is not fussy about feature scaling.</p>
-<p><strong>(c) and (d)</strong> Below, the Huber fit next to the squared-loss fit.</p>
-<div id="da15eb54" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;execution&quot;,&quot;value&quot;:{&quot;iopub.execute_input&quot;:&quot;2026-09-18T20:22:30.978494Z&quot;,&quot;iopub.status.busy&quot;:&quot;2026-09-18T20:22:30.978494Z&quot;,&quot;iopub.status.idle&quot;:&quot;2026-09-18T20:22:31.117099Z&quot;,&quot;shell.execute_reply&quot;:&quot;2026-09-18T20:22:31.116092Z&quot;}}">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>lidar_rng <span class="op">=</span> np.random.default_rng(<span class="dv">7</span>)</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>t_lidar <span class="op">=</span> np.sort(lidar_rng.uniform(<span class="fl">0.0</span>, <span class="fl">2.5</span>, <span class="dv">80</span>))</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>height_lidar <span class="op">=</span> <span class="fl">1.5</span> <span class="op">+</span> <span class="fl">12.0</span> <span class="op">*</span> t_lidar <span class="op">-</span> <span class="fl">0.5</span> <span class="op">*</span> <span class="fl">9.81</span> <span class="op">*</span> t_lidar<span class="op">**</span><span class="dv">2</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>height_lidar <span class="op">=</span> height_lidar <span class="op">+</span> lidar_rng.normal(<span class="fl">0.0</span>, <span class="fl">0.05</span>, t_lidar.size)</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>lidar_missed <span class="op">=</span> lidar_rng.random(t_lidar.size) <span class="op">&lt;</span> <span class="fl">0.12</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>height_lidar[lidar_missed] <span class="op">=</span> <span class="fl">0.0</span></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> trajectory_features(t):</span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Features [t, t^2] for the free-flight model; the intercept is the launch height."""</span></span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.column_stack([t, t<span class="op">**</span><span class="dv">2</span>])</span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> report(name, model):</span>
-<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Print launch height, launch speed and g implied by a fitted model with features [t, t^2]."""</span></span>
-<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>    launch_height <span class="op">=</span> model.intercept_</span>
-<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>    launch_speed, half_minus_g <span class="op">=</span> model.coef_</span>
-<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>name<span class="sc">:&gt;14s}</span><span class="ss">: h0 = </span><span class="sc">{</span>launch_height<span class="sc">:5.2f}</span><span class="ss"> m, v0 = </span><span class="sc">{</span>launch_speed<span class="sc">:5.2f}</span><span class="ss"> m/s, g = </span><span class="sc">{</span><span class="op">-</span><span class="dv">2</span> <span class="op">*</span> half_minus_g<span class="sc">:5.2f}</span><span class="ss"> m/s^2"</span>)</span>
-<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>huber_fit <span class="op">=</span> HuberRegressor(epsilon<span class="op">=</span><span class="fl">1.35</span>, max_iter<span class="op">=</span><span class="dv">1000</span>).fit(trajectory_features(t_lidar), height_lidar)</span>
-<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>squared_fit <span class="op">=</span> LinearRegression().fit(trajectory_features(t_lidar), height_lidar)</span>
-<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>report(<span class="st">"Huber loss"</span>, huber_fit)</span>
-<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>report(<span class="st">"squared loss"</span>, squared_fit)</span>
-<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'truth'</span><span class="sc">:&gt;14s}</span><span class="ss">: h0 =  1.50 m, v0 = 12.00 m/s, g =  9.81 m/s^2   (</span><span class="sc">{</span>lidar_missed<span class="sc">.</span><span class="bu">sum</span>()<span class="sc">}</span><span class="ss"> of </span><span class="sc">{</span>t_lidar<span class="sc">.</span>size<span class="sc">}</span><span class="ss"> readings dropped)"</span>)</span>
-<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>t_dense <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="fl">2.5</span>, <span class="dv">200</span>)</span>
-<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">9</span>, <span class="dv">5</span>))</span>
-<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>plt.scatter(t_lidar, height_lidar, facecolors<span class="op">=</span><span class="st">'none'</span>, edgecolors<span class="op">=</span><span class="st">'k'</span>, label<span class="op">=</span><span class="st">"lidar readings"</span>)</span>
-<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>plt.plot(t_dense, huber_fit.predict(trajectory_features(t_dense)), label<span class="op">=</span><span class="st">"Huber loss"</span>)</span>
-<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>plt.plot(t_dense, squared_fit.predict(trajectory_features(t_dense)), <span class="st">'--'</span>, label<span class="op">=</span><span class="st">"squared loss"</span>)</span>
-<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"time (s)"</span>)</span>
-<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"height (m)"</span>)</span>
-<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>    Huber loss: h0 =  1.49 m, v0 = 11.97 m/s, g =  9.79 m/s^2
-  squared loss: h0 =  1.26 m, v0 =  9.33 m/s, g =  7.44 m/s^2
-         truth: h0 =  1.50 m, v0 = 12.00 m/s, g =  9.81 m/s^2   (13 of 80 readings dropped)</code></pre>
-</div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="exercise_solutions_files/figure-html/..-solutions-reviewing_supervised_linear_models_solutions-cell-10-output-2.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>The Huber fit recovers all three quantities to within a few percent of the truth. The squared-loss fit is dragged towards the zero readings: because the dropouts are spread over the whole flight, pulling the parabola down mostly reduces its <em>curvature</em>, so the estimate of <span class="math inline">\(g\)</span> suffers most, while the launch height is anchored by the early readings and moves least.</p>
-<p>Note on implementation: if you use the vanilla <code>SGDRegressor(loss='huber')</code> from earlier in the chapter, the fact that <span class="math inline">\(t\)</span> and <span class="math inline">\(t^2\)</span> live on different scales can cause issues with basic stochastic gradient descent steps. If you want to do this, then standardize the features first (<code>StandardScaler</code>) and convert the coefficients back afterward.</p>
-</section>
-</div>
-</section>
-<section id="evaluating-machine-learning-models" class="level2" data-number="B.2">
-<h2 data-number="B.2" class="anchored" data-anchor-id="evaluating-machine-learning-models"><span class="header-section-number">B.2</span> Evaluating Machine Learning Models</h2>
-<!-- {{< embed ../solutions/cross_validation_linear_regression_solutions.ipynb echo=true >}} -->
-</section>
-<section id="introduction-to-gradient-descent" class="level2" data-number="B.3">
-<h2 data-number="B.3" class="anchored" data-anchor-id="introduction-to-gradient-descent"><span class="header-section-number">B.3</span> Introduction to Gradient Descent</h2>
-<!-- {{< embed ../solutions/supervised_linear_models_solutions.ipynb echo=true >}} -->
-</section>
-<section id="review-of-linear-unsupervised-learning" class="level2" data-number="B.4">
-<h2 data-number="B.4" class="anchored" data-anchor-id="review-of-linear-unsupervised-learning"><span class="header-section-number">B.4</span> Review of Linear Unsupervised Learning</h2>
-<!-- {{< embed ../solutions/linear_decompositions_solutions.ipynb echo=true >}} -->
-</section>
-<section id="taking-derivatives-with-automatic-differentiation" class="level2" data-number="B.5">
-<h2 data-number="B.5" class="anchored" data-anchor-id="taking-derivatives-with-automatic-differentiation"><span class="header-section-number">B.5</span> Taking Derivatives with Automatic Differentiation</h2>
-<!-- {{< embed ../solutions/taking_derivatives_solutions.ipynb echo=true >}} -->
-</section>
-<section id="measuring-distribution-distances" class="level2" data-number="B.6">
-<h2 data-number="B.6" class="anchored" data-anchor-id="measuring-distribution-distances"><span class="header-section-number">B.6</span> Measuring Distribution Distances</h2>
-<!-- {{< embed ../solutions/distribution_distance_solutions.ipynb echo=true >}} -->
-</section>
-<section id="introduction-to-probabilistic-inference" class="level2" data-number="B.7">
-<h2 data-number="B.7" class="anchored" data-anchor-id="introduction-to-probabilistic-inference"><span class="header-section-number">B.7</span> Introduction to Probabilistic Inference</h2>
-<!-- {{< embed ../solutions/introduction_to_inference_solutions.ipynb echo=true >}} -->
-</section>
-<section id="introduction-to-probabilistic-programming" class="level2" data-number="B.8">
-<h2 data-number="B.8" class="anchored" data-anchor-id="introduction-to-probabilistic-programming"><span class="header-section-number">B.8</span> Introduction to Probabilistic Programming</h2>
-<!-- {{< embed ../solutions/introduction_to_probabilistic_programming_solutions.ipynb echo=true >}} -->
+<p>Worked solutions for the end-of-chapter exercises are published as a separate, shorter book so that this one stays readable in print. Each solutions chapter follows the numbering used in the corresponding chapter here and reuses that chapter’s data and code. Try the exercises before reading the solutions; most of the value is in the attempt.</p>
+<p>The solutions are available at <a href="../solutions/index.html">solutions/index.html</a>, with a PDF download in their sidebar.</p>
+<!--
+The solution notebooks live in ../solutions/ and are rendered by their own Quarto
+project (solutions/_quarto.yml) into _book/solutions/. Do not embed them here with
+{{< embed >}}: embedding a whole notebook mangles multi-line display math and
+leaks the notebook's title into the book's PDF metadata.
+-->
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -1430,7 +789,7 @@ The blue path was computed with p = 1, so panel B is the consistent one.</code><
       &nbsp;
     </div>   
     <div class="nav-footer-center">
-<p>Machine Learning for Mechanical Engineers © 2025 by <a href="./index.qmd#sec-contributors">Mark Fuge and IDEAL Lab Contributors</a> is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></p>
+<p>Machine Learning for Mechanical Engineers © 2025 by <a href="../index.html#sec-contributors">Mark Fuge and IDEAL Lab Contributors</a> is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></p>
 </div>
     <div class="nav-footer-right">
       &nbsp;

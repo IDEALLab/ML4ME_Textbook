@@ -172,6 +172,9 @@ window.Quarto = {
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="../">Machine Learning for Mechanical Engineering</a> 
+        <div class="sidebar-tools-main">
+    <a href="../Machine-Learning-for-Mechanical-Engineering.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -360,53 +363,13 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../problems/problems.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Problems</span></a>
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../problems/ps1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Problem Set 1</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../problems/ps2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Problem Set 2</span></span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a href="../notebooks/notebooks.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">In-Class Notebooks</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../notebooks/california_housing_visualization.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Housing Price Data Visualization In-Class Exercise</span></span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
- <span class="menu-text">Appendices</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../appendices/helpful_tooling.html" class="sidebar-item-text sidebar-link">
@@ -443,8 +406,8 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#the-singular-value-decomposition" id="toc-the-singular-value-decomposition" class="nav-link active" data-scroll-target="#the-singular-value-decomposition"><span class="header-section-number">D</span> The Singular Value Decomposition</a></li>
-  <li><a href="#what-about-different-dimensions" id="toc-what-about-different-dimensions" class="nav-link" data-scroll-target="#what-about-different-dimensions"><span class="header-section-number">E</span> What about different dimensions?</a></li>
+  <li><a href="#the-singular-value-decomposition" id="toc-the-singular-value-decomposition" class="nav-link active" data-scroll-target="#the-singular-value-decomposition"><span class="header-section-number">C.1</span> The Singular Value Decomposition</a></li>
+  <li><a href="#what-about-different-dimensions" id="toc-what-about-different-dimensions" class="nav-link" data-scroll-target="#what-about-different-dimensions"><span class="header-section-number">C.2</span> What about different dimensions?</a></li>
   </ul>
 </nav>
     </div>
@@ -633,8 +596,8 @@ Transformed:
 </div>
 </div>
 </div>
-<section id="the-singular-value-decomposition" class="level1" data-number="D">
-<h1 data-number="D"><span class="header-section-number">D</span> <a href="https://en.wikipedia.org/wiki/Singular_value_decomposition">The Singular Value Decomposition</a></h1>
+<section id="the-singular-value-decomposition" class="level2" data-number="C.1">
+<h2 data-number="C.1" class="anchored" data-anchor-id="the-singular-value-decomposition"><span class="header-section-number">C.1</span> <a href="https://en.wikipedia.org/wiki/Singular_value_decomposition">The Singular Value Decomposition</a></h2>
 <p>For <span class="math inline">\(N\)</span> data points of <span class="math inline">\(d\)</span> dimensions: <span class="math display">\[
 X_{d\times N} = U_{d\times d}  \Sigma_{d\times N} V^*_{N\times N}
 \]</span> Where <span class="math inline">\(U\)</span>, <span class="math inline">\(V\)</span> are <a href="https://en.wikipedia.org/wiki/Orthogonal_matrix">orthogonal</a> (<span class="math inline">\(UU^T=I\)</span>), and <span class="math inline">\(\Sigma\)</span> is diagonal.</p>
@@ -741,8 +704,8 @@ U*U.T =
 </div>
 </div>
 </section>
-<section id="what-about-different-dimensions" class="level1" data-number="E">
-<h1 data-number="E"><span class="header-section-number">E</span> What about different dimensions?</h1>
+<section id="what-about-different-dimensions" class="level2" data-number="C.2">
+<h2 data-number="C.2" class="anchored" data-anchor-id="what-about-different-dimensions"><span class="header-section-number">C.2</span> What about different dimensions?</h2>
 <div id="cell-20" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;slideshow&quot;,&quot;value&quot;:{&quot;slide_type&quot;:&quot;fragment&quot;}}" data-execution_count="16">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>M <span class="op">=</span> np.matrix([[<span class="dv">1</span>,<span class="dv">0</span>,],[<span class="dv">0</span>,<span class="dv">1</span>],[<span class="dv">2</span>,<span class="fl">0.5</span>]])</span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> np.matrix([[<span class="dv">1</span>],[<span class="dv">1</span>]])</span>
@@ -1575,7 +1538,7 @@ Are they equal?:  True</code></pre>
       &nbsp;
     </div>   
     <div class="nav-footer-center">
-<p>Machine Learning for Mechanical Engineers © 2025 by <a href="./index.qmd#sec-contributors">Mark Fuge and IDEAL Lab Contributors</a> is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></p>
+<p>Machine Learning for Mechanical Engineers © 2025 by <a href="../index.html#sec-contributors">Mark Fuge and IDEAL Lab Contributors</a> is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></p>
 </div>
     <div class="nav-footer-right">
       &nbsp;

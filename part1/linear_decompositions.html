@@ -174,6 +174,9 @@ window.Quarto = {
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="../">Machine Learning for Mechanical Engineering</a> 
+        <div class="sidebar-tools-main">
+    <a href="../Machine-Learning-for-Mechanical-Engineering.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -362,53 +365,13 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../problems/problems.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Problems</span></a>
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../problems/ps1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Problem Set 1</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../problems/ps2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Problem Set 2</span></span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a href="../notebooks/notebooks.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">In-Class Notebooks</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../notebooks/california_housing_visualization.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Housing Price Data Visualization In-Class Exercise</span></span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
- <span class="menu-text">Appendices</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../appendices/helpful_tooling.html" class="sidebar-item-text sidebar-link">
@@ -587,7 +550,7 @@ Airfoils Data Shape: (1222, 192, 2)</code></pre>
 <p>Now let’s demonstrate how to use various dimension reduction algorithms on this example.</p>
 <section id="principal-component-analysis" class="level2" data-number="4.1">
 <h2 data-number="4.1" class="anchored" data-anchor-id="principal-component-analysis"><span class="header-section-number">4.1</span> Principal Component Analysis</h2>
-<p>Mathematically, given centered data <span class="math inline">\(X \in R^{n×d}\)</span>, PCA finds k orthonormal components that best reconstruct the data in least-squares sense. One convenient formulation is</p>
+<p>Mathematically, given centered data <span class="math inline">\(X \in \mathbb{R}^{n \times d}\)</span>, PCA finds k orthonormal components that best reconstruct the data in least-squares sense. One convenient formulation is</p>
 <p><span class="math display">\[
 \min_{W,Z}\;\|X - Z W\|_{F}^{2}\quad\text{s.t. }Z=XW^{T},\;W W^{T}=I.
 \]</span></p>
@@ -972,7 +935,7 @@ Airfoils Data Shape: (1222, 192, 2)</code></pre>
 <p>Sparse PCA encourages components that have many zeros, which can make the learned components easier to interpret as localized shape features. Below we fit a SparsePCA model and visualize a small set of sparse components and their effect on reconstructing an example airfoil.</p>
 <p>Mathematically, Sparse PCA augments a PCA-style reconstruction loss with an L1 penalty on the (unconstrained) components to encourage sparsity. A common optimization is:</p>
 <p><span class="math display">\[\min_{Z,W}\;\|X - ZW\|_{F}^{2} + \alpha\|W\|_{1}\quad\text{s.t. }\|Z_{i}\|_{2}^{2}\le 1\;\forall i,\,\]</span></p>
-<p>where <span class="math inline">\(W \in R^{k×d}\)</span> holds the component vectors (rows), <span class="math inline">\(Z \in R^{n×k}\)</span> are the codes, and <span class="math inline">\(\alpha&gt;0\)</span> controls sparsity. Different implementations (e.g., the sklearn SparsePCA) solve related objectives (sometimes using a LASSO subproblem or elastic-net style updates).</p>
+<p>where <span class="math inline">\(W \in \mathbb{R}^{k \times d}\)</span> holds the component vectors (rows), <span class="math inline">\(Z \in \mathbb{R}^{n \times k}\)</span> are the codes, and <span class="math inline">\(\alpha&gt;0\)</span> controls sparsity. Different implementations (e.g., the sklearn SparsePCA) solve related objectives (sometimes using a LASSO subproblem or elastic-net style updates).</p>
 <p>Notes:</p>
 <ul>
 <li>The L1 term on W encourages many component weights to be exactly zero, producing localized/part-like components.</li>
@@ -1110,7 +1073,7 @@ Airfoils Data Shape: (1222, 192, 2)</code></pre>
 <section id="dictionary-learning" class="level2" data-number="4.3">
 <h2 data-number="4.3" class="anchored" data-anchor-id="dictionary-learning"><span class="header-section-number">4.3</span> Dictionary Learning</h2>
 <p>Dictionary learning finds a set of atoms (basis elements) and sparse codes that reconstruct the data. This is useful when localized, part-based representations are desirable. Essentially, unlike Sparse PCA (which adds an L1 penalty to the components), dictionary learning adds an L1 penalty to the codes. Below we fit a Dictionary Learning model and visualize a small set of learned atoms and their effect on reconstructing an example airfoil.</p>
-<p>Mathematically, Dictionary learning (sparse coding) models X as the product of a dictionary <span class="math inline">\(W \in R^{k×d}\)</span> (atoms) and sparse codes <span class="math inline">\(Z \in R^{n×k}\)</span>:</p>
+<p>Mathematically, Dictionary learning (sparse coding) models X as the product of a dictionary <span class="math inline">\(W \in \mathbb{R}^{k \times d}\)</span> (atoms) and sparse codes <span class="math inline">\(Z \in \mathbb{R}^{n \times k}\)</span>:</p>
 <p><span class="math display">\[
 \min_{Z,W}\;\|X - Z W\|_{F}^{2} + \alpha\|Z\|_{1} \,\quad\text{s.t. }\|W_{j}\|_{2}\le 1\; \forall j.
 \]</span></p>
@@ -1294,7 +1257,7 @@ Airfoils Data Shape: (1222, 192, 2)</code></pre>
 <section id="non-negative-matrix-factorization-nmf" class="level2" data-number="4.4">
 <h2 data-number="4.4" class="anchored" data-anchor-id="non-negative-matrix-factorization-nmf"><span class="header-section-number">4.4</span> Non-Negative Matrix Factorization (NMF)</h2>
 <p>NMF constrains both the basis elements and coefficients to be non-negative. This often yields parts-based, additive representations which can be intuitive for shape components under certain circumstances.</p>
-<p>Mathematically, Non-negative matrix factorization approximates <span class="math inline">\(X\)</span> (with <span class="math inline">\(X &gt; 0\)</span> after shift) as the product of non-negative factors <span class="math inline">\(W\in R^{n×k}_{+}\)</span> and <span class="math inline">\(H \in R^{k×d}_{+}\)</span> by minimizing reconstruction error under non-negativity constraints:</p>
+<p>Mathematically, Non-negative matrix factorization approximates <span class="math inline">\(X\)</span> (with <span class="math inline">\(X &gt; 0\)</span> after shift) as the product of non-negative factors <span class="math inline">\(W\in \mathbb{R}^{n \times k}_{+}\)</span> and <span class="math inline">\(H \in \mathbb{R}^{k \times d}_{+}\)</span> by minimizing reconstruction error under non-negativity constraints:</p>
 <p><span class="math display">\[\min_{W\ge 0,H\ge 0}\;\|X - Z W\|_{F}^{2} + \beta_Z\|Z\|_{1} + \beta_W\|W\|_{1} + \alpha_Z\|Z\|^{2}_{F} + \alpha_W\|W\|^{2}_{F},\]</span></p>
 <p>where optional L1 penalties (<span class="math inline">\(\beta_Z\)</span>, <span class="math inline">\(\beta_W \ge 0\)</span>) encourage sparse parts or sparse activations, and L2 penalties (<span class="math inline">\(\alpha_Z\)</span>, <span class="math inline">\(\alpha_W \ge 0\)</span>) encourage stability or shrinkage. The essential constraint is <span class="math inline">\(W,Z \ge 0\)</span> which induces additive, parts-based representations.</p>
 <p>Notes:</p>
@@ -1980,7 +1943,7 @@ Airfoils Data Shape: (1222, 192, 2)</code></pre>
       &nbsp;
     </div>   
     <div class="nav-footer-center">
-<p>Machine Learning for Mechanical Engineers © 2025 by <a href="../part1/index.html#sec-contributors">Mark Fuge and IDEAL Lab Contributors</a> is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></p>
+<p>Machine Learning for Mechanical Engineers © 2025 by <a href="../index.html#sec-contributors">Mark Fuge and IDEAL Lab Contributors</a> is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></p>
 </div>
     <div class="nav-footer-right">
       &nbsp;

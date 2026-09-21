@@ -170,6 +170,9 @@ window.Quarto = {
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="../../">Machine Learning for Mechanical Engineering</a> 
+        <div class="sidebar-tools-main">
+    <a href="../../Machine-Learning-for-Mechanical-Engineering.pdf" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+</div>
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -358,53 +361,13 @@ window.Quarto = {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../problems/problems.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Problems</span></a>
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../problems/ps1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Problem Set 1</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../problems/ps2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Problem Set 2</span></span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a href="../../notebooks/notebooks.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">In-Class Notebooks</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../notebooks/california_housing_visualization.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Housing Price Data Visualization In-Class Exercise</span></span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
- <span class="menu-text">Appendices</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../appendices/helpful_tooling.html" class="sidebar-item-text sidebar-link">
@@ -504,11 +467,11 @@ window.Quarto = {
 \]</span></p>
 <p>for a sequence of <span class="math inline">\(K\)</span> invertible maps <span class="math inline">\(f_i\)</span> transforming a base sample <span class="math inline">\(z_0\)</span> to a target sample <span class="math inline">\(x=z_K\)</span>. Here, <span class="math inline">\(J_{f_i}\)</span> is the Jacobian of the <span class="math inline">\(i\)</span>-th transformation.</p>
 <p>If we instead consider an infinite sequence of infinitesimal transformations, we can think of each layer as a tiny residual step: <span class="math inline">\(z_{i+1} = z_i + \varepsilon v(z_i, t_i)\)</span> where <span class="math inline">\(\varepsilon\)</span> is a small step size, <span class="math inline">\(v\)</span> is a velocity field, and <span class="math inline">\(t_i\)</span> is a time index. The change in probability density can then be thought of as an integral over these infinitesimal changes, like particles flowing through a fluid governed by the velocity field. The main learning challenge here is to learn the right velocity field <span class="math inline">\(v(z, t)\)</span> that transports our simple base distribution to our desired target distribution over time, and also to solve this ODE inexpensively.</p>
-<p>Concretely, rather than consider a single step of the change of variables formula, we consider the limit as <span class="math inline">\(\varepsilon \to 0\)</span> of many small steps, which gives rise to the <em>instantaneous change of variables</em> formula<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>: <span class="math display">\[
+<p>Concretely, rather than consider a single step of the change of variables formula, we consider the limit as <span class="math inline">\(\varepsilon \to 0\)</span> of many small steps, which gives rise to the <em>instantaneous change of variables</em> formula[^1]: <span class="math display">\[
 \frac{\partial}{\partial t} \log p(z(t)) = -\operatorname{tr}\left( \nabla_x v(z(t), t) \right),
 \]</span></p>
-<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;For the full derivation, see e.g.&nbsp;<a href="https://arxiv.org/abs/1806.07366">Chen et al., 2018</a> Appendix A.</p></div></div><p>where <span class="math inline">\(\nabla_x v\)</span> is the Jacobian of the velocity field with respect to <span class="math inline">\(z\)</span>, and <span class="math inline">\(\operatorname{tr}\)</span> denotes the trace of a matrix.</p>
-<p>Now, given a vector field <span class="math inline">\(v(z, t)\)</span>, we can compute how a base density <span class="math inline">\(p(z_0)\)</span> evolves into the final distribution <span class="math inline">\(p(x)=p(z_K)\)</span> via: <span class="math display">\[
+<p>where <span class="math inline">\(\nabla_x v\)</span> is the Jacobian of the velocity field with respect to <span class="math inline">\(z\)</span>, and <span class="math inline">\(\operatorname{tr}\)</span> denotes the trace of a matrix.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;For the full derivation, see e.g.&nbsp;<a href="https://arxiv.org/abs/1806.07366">Chen et al., 2018</a> Appendix A.</p></div></div><p>Now, given a vector field <span class="math inline">\(v(z, t)\)</span>, we can compute how a base density <span class="math inline">\(p(z_0)\)</span> evolves into the final distribution <span class="math inline">\(p(x)=p(z_K)\)</span> via: <span class="math display">\[
 \log p(x) = \log p(z_0) - \int_{0}^{T} \operatorname{tr}\left( \nabla_x v(z(t), t) \right) \, \mathrm{d}t.
 \]</span></p>
 <p>We can think of this as starting a distribution at time <span class="math inline">\(t=0\)</span> (i.e., at <span class="math inline">\(p(z_0)\)</span>) and then integrating it through the velocity field <span class="math inline">\(v(z, t)\)</span> until time <span class="math inline">\(t=T\)</span>, where we hope to recover the distribution of the training data (i.e., <span class="math inline">\(p(x)\)</span>). To find the best velocity field, we can optimize the above expression for <span class="math inline">\(\log p(x)\)</span> with respect to the parameters of <span class="math inline">\(v(z, t)\)</span> using maximum likelihood. For neural network-based parameterizations of <span class="math inline">\(v(z, t)\)</span> we would parameterize the velocity field via neural network weights and denote this <span class="math inline">\(v_\theta(z,t)\)</span> where <span class="math inline">\(\theta\)</span> are the neural network weights. The main requirement we have for the velocity field <span class="math inline">\(v(z, t)\)</span> is that it (and its first derivative) must be Lipschitz continuous so that the resulting ODE has a unique solution (and thus can be in principle inverted as well). We can enforce the Lipschitz continuity of <span class="math inline">\(v_\theta\)</span> by choosing activations that have bounded Lipschitz constants, and then further control the smoothnessness of the velocity field by regularizing the weights (e.g., via spectral normalization).</p>
@@ -1390,7 +1353,7 @@ Training complete.</code></pre>
       &nbsp;
     </div>   
     <div class="nav-footer-center">
-<p>Machine Learning for Mechanical Engineers © 2025 by <a href="./index.qmd#sec-contributors">Mark Fuge and IDEAL Lab Contributors</a> is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></p>
+<p>Machine Learning for Mechanical Engineers © 2025 by <a href="../../index.html#sec-contributors">Mark Fuge and IDEAL Lab Contributors</a> is licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></p>
 </div>
     <div class="nav-footer-right">
       &nbsp;
