@@ -45,11 +45,13 @@ book:
     # in-class notebooks) is kept out of the render. To publish it again, list
     # the notebooks directly as chapters (never via {{< embed >}}: embedding a
     # whole notebook mangles multi-line $$ display math in HTML and PDF):
-    #- part: problems/problems.qmd
+    #- part: "Problem Set 1"
     #  chapters:
     #    - problems/ps1_part1.ipynb
     #    - problems/ps1_part2.ipynb
     #    - problems/ps1_part3.ipynb
+    #- part: "Problem Set 2"
+    #  chapters:
     #    - problems/ps2_part1_autodiff.ipynb
     #    - problems/ps2_part2.ipynb
     #- part: notebooks/notebooks.qmd
