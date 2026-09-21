@@ -29,6 +29,15 @@ local function is_browser_only_output(text)
     or text:match("^Unable to display output for mime type") ~= nil
 end
 
+-- Outputs that carry no information in print, e.g. the return value of interact():
+-- `<function __main__.plot_p_norm(p=2.0)>`, or a bare object repr.
+local function is_noise_output(text)
+  return text:match("^<function ") ~= nil
+    or text:match("^<IPython%.") ~= nil
+    or text:match("^<ipywidgets%.") ~= nil
+    or text:match("^<matplotlib%.") ~= nil
+end
+
 local note = pandoc.Para({
   pandoc.Emph({ pandoc.Str("[Interactive output: available in the online version of this chapter.]") }),
 })
@@ -51,6 +60,9 @@ return {
       end
       if is_browser_only_output(el.text) then
         return note
+      end
+      if is_noise_output(el.text) then
+        return {}
       end
       return nil
     end,
