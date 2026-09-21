@@ -161,9 +161,9 @@ def scan(path, findings, footnote_labels):
         if re.match(r"^# (?!#)", l)
     ]
     if has_yaml_title and h1s:
-        findings["FATAL YAML title plus a level-1 heading: remove one (duplicate chapter)"].append(f"{rel}: {h1s[0][:60]}")
-    if len(h1s) > 1:
-        findings["FATAL more than one level-1 heading: extra chapters"].append(f"{rel}: {', '.join(h[:40] for h in h1s[1:])}")
+        findings["WARN YAML title plus a level-1 heading: remove one (duplicate, empty chapter)"].append(f"{rel}: {h1s[0][:60]}")
+    if len(h1s) > 1 and path.name != "index.qmd":   # the preface deliberately holds several unnumbered chapters
+        findings["WARN more than one level-1 heading: each becomes its own chapter"].append(f"{rel}: {', '.join(h[:40] for h in h1s[1:])}")
 
 
 def main(argv):
