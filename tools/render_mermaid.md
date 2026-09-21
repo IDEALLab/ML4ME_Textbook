@@ -1,30 +1,32 @@
 # Diagrams (Mermaid / Graphviz) in the book
 
-Mermaid and Graphviz blocks render in the browser for the HTML book, but for the
-PDF Quarto has to rasterise them with headless Chrome. That works on a laptop
-with Chrome installed and **hangs on the GitHub Actions runner**, which is why
-the PDF never uses a live diagram block.
+A live ```` ```{mermaid} ```` or ```` ```{dot} ```` block makes Quarto launch
+headless Chrome whenever a non-HTML format (the PDF) is rendered, and it does so
+**even when the block sits inside a `::: {.content-visible when-format="html"}`
+div**, because diagrams are processed before conditional content is dropped.
+On a laptop with Chrome this takes a second; on the GitHub Actions runner the
+publish job hangs on that chapter with no error message.
 
-Pattern used in the notebooks (see `part1/taking_derivatives.ipynb`):
+So the book does not contain live diagram blocks. Each diagram is a committed
+PNG, and its Mermaid source is kept next to it in a Markdown comment so it can
+be regenerated:
 
 ````markdown
-::: {.content-visible when-format="html"}
-```{mermaid}
+<!-- The figure below is rendered from this Mermaid source (recipe: tools/render_mermaid.md).
 graph LR
     A --> B
-```
-:::
-
-::: {.content-visible unless-format="html"}
-![Caption for the print edition.](figures/my_diagram.png){width=80%}
-:::
+-->
+![Caption.](figures/my_diagram.png){width=80%}
 ````
 
-## Regenerating the PNG after editing a diagram
+`python tools/check_latex_compat.py` fails on any live diagram block outside a
+comment.
 
-1. Put the diagram block alone in a scratch `graph.qmd` (outside the repo):
+## Regenerating a PNG after editing the source
 
-   ```markdown
+1. Put the diagram alone in a scratch `graph.qmd` **outside the repo**:
+
+   ````markdown
    ---
    format:
      html:
@@ -32,14 +34,13 @@ graph LR
    ---
 
    ```{mermaid}
-   ... diagram source ...
+   graph LR
+       A --> B
    ```
-   ```
+   ````
 
 2. Run `quarto render graph.qmd`. Quarto uses your local Chrome and writes
    `graph_files/figure-html/mermaid-figure-1.png` (about 2300 px wide).
-3. Copy that file over the PNG referenced in the notebook (for the example above,
-   `part1/figures/computational_graph.png`) and commit it.
-
-`python tools/check_latex_compat.py` warns about any diagram block that is not
-wrapped in a `when-format="html"` div.
+3. Copy it over the PNG the notebook references (for the computational graph in
+   `part1/taking_derivatives.ipynb` that is `part1/figures/computational_graph.png`)
+   and commit both the PNG and the updated comment.

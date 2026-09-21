@@ -141,14 +141,12 @@ def scan(path, findings, footnote_labels):
             non_ascii = sorted(set(ch for ch in body if ord(ch) > 127))
             if non_ascii:
                 findings["WARN non-ASCII character inside math"].append(f"{where}: {''.join(non_ascii)}")
-        # Diagram blocks need headless Chrome for the PDF, which hangs on the GitHub runner.
-        # They must be HTML-only, with a pre-rendered image for print (tools/render_mermaid.md).
-        for m in re.finditer(r"```\{(mermaid|dot)\}", text):
-            before = text[: m.start()]
-            opened = len(re.findall(r'^:::+\s*\{[^}]*when-format="html"', before, flags=re.M))
-            closed = len(re.findall(r"^:::+\s*$", before, flags=re.M))
-            if opened <= closed:
-                findings[f"WARN {m.group(1)} block outside a when-format=\"html\" div (PDF needs Chrome; see tools/render_mermaid.md)"].append(where)
+        # Diagram blocks make Quarto launch headless Chrome when rendering the PDF (even inside a
+        # when-format="html" div), which hangs on the GitHub runner. Use a pre-rendered image
+        # instead and keep the source in an HTML comment (tools/render_mermaid.md).
+        no_comments = blank_out(r"<!--.*?-->", text, re.S)
+        for m in re.finditer(r"```\{(mermaid|dot)\}", no_comments):
+            findings[f"FATAL live {m.group(1)} block: the PDF build hangs on GitHub Actions (see tools/render_mermaid.md)"].append(where)
         # Raw HTML that the PDF drops
         for tag in ("img", "iframe", "video"):
             if re.search(rf"<{tag}\b", text, flags=re.I):
