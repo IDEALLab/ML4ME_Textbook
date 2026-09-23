@@ -8,7 +8,7 @@ Worked solutions for the end-of-chapter exercises in Part 1. Each section follow
 
 ## Evaluating Machine Learning Models
 
-<!-- {{< embed ../solutions/cross_validation_linear_regression_solutions.ipynb echo=true >}} -->
+{{< embed ../solutions/cross_validation_linear_regression_solutions.ipynb echo=true >}}
 
 ## Introduction to Gradient Descent
 
