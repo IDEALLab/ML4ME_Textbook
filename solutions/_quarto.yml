@@ -14,8 +14,7 @@ book:
   chapters:
     - index.qmd
     - reviewing_supervised_linear_models_solutions.ipynb
-    # Add one notebook per chapter as the solutions are written:
-    # - cross_validation_linear_regression_solutions.ipynb
+    - cross_validation_linear_regression_solutions.ipynb
     # - supervised_linear_models_solutions.ipynb
     # - linear_decompositions_solutions.ipynb
     # - taking_derivatives_solutions.ipynb
