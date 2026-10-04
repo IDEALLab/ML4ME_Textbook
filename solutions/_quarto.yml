@@ -16,7 +16,7 @@ book:
     - reviewing_supervised_linear_models_solutions.ipynb
     - cross_validation_linear_regression_solutions.ipynb
     - supervised_linear_models_solutions.ipynb
-    # - linear_decompositions_solutions.ipynb
+    - linear_decompositions_solutions.ipynb
     # - taking_derivatives_solutions.ipynb
     # - distribution_distance_solutions.ipynb
     # - introduction_to_inference_solutions.ipynb
