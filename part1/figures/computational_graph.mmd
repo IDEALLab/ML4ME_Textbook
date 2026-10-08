@@ -1,0 +1,22 @@
+graph LR
+    %% Input nodes
+    V0((V0 = x1))
+    V1((V1 = x2))
+    %% Intermediate nodes
+    V2((V2 = ln V0))
+    V3((V3 = V0 x V1))
+    V4((V4 = -sin V1))
+    V5((V5 = V2 + V3))
+    V6((V6 = V5 + V4 = f))
+
+    %% Operations
+    V0 --> V2
+    V0 --> V3
+    V1 --> V3
+    V1 --> V4
+
+    %% Sum nodes
+    V2 --> V5
+    V3 --> V5
+    V5 --> V6
+    V4 --> V6
