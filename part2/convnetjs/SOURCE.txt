@@ -1,0 +1,6 @@
+Self-hosted copy of two ConvNetJS demos by Andrej Karpathy (MIT license, see LICENSE).
+
+The original pages at cs.stanford.edu/people/karpathy/convnetjs went offline in 2026.
+Demo pages, styles and scripts come from github.com/karpathy/convnetjs (master).
+The compiled library demo/js/convnet.js is not in that repository, so it comes from the
+convnetjs 0.3.0 npm package. The Google Analytics snippet was removed from the pages.
