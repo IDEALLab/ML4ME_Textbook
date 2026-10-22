@@ -411,8 +411,9 @@ window.Quarto = {
   <li><a href="#now-lets-do-the-actual-training" id="toc-now-lets-do-the-actual-training" class="nav-link" data-scroll-target="#now-lets-do-the-actual-training"><span class="header-section-number">9.1.3</span> Now let’s do the actual training</a></li>
   </ul></li>
   <li><a href="#unsupervised-learning-using-autoencoders" id="toc-unsupervised-learning-using-autoencoders" class="nav-link" data-scroll-target="#unsupervised-learning-using-autoencoders"><span class="header-section-number">9.2</span> Unsupervised Learning using Autoencoders</a></li>
-  <li><a href="#least-volume-regularization" id="toc-least-volume-regularization" class="nav-link" data-scroll-target="#least-volume-regularization"><span class="header-section-number">9.3</span> Least Volume Regularization</a></li>
+  <li><a href="#a-deeper-autoencoder-before-least-volume-regularization" id="toc-a-deeper-autoencoder-before-least-volume-regularization" class="nav-link" data-scroll-target="#a-deeper-autoencoder-before-least-volume-regularization"><span class="header-section-number">9.3</span> A Deeper Autoencoder, Before Least Volume Regularization</a></li>
   <li><a href="#how-might-we-select-the-right-order-in-an-autoencoder-building-the-case-for-least-volume-analysis-lva" id="toc-how-might-we-select-the-right-order-in-an-autoencoder-building-the-case-for-least-volume-analysis-lva" class="nav-link" data-scroll-target="#how-might-we-select-the-right-order-in-an-autoencoder-building-the-case-for-least-volume-analysis-lva"><span class="header-section-number">9.4</span> How might we select the right order in an Autoencoder? Building the case for Least Volume Analysis (LVA)</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">9.5</span> Exercises</a></li>
   </ul>
 </nav>
     </div>
@@ -451,7 +452,16 @@ window.Quarto = {
 
 
 <p>This notebook reviews some basic notation and concepts related to neural networks. It will skip many details that would have been covered in your earlier Stochastics and Machine Learning course, but will set a basis for us jumping into more advanced topics in a few chapters.</p>
-<p>Before we get started with PyTorch code, I encourage you first to interactive with the ConvNetJS demo, specifically the <a href="https://cs.stanford.edu/people/karpathy/convnetjs/demo/regression.html">interactive 1D Regression</a> where you can toogle on and off the different layers and plotting functions, as well as the <a href="https://cs.stanford.edu/people/karpathy/convnetjs/demo/classify2d.html">2D Classification demo</a> to see how a neural network is just performing a series of feature transformations that ultimately lead to a linear classification boundary. These demos help build a good intuition for what is going on before we move onto more obtuse PyTorch code.</p>
+<p>Before we get started with PyTorch code, I encourage you first to interact with the ConvNetJS demo, specifically the <a href="https://cs.stanford.edu/people/karpathy/convnetjs/demo/regression.html">interactive 1D Regression</a> where you can toggle on and off the different layers and plotting functions, as well as the <a href="https://cs.stanford.edu/people/karpathy/convnetjs/demo/classify2d.html">2D Classification demo</a> to see how a neural network is just performing a series of feature transformations that ultimately lead to a linear classification boundary. These demos help build a good intuition for what is going on before we move onto more obtuse PyTorch code.</p>
+<p><strong>Learning Objectives</strong></p>
+<p>By the end of this chapter, you should be able to:</p>
+<ol type="1">
+<li>Write a minimal PyTorch training loop (forward, loss, <code>zero_grad</code>, <code>backward</code>, <code>step</code>) and explain what each call does and what goes wrong without it.</li>
+<li>Build a multilayer perceptron three ways (<code>nn.Module</code> subclass, <code>nn.Sequential</code>, list unpacking) and predict how the activation function shapes the fitted curve.</li>
+<li>Explain, from the PCA explained-variance plot and the two-component reconstruction, why a linear projection cannot compress a nonlinearly embedded one-dimensional curve, and contrast this with an autoencoder.</li>
+<li>Read latent-space diagnostics (sorted latent standard deviations, covariance matrix, pair plot, parity plot) to judge whether an autoencoder has found an ordered, low-dimensional code.</li>
+<li>State the least-volume penalty (geometric mean of latent standard deviations), explain why the decoder needs spectral normalization, and relate least-volume autoencoders to PCA as their linear special case.</li>
+</ol>
 <div id="5ae3d003" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Show Code</summary>
@@ -464,7 +474,12 @@ window.Quarto = {
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> PCA</span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Fix the random seeds so that every run of this notebook gives the same data and results</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>SEED <span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(SEED)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>np.random.seed(SEED)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <section id="example-of-pytorch-sgd-for-linear-regression-and-a-simple-feed-forward-network" class="level2" data-number="9.1">
@@ -478,17 +493,18 @@ window.Quarto = {
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> true_func(X): <span class="cf">return</span> np.cos(<span class="fl">1.5</span> <span class="op">*</span> np.pi <span class="op">*</span> X)</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Noisy Samples from the true function</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.sort(<span class="dv">2</span><span class="op">*</span>np.random.rand(n_samples)<span class="op">-</span><span class="dv">1</span>)</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> true_func(X) <span class="op">+</span> np.random.randn(n_samples) <span class="op">*</span> <span class="fl">0.1</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">10</span>))</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the true function:</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>X_plot <span class="op">=</span> np.linspace(<span class="op">-</span><span class="fl">1.5</span>, <span class="fl">1.5</span>, <span class="dv">100</span>)</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>plt.plot(X_plot, true_func(X_plot), <span class="st">'--'</span>,label<span class="op">=</span><span class="st">"True function"</span>)</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the data samples</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>plt.scatter(X,y, label<span class="op">=</span><span class="st">"Samples"</span>)</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>plt.legend(loc<span class="op">=</span><span class="st">"best"</span>)</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>np.random.seed(SEED)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.sort(<span class="dv">2</span><span class="op">*</span>np.random.rand(n_samples)<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> true_func(X) <span class="op">+</span> np.random.randn(n_samples) <span class="op">*</span> <span class="fl">0.1</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">10</span>))</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the true function:</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>X_plot <span class="op">=</span> np.linspace(<span class="op">-</span><span class="fl">1.5</span>, <span class="fl">1.5</span>, <span class="dv">100</span>)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>plt.plot(X_plot, true_func(X_plot), <span class="st">'--'</span>,label<span class="op">=</span><span class="st">"True function"</span>)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the data samples</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>plt.scatter(X,y, label<span class="op">=</span><span class="st">"Samples"</span>)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>plt.legend(loc<span class="op">=</span><span class="st">"best"</span>)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -530,18 +546,19 @@ window.Quarto = {
 </div>
 <section id="linear-regression" class="level3" data-number="9.1.1">
 <h3 data-number="9.1.1" class="anchored" data-anchor-id="linear-regression"><span class="header-section-number">9.1.1</span> Linear Regression</h3>
-<div id="63860077" class="cell">
+<div id="63860077" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>input_size  <span class="op">=</span> <span class="dv">1</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>output_size <span class="op">=</span> <span class="dv">1</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Linear regression model</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> nn.Linear(input_size, output_size)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Loss and optimizer</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>criterion <span class="op">=</span> nn.MSELoss()</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>learning_rate <span class="op">=</span> <span class="fl">0.1</span> <span class="co"># alpha</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> torch.optim.SGD(model.parameters(), lr<span class="op">=</span>learning_rate)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Linear regression model (seeded, so its random initial weights are the same every run)</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(SEED)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> nn.Linear(input_size, output_size)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Loss and optimizer</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>criterion <span class="op">=</span> nn.MSELoss()</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>learning_rate <span class="op">=</span> <span class="fl">0.1</span> <span class="co"># alpha</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> torch.optim.SGD(model.parameters(), lr<span class="op">=</span>learning_rate)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="1b454a65" class="cell">
+<div id="1b454a65" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Train the model</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>num_epochs <span class="op">=</span> <span class="dv">100</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(num_epochs):</span>
@@ -561,11 +578,11 @@ window.Quarto = {
 <span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (epoch<span class="op">+</span><span class="dv">1</span>) <span class="op">%</span> <span class="dv">20</span> <span class="op">==</span> <span class="dv">0</span>:</span>
 <span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span> (<span class="st">'Epoch [</span><span class="sc">{}</span><span class="st">/</span><span class="sc">{}</span><span class="st">], Loss: </span><span class="sc">{:.4f}</span><span class="st">'</span>.<span class="bu">format</span>(epoch<span class="op">+</span><span class="dv">1</span>, num_epochs, loss.item()))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [20/100], Loss: 0.3992
-Epoch [40/100], Loss: 0.3596
-Epoch [60/100], Loss: 0.3553
-Epoch [80/100], Loss: 0.3548
-Epoch [100/100], Loss: 0.3548</code></pre>
+<pre><code>Epoch [20/100], Loss: 0.4881
+Epoch [40/100], Loss: 0.4625
+Epoch [60/100], Loss: 0.4562
+Epoch [80/100], Loss: 0.4547
+Epoch [100/100], Loss: 0.4543</code></pre>
 </div>
 </div>
 <div id="305d8e4b" class="cell" data-execution_count="7">
@@ -594,7 +611,7 @@ Epoch [100/100], Loss: 0.3548</code></pre>
 <h3 data-number="9.1.2" class="anchored" data-anchor-id="neural-network-examples"><span class="header-section-number">9.1.2</span> Neural Network Examples</h3>
 <section id="example-of-defining-a-network-via-the-full-module-class" class="level4" data-number="9.1.2.1">
 <h4 data-number="9.1.2.1" class="anchored" data-anchor-id="example-of-defining-a-network-via-the-full-module-class"><span class="header-section-number">9.1.2.1</span> Example of Defining a Network via the full Module class</h4>
-<div id="084cc88a" class="cell">
+<div id="084cc88a" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Net(nn.Module):</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, input_size, hidden_size):</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>(Net, <span class="va">self</span>).<span class="fu">__init__</span>()  </span>
@@ -649,19 +666,26 @@ Epoch [100/100], Loss: 0.3548</code></pre>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>num_hidden_layers <span class="op">=</span> <span class="dv">3</span></span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>activation <span class="op">=</span> nn.ReLU</span>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>input_layer <span class="op">=</span> [nn.Linear(input_size, hidden_size),</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>                activation()]</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>hidden_layers <span class="op">=</span> num_hidden_layers<span class="op">*</span>[nn.Linear(hidden_size, hidden_size), </span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>                                   activation()]</span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>output_layer <span class="op">=</span> [ nn.Linear(hidden_size, <span class="dv">1</span>) ] </span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Stack them all together</span></span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>layers <span class="op">=</span> input_layer <span class="op">+</span> hidden_layers <span class="op">+</span> output_layer</span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(layers)</span>
-<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Use the * operator to "expand" or "unpack" the list</span></span>
-<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> nn.Sequential(<span class="op">*</span>layers)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Seed so that this network starts from the same random weights every run</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(SEED)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>input_layer <span class="op">=</span> [nn.Linear(input_size, hidden_size),</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>                activation()]</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Build a fresh Linear layer in every pass of the loop. (Writing</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co"># num_hidden_layers*[nn.Linear(hidden_size, hidden_size), activation()] would repeat</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="co"># the *same* layer object, so all hidden layers would share one set of weights.)</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>hidden_layers <span class="op">=</span> []</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(num_hidden_layers):</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>    hidden_layers.append(nn.Linear(hidden_size, hidden_size))</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>    hidden_layers.append(activation())</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>output_layer <span class="op">=</span> [ nn.Linear(hidden_size, <span class="dv">1</span>) ] </span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Stack them all together</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>layers <span class="op">=</span> input_layer <span class="op">+</span> hidden_layers <span class="op">+</span> output_layer</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(layers)</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Use the * operator to "expand" or "unpack" the list</span></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> nn.Sequential(<span class="op">*</span>layers)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[Linear(in_features=1, out_features=7, bias=True), ReLU(), Linear(in_features=7, out_features=7, bias=True), ReLU(), Linear(in_features=7, out_features=7, bias=True), ReLU(), Linear(in_features=7, out_features=7, bias=True), ReLU(), Linear(in_features=7, out_features=1, bias=True)]</code></pre>
@@ -671,7 +695,7 @@ Epoch [100/100], Loss: 0.3548</code></pre>
 </section>
 <section id="now-lets-do-the-actual-training" class="level3" data-number="9.1.3">
 <h3 data-number="9.1.3" class="anchored" data-anchor-id="now-lets-do-the-actual-training"><span class="header-section-number">9.1.3</span> Now let’s do the actual training</h3>
-<div id="a394dc65" class="cell">
+<div id="a394dc65" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># What Loss function should we use? MSE!</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>criterion <span class="op">=</span> nn.MSELoss()</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -681,9 +705,9 @@ Epoch [100/100], Loss: 0.3548</code></pre>
 <span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>learning_rate <span class="op">=</span> <span class="fl">0.05</span></span>
 <span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>weight_decay <span class="op">=</span> <span class="fl">0.0</span></span>
 <span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="co">##########################</span></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> torch.optim.Adam(model.parameters(), lr<span class="op">=</span>learning_rate, weight_decay<span class="op">=</span><span class="fl">0.0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> torch.optim.Adam(model.parameters(), lr<span class="op">=</span>learning_rate, weight_decay<span class="op">=</span>weight_decay)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="5266f56d" class="cell">
+<div id="5266f56d" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">### Train the model</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert numpy arrays to torch tensors</span></span>
@@ -711,31 +735,31 @@ Epoch [100/100], Loss: 0.3548</code></pre>
 <span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (epoch<span class="op">+</span><span class="dv">1</span>) <span class="op">%</span> <span class="dv">200</span> <span class="op">==</span> <span class="dv">0</span>:</span>
 <span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span> (<span class="st">'Epoch [</span><span class="sc">{:4}</span><span class="st">/</span><span class="sc">{}</span><span class="st">], Loss: </span><span class="sc">{:.4f}</span><span class="st">'</span>.<span class="bu">format</span>(epoch<span class="op">+</span><span class="dv">1</span>, num_epochs, loss.item()))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch [ 200/5000], Loss: 0.0064
-Epoch [ 400/5000], Loss: 0.0025
-Epoch [ 600/5000], Loss: 0.0029
-Epoch [ 800/5000], Loss: 0.0023
-Epoch [1000/5000], Loss: 0.0023
-Epoch [1200/5000], Loss: 0.0023
-Epoch [1400/5000], Loss: 0.0023
-Epoch [1600/5000], Loss: 0.0023
-Epoch [1800/5000], Loss: 0.0022
-Epoch [2000/5000], Loss: 0.0023
-Epoch [2200/5000], Loss: 0.0022
-Epoch [2400/5000], Loss: 0.0033
-Epoch [2600/5000], Loss: 0.0023
-Epoch [2800/5000], Loss: 0.0209
-Epoch [3000/5000], Loss: 0.0218
-Epoch [3200/5000], Loss: 0.0023
-Epoch [3400/5000], Loss: 0.0022
-Epoch [3600/5000], Loss: 0.0020
-Epoch [3800/5000], Loss: 0.0070
-Epoch [4000/5000], Loss: 0.0020
-Epoch [4200/5000], Loss: 0.0019
-Epoch [4400/5000], Loss: 0.0023
-Epoch [4600/5000], Loss: 0.0019
-Epoch [4800/5000], Loss: 0.0030
-Epoch [5000/5000], Loss: 0.0118</code></pre>
+<pre><code>Epoch [ 200/5000], Loss: 0.0131
+Epoch [ 400/5000], Loss: 0.0131
+Epoch [ 600/5000], Loss: 0.0132
+Epoch [ 800/5000], Loss: 0.0136
+Epoch [1000/5000], Loss: 0.0119
+Epoch [1200/5000], Loss: 0.0159
+Epoch [1400/5000], Loss: 0.0095
+Epoch [1600/5000], Loss: 0.0093
+Epoch [1800/5000], Loss: 0.0090
+Epoch [2000/5000], Loss: 0.0086
+Epoch [2200/5000], Loss: 0.0088
+Epoch [2400/5000], Loss: 0.0088
+Epoch [2600/5000], Loss: 0.0084
+Epoch [2800/5000], Loss: 0.0085
+Epoch [3000/5000], Loss: 0.0073
+Epoch [3200/5000], Loss: 0.0070
+Epoch [3400/5000], Loss: 0.0069
+Epoch [3600/5000], Loss: 0.0069
+Epoch [3800/5000], Loss: 0.0069
+Epoch [4000/5000], Loss: 0.0069
+Epoch [4200/5000], Loss: 0.0069
+Epoch [4400/5000], Loss: 0.0069
+Epoch [4600/5000], Loss: 0.0069
+Epoch [4800/5000], Loss: 0.0068
+Epoch [5000/5000], Loss: 0.0058</code></pre>
 </div>
 </div>
 <p>Now let’s plot the prediction:</p>
@@ -768,7 +792,7 @@ Epoch [5000/5000], Loss: 0.0118</code></pre>
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Revisit the above regression code and experiment with the weight decay parameter in the Adam optimizer. How does this affect the learned function? Why do you think this is?:</p>
+<p>Revisit the above regression code and experiment with the weight decay parameter in the Adam optimizer. How does this affect the learned function? Why do you think this is? We return to weight decay, and to the other ways of controlling a network, in the chapter <em>Regularizing, Normalizing, and Controlling Neural Networks</em>.</p>
 </div>
 </div>
 <p>You can also play around with different activation functions, e.g., <code>nn.ReLU()</code>, <code>nn.Sigmoid()</code>, <code>nn.Tanh()</code>, etc., and the below plot pulls out several options from PyTorch for you to visualize the activation functions:</p>
@@ -831,7 +855,8 @@ Epoch [5000/5000], Loss: 0.0118</code></pre>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co"># You can try out different functions below by uncommenting/commenting them</span></span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co">#X = np.vstack([t,1*t**2,-1*t**3, 0.4*t**5,t**2-t**3,-0.4*t**4]).T</span></span>
 <span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co">#X = np.vstack([2*np.sin(3*t),1*t**2,-1*t**3, 2*np.sin(6*t+1)-t**3,2*np.cos(3*t)]).T</span></span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.vstack([np.sin(<span class="dv">2</span><span class="op">*</span>t),<span class="dv">1</span><span class="op">*</span>t<span class="op">**</span><span class="dv">2</span>,<span class="dv">1</span><span class="op">*</span>np.cos(<span class="dv">5</span><span class="op">*</span>t)]).T <span class="op">+</span> noise_level<span class="op">*</span>np.random.randn(<span class="bu">len</span>(t),<span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>np.random.seed(SEED)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.vstack([np.sin(<span class="dv">2</span><span class="op">*</span>t),<span class="dv">1</span><span class="op">*</span>t<span class="op">**</span><span class="dv">2</span>,<span class="dv">1</span><span class="op">*</span>np.cos(<span class="dv">5</span><span class="op">*</span>t)]).T <span class="op">+</span> noise_level<span class="op">*</span>np.random.randn(<span class="bu">len</span>(t),<span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="2fc11733" class="cell" data-execution_count="17">
 <details class="code-fold">
@@ -857,7 +882,7 @@ Epoch [5000/5000], Loss: 0.0118</code></pre>
 <p>We can see that it results in 100 points each of which has three dimensions:</p>
 <div id="b8b1dab6" class="cell" data-execution_count="18">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>X.shape</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="18">
+<div class="cell-output cell-output-display" data-execution_count="19">
 <pre><code>(100, 3)</code></pre>
 </div>
 </div>
@@ -929,7 +954,7 @@ Epoch [5000/5000], Loss: 0.0118</code></pre>
 </div>
 </div>
 </div>
-<p>Now let’s see how this works using an autoencoder. We will use a very simple architecture with just one hidden layer in the encoder and one hidden layer in the decoder, and we will use 1D latent space (since we know that the data is fundamentally 1D). You will have the option in the below code to change the number of hidden units in the encoder and decoder, as well as the number of latent dimensions, and see how this affects the results.</p>
+<p>Now let’s see how this works using an autoencoder. We will use a very simple architecture with just one hidden layer in the encoder and one hidden layer in the decoder, and we will start with a three-dimensional latent space, even though we know that the data is fundamentally 1D (the experiment below asks you to try a 1D latent space and see why that is harder than it sounds). You will have the option in the below code to change the number of hidden units in the encoder and decoder, as well as the number of latent dimensions, and see how this affects the results.</p>
 <div id="6bbd51be" class="cell" data-execution_count="22">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Encoder(nn.Module):</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, num_input, num_latent,num_hidden):</span>
@@ -1004,16 +1029,19 @@ Epoch [5000/5000], Loss: 0.0118</code></pre>
 <span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>num_points, D_orig <span class="op">=</span> X.shape</span>
 <span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>num_latent <span class="op">=</span> <span class="dv">3</span></span>
 <span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>num_hidden <span class="op">=</span> <span class="dv">5</span></span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> AutoEncoder(D_orig,num_latent,num_hidden)</span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the optimizer object:</span></span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Adam optimizer with learning rate and weight decay</span></span>
-<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="co"># I encourage you to try out different learning rates and weight decays and</span></span>
-<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="co"># observe their effect on the model</span></span>
-<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> optim.AdamW(model.parameters(), </span>
-<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>                        lr<span class="op">=</span><span class="fl">1e-3</span>, </span>
-<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>                        weight_decay<span class="op">=</span><span class="fl">1e-2</span>)</span>
-<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Add a mean-squared error loss</span></span>
-<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>criterion <span class="op">=</span> nn.MSELoss()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Unlike the rest of this notebook, we deliberately do not reseed here: each time you</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="co"># re-run this cell (and the training cell below), the network starts from new random</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="co"># weights, so you can see how much the result varies from run to run.</span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> AutoEncoder(D_orig,num_latent,num_hidden)</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the optimizer object:</span></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a><span class="co"># AdamW optimizer (Adam with decoupled weight decay) with learning rate and weight decay</span></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a><span class="co"># I encourage you to try out different learning rates and weight decays and</span></span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a><span class="co"># observe their effect on the model</span></span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> optim.AdamW(model.parameters(), </span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>                        lr<span class="op">=</span><span class="fl">1e-3</span>, </span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>                        weight_decay<span class="op">=</span><span class="fl">1e-2</span>)</span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Add a mean-squared error loss</span></span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>criterion <span class="op">=</span> nn.MSELoss()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="8bc10924" class="cell" data-execution_count="24">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>X_torch <span class="op">=</span> torch.from_numpy(X)</span>
@@ -1045,21 +1073,21 @@ Epoch [5000/5000], Loss: 0.0118</code></pre>
 <span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> epoch<span class="op">%</span><span class="dv">500</span><span class="op">==</span><span class="dv">0</span>:</span>
 <span id="cb28-28"><a href="#cb28-28" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"epoch : </span><span class="sc">{}</span><span class="st">/</span><span class="sc">{}</span><span class="st">, loss = </span><span class="sc">{:.6f}</span><span class="st">"</span>.<span class="bu">format</span>(epoch <span class="op">+</span> <span class="dv">1</span>, epochs, loss.item()))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>epoch : 1/10000, loss = 0.716544
-epoch : 501/10000, loss = 0.350305
-epoch : 1001/10000, loss = 0.090813
-epoch : 1501/10000, loss = 0.010054
-epoch : 2001/10000, loss = 0.000795
-epoch : 2501/10000, loss = 0.000162
-epoch : 3001/10000, loss = 0.000120
-epoch : 3501/10000, loss = 0.000097
-epoch : 4001/10000, loss = 0.000081
-epoch : 4501/10000, loss = 0.000073
-epoch : 5001/10000, loss = 0.000062
-epoch : 5501/10000, loss = 0.000054
-epoch : 6001/10000, loss = 0.000035
-epoch : 6501/10000, loss = 0.000016
-epoch : 7001/10000, loss = 0.000006
+<pre><code>epoch : 1/10000, loss = 0.639043
+epoch : 501/10000, loss = 0.051612
+epoch : 1001/10000, loss = 0.025585
+epoch : 1501/10000, loss = 0.022820
+epoch : 2001/10000, loss = 0.020838
+epoch : 2501/10000, loss = 0.013447
+epoch : 3001/10000, loss = 0.005840
+epoch : 3501/10000, loss = 0.003067
+epoch : 4001/10000, loss = 0.002534
+epoch : 4501/10000, loss = 0.002365
+epoch : 5001/10000, loss = 0.002286
+epoch : 5501/10000, loss = 0.002073
+epoch : 6001/10000, loss = 0.001919
+epoch : 6501/10000, loss = 0.001701
+epoch : 7001/10000, loss = 0.000241
 epoch : 7501/10000, loss = 0.000000
 epoch : 8001/10000, loss = 0.000000
 epoch : 8501/10000, loss = 0.000000
@@ -1099,7 +1127,7 @@ epoch : 9501/10000, loss = 0.000000</code></pre>
 </div>
 </div>
 <p>Let’s see how the encoded (i.e., latent) points actually look in Z space:</p>
-<div id="78bb7b56" class="cell">
+<div id="78bb7b56" class="cell" data-execution_count="27">
 <details class="code-fold">
 <summary>Show Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>Z <span class="op">=</span> encoded.cpu().detach().numpy()</span>
@@ -1120,7 +1148,7 @@ epoch : 9501/10000, loss = 0.000000</code></pre>
 </div>
 </div>
 </div>
-<div id="e9c9a2c2" class="cell" data-execution_count="29">
+<div id="e9c9a2c2" class="cell" data-execution_count="28">
 <details class="code-fold">
 <summary>Show Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>plt.figure()</span>
@@ -1139,22 +1167,18 @@ epoch : 9501/10000, loss = 0.000000</code></pre>
 </div>
 </div>
 <p>We can also look at a pairplot of the points in the latent space to get a sense of how the different dimensions correlate with each other:</p>
-<div id="d7414640" class="cell" data-execution_count="30">
+<div id="d7414640" class="cell" data-execution_count="29">
 <details class="code-fold">
 <summary>Show Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(Z, columns<span class="op">=</span>[<span class="ss">f'z</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">'</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(Z.shape[<span class="dv">1</span>])])</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>plt.figure()</span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>sns.pairplot(df)</span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>plt.suptitle(<span class="st">'Latent Space Pairplot'</span>, y<span class="op">=</span><span class="fl">1.02</span>)</span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>sns.pairplot(df)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>plt.suptitle(<span class="st">'Latent Space Pairplot'</span>, y<span class="op">=</span><span class="fl">1.02</span>)</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-display">
-<pre><code>&lt;Figure size 640x480 with 0 Axes&gt;</code></pre>
-</div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="review_neural_networks_files/figure-html/cell-30-output-2.png" class="img-fluid figure-img"></p>
+<p><img src="review_neural_networks_files/figure-html/cell-30-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1165,7 +1189,7 @@ epoch : 9501/10000, loss = 0.000000</code></pre>
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Experiment: Effect on Autoencoder Architecture on Reconstruction Accuracy and Latent Space Behavior
+<span class="screen-reader-only">Tip</span>Experiment: Effect of Autoencoder Architecture on Reconstruction Accuracy and Latent Space Behavior
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1174,172 +1198,173 @@ epoch : 9501/10000, loss = 0.000000</code></pre>
 <li>We know that the data is fundamentally 1D, but why does setting the autoencoder latent dimension to 1 not work well? Why might it be useful to have a latent dimension larger than the true dimensionality of the data for this type of model?</li>
 <li>What happens if you set the latent dimension to be three or larger? Why do you think this happens? What have we given up by doing this?</li>
 <li>As you increase or decrease the number of hidden units in Autoencoder, how does this affect the reconstruction accuracy? Why do you think this is? Consider in particular the case where the number of hidden units is one or two.</li>
-<li>Unlike in PCA, when we re-run the autoencoder training, we get different results each time. Why do you think this is?</li>
+<li>Unlike in PCA, when we re-run the autoencoder training, we get different results each time. Why do you think this is? (The cell that creates the autoencoder is deliberately not seeded, so re-running it and the training cell gives a new random start each time.)</li>
 <li>Unlike PCA, the autoencoder does not guarantee that the latent dimensions are orthogonal or ordered by importance (e.g., <span class="math inline">\(z_0\)</span> being more important than <span class="math inline">\(z_1\)</span>, etc.). Do you see any evidence of this in the learned latent space? Why do you think this is?</li>
 <li>The Autoencoder used a ReLU activation function in the hidden layers. How does this manifest in the way that the network reconstructs the data? (Note, this may only be visible if you set the latent dimension to 1 and the number of hidden units to a small number, e.g., 2 or 3).</li>
-<li>We can see that when we set the latent dimension to two or greater, the autoencoder can reconstruct the data well, but it is not capturing the intrinsic dimensionality of the data. One way we might do this is by adding L1 regularization to the latent space coordinates, which is commented out in the code above. Try adding in this regularization. Does it fix the problem?</li>
+<li>We can see that when we set the latent dimension to two or greater, the autoencoder can reconstruct the data well, but it is not capturing the intrinsic dimensionality of the data. One way we might do this is by adding L1 regularization to the latent space coordinates. You will find this penalty commented out in the training loop of the deeper autoencoder in the next section. Try adding in this regularization, either there or in the training loop above (where the latent codes are called <code>encoded</code>). Does it fix the problem?</li>
 </ul>
 </div>
 </div>
 </section>
-<section id="least-volume-regularization" class="level2" data-number="9.3">
-<h2 data-number="9.3" class="anchored" data-anchor-id="least-volume-regularization"><span class="header-section-number">9.3</span> Least Volume Regularization</h2>
-<p>One of the problems that we saw in Autoencoders is that the latent space does not have any particular structure, and in particular, it is not guaranteed to be ordered, in the same sense as PCA. It was also difficult for us to determine the exact “size” of the latent dimension, since, as we saw, setting the latent dimension to 1 did not work well, even though we knew that the data was fundamentally 1D, due to training variability and the fact that the autoencoder could get trapped in local minima. One possible solution to this is to add a regularization term that encourages the latent space to be small in some sense. One such regularization is called <a href="https://arxiv.org/abs/2404.17773">Least Volume Regularization</a>, which encourages the latent space to have a small volume by penalizing the volume of the encoded points in the latent space.</p>
-<div id="f3bec35b" class="cell" data-execution_count="31">
+<section id="a-deeper-autoencoder-before-least-volume-regularization" class="level2" data-number="9.3">
+<h2 data-number="9.3" class="anchored" data-anchor-id="a-deeper-autoencoder-before-least-volume-regularization"><span class="header-section-number">9.3</span> A Deeper Autoencoder, Before Least Volume Regularization</h2>
+<p>One of the problems that we saw in Autoencoders is that the latent space does not have any particular structure, and in particular, it is not guaranteed to be ordered, in the same sense as PCA. It was also difficult for us to determine the exact “size” of the latent dimension, since, as we saw, setting the latent dimension to 1 did not work well, even though we knew that the data was fundamentally 1D, due to training variability and the fact that the autoencoder could get trapped in local minima. One possible solution to this is to add a regularization term that encourages the latent space to be small in some sense. One such regularization is called <a href="https://arxiv.org/abs/2404.17773">Least Volume Regularization</a>, which encourages the latent space to have a small volume by penalizing the volume of the encoded points in the latent space. Before we add it, let’s first train a deeper autoencoder without any regularization, so that we have something to compare against.</p>
+<div id="f3bec35b" class="cell" data-execution_count="30">
 <details class="code-fold">
 <summary>Show Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> _Combo(nn.Module):</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, <span class="bu">input</span>):</span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.model(<span class="bu">input</span>)</span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> LinearCombo(_Combo):</span>
-<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, in_features, out_features, activation<span class="op">=</span>nn.LeakyReLU(<span class="fl">0.2</span>)):</span>
-<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
-<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.model <span class="op">=</span> nn.Sequential(</span>
-<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>            nn.Linear(in_features, out_features),</span>
-<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>            activation</span>
-<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MLP(nn.Module):</span>
-<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Regular fully connected network generating features.</span></span>
-<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
-<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a><span class="co">        in_features: The number of input features.</span></span>
-<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a><span class="co">        out_feature: The number of output features.</span></span>
-<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a><span class="co">        layer_width: The widths of the hidden layers.</span></span>
-<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a><span class="co">        combo: The layer combination to be stacked up.</span></span>
-<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a><span class="co">    Shape:</span></span>
-<span id="cb36-23"><a href="#cb36-23" aria-hidden="true" tabindex="-1"></a><span class="co">        - Input: `(N, H_in)` where H_in = in_features.</span></span>
-<span id="cb36-24"><a href="#cb36-24" aria-hidden="true" tabindex="-1"></a><span class="co">        - Output: `(N, H_out)` where H_out = out_features.</span></span>
-<span id="cb36-25"><a href="#cb36-25" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb36-26"><a href="#cb36-26" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(</span>
-<span id="cb36-27"><a href="#cb36-27" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>, in_features: <span class="bu">int</span>, out_features:<span class="bu">int</span>, layer_width: <span class="bu">list</span>,</span>
-<span id="cb36-28"><a href="#cb36-28" aria-hidden="true" tabindex="-1"></a>        combo <span class="op">=</span> LinearCombo</span>
-<span id="cb36-29"><a href="#cb36-29" aria-hidden="true" tabindex="-1"></a>        ):</span>
-<span id="cb36-30"><a href="#cb36-30" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
-<span id="cb36-31"><a href="#cb36-31" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.in_features <span class="op">=</span> in_features</span>
-<span id="cb36-32"><a href="#cb36-32" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.out_features <span class="op">=</span> out_features</span>
-<span id="cb36-33"><a href="#cb36-33" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.layer_width <span class="op">=</span> <span class="bu">list</span>(layer_width)</span>
-<span id="cb36-34"><a href="#cb36-34" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.model <span class="op">=</span> <span class="va">self</span>._build_model(combo)</span>
-<span id="cb36-35"><a href="#cb36-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-36"><a href="#cb36-36" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, <span class="bu">input</span>):</span>
-<span id="cb36-37"><a href="#cb36-37" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.model(<span class="bu">input</span>)</span>
-<span id="cb36-38"><a href="#cb36-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-39"><a href="#cb36-39" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> _build_model(<span class="va">self</span>, combo):</span>
-<span id="cb36-40"><a href="#cb36-40" aria-hidden="true" tabindex="-1"></a>        model <span class="op">=</span> nn.Sequential()</span>
-<span id="cb36-41"><a href="#cb36-41" aria-hidden="true" tabindex="-1"></a>        idx <span class="op">=</span> <span class="op">-</span><span class="dv">1</span></span>
-<span id="cb36-42"><a href="#cb36-42" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> idx, (in_ftr, out_ftr) <span class="kw">in</span> <span class="bu">enumerate</span>(<span class="va">self</span>.layer_sizes[:<span class="op">-</span><span class="dv">1</span>]):</span>
-<span id="cb36-43"><a href="#cb36-43" aria-hidden="true" tabindex="-1"></a>            model.add_module(<span class="bu">str</span>(idx), combo(in_ftr, out_ftr))</span>
-<span id="cb36-44"><a href="#cb36-44" aria-hidden="true" tabindex="-1"></a>        model.add_module(<span class="bu">str</span>(idx<span class="op">+</span><span class="dv">1</span>), nn.Linear(<span class="op">*</span><span class="va">self</span>.layer_sizes[<span class="op">-</span><span class="dv">1</span>])) <span class="co"># type:ignore</span></span>
-<span id="cb36-45"><a href="#cb36-45" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> model</span>
-<span id="cb36-46"><a href="#cb36-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-47"><a href="#cb36-47" aria-hidden="true" tabindex="-1"></a>    <span class="at">@property</span></span>
-<span id="cb36-48"><a href="#cb36-48" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> layer_sizes(<span class="va">self</span>):</span>
-<span id="cb36-49"><a href="#cb36-49" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="bu">list</span>(<span class="bu">zip</span>([<span class="va">self</span>.in_features] <span class="op">+</span> <span class="va">self</span>.layer_width,</span>
-<span id="cb36-50"><a href="#cb36-50" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.layer_width <span class="op">+</span> [<span class="va">self</span>.out_features]))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> _Combo(nn.Module):</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, <span class="bu">input</span>):</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.model(<span class="bu">input</span>)</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> LinearCombo(_Combo):</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, in_features, out_features, activation<span class="op">=</span>nn.LeakyReLU(<span class="fl">0.2</span>)):</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.model <span class="op">=</span> nn.Sequential(</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>            nn.Linear(in_features, out_features),</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>            activation</span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MLP(nn.Module):</span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Regular fully connected network generating features.</span></span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a><span class="co">        in_features: The number of input features.</span></span>
+<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a><span class="co">        out_feature: The number of output features.</span></span>
+<span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a><span class="co">        layer_width: The widths of the hidden layers.</span></span>
+<span id="cb35-20"><a href="#cb35-20" aria-hidden="true" tabindex="-1"></a><span class="co">        combo: The layer combination to be stacked up.</span></span>
+<span id="cb35-21"><a href="#cb35-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-22"><a href="#cb35-22" aria-hidden="true" tabindex="-1"></a><span class="co">    Shape:</span></span>
+<span id="cb35-23"><a href="#cb35-23" aria-hidden="true" tabindex="-1"></a><span class="co">        - Input: `(N, H_in)` where H_in = in_features.</span></span>
+<span id="cb35-24"><a href="#cb35-24" aria-hidden="true" tabindex="-1"></a><span class="co">        - Output: `(N, H_out)` where H_out = out_features.</span></span>
+<span id="cb35-25"><a href="#cb35-25" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb35-26"><a href="#cb35-26" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(</span>
+<span id="cb35-27"><a href="#cb35-27" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>, in_features: <span class="bu">int</span>, out_features:<span class="bu">int</span>, layer_width: <span class="bu">list</span>,</span>
+<span id="cb35-28"><a href="#cb35-28" aria-hidden="true" tabindex="-1"></a>        combo <span class="op">=</span> LinearCombo</span>
+<span id="cb35-29"><a href="#cb35-29" aria-hidden="true" tabindex="-1"></a>        ):</span>
+<span id="cb35-30"><a href="#cb35-30" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb35-31"><a href="#cb35-31" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.in_features <span class="op">=</span> in_features</span>
+<span id="cb35-32"><a href="#cb35-32" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.out_features <span class="op">=</span> out_features</span>
+<span id="cb35-33"><a href="#cb35-33" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.layer_width <span class="op">=</span> <span class="bu">list</span>(layer_width)</span>
+<span id="cb35-34"><a href="#cb35-34" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.model <span class="op">=</span> <span class="va">self</span>._build_model(combo)</span>
+<span id="cb35-35"><a href="#cb35-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-36"><a href="#cb35-36" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, <span class="bu">input</span>):</span>
+<span id="cb35-37"><a href="#cb35-37" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.model(<span class="bu">input</span>)</span>
+<span id="cb35-38"><a href="#cb35-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-39"><a href="#cb35-39" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> _build_model(<span class="va">self</span>, combo):</span>
+<span id="cb35-40"><a href="#cb35-40" aria-hidden="true" tabindex="-1"></a>        model <span class="op">=</span> nn.Sequential()</span>
+<span id="cb35-41"><a href="#cb35-41" aria-hidden="true" tabindex="-1"></a>        idx <span class="op">=</span> <span class="op">-</span><span class="dv">1</span></span>
+<span id="cb35-42"><a href="#cb35-42" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> idx, (in_ftr, out_ftr) <span class="kw">in</span> <span class="bu">enumerate</span>(<span class="va">self</span>.layer_sizes[:<span class="op">-</span><span class="dv">1</span>]):</span>
+<span id="cb35-43"><a href="#cb35-43" aria-hidden="true" tabindex="-1"></a>            model.add_module(<span class="bu">str</span>(idx), combo(in_ftr, out_ftr))</span>
+<span id="cb35-44"><a href="#cb35-44" aria-hidden="true" tabindex="-1"></a>        model.add_module(<span class="bu">str</span>(idx<span class="op">+</span><span class="dv">1</span>), nn.Linear(<span class="op">*</span><span class="va">self</span>.layer_sizes[<span class="op">-</span><span class="dv">1</span>])) <span class="co"># type:ignore</span></span>
+<span id="cb35-45"><a href="#cb35-45" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> model</span>
+<span id="cb35-46"><a href="#cb35-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-47"><a href="#cb35-47" aria-hidden="true" tabindex="-1"></a>    <span class="at">@property</span></span>
+<span id="cb35-48"><a href="#cb35-48" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> layer_sizes(<span class="va">self</span>):</span>
+<span id="cb35-49"><a href="#cb35-49" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="bu">list</span>(<span class="bu">zip</span>([<span class="va">self</span>.in_features] <span class="op">+</span> <span class="va">self</span>.layer_width,</span>
+<span id="cb35-50"><a href="#cb35-50" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.layer_width <span class="op">+</span> [<span class="va">self</span>.out_features]))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<div id="095283c8" class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>ambient_dim <span class="op">=</span> X.shape[<span class="dv">1</span>]</span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Change the below latent dimension to see what happens to the embedded points</span></span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>latent_dim <span class="op">=</span> <span class="dv">3</span></span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>width <span class="op">=</span> ambient_dim <span class="op">*</span> <span class="dv">16</span></span>
-<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>encoder <span class="op">=</span> MLP(ambient_dim, latent_dim, [width] <span class="op">*</span> <span class="dv">4</span>)</span>
-<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>decoder <span class="op">=</span> MLP(latent_dim, ambient_dim, [width] <span class="op">*</span> <span class="dv">4</span>)</span>
-<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>opt <span class="op">=</span> torch.optim.Adam(<span class="bu">list</span>(encoder.parameters()) <span class="op">+</span> <span class="bu">list</span>(decoder.parameters()), lr<span class="op">=</span><span class="fl">1e-4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="095283c8" class="cell" data-execution_count="31">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>ambient_dim <span class="op">=</span> X.shape[<span class="dv">1</span>]</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Change the below latent dimension to see what happens to the embedded points</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>latent_dim <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>width <span class="op">=</span> ambient_dim <span class="op">*</span> <span class="dv">16</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(SEED)</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>encoder <span class="op">=</span> MLP(ambient_dim, latent_dim, [width] <span class="op">*</span> <span class="dv">4</span>)</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>decoder <span class="op">=</span> MLP(latent_dim, ambient_dim, [width] <span class="op">*</span> <span class="dv">4</span>)</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>opt <span class="op">=</span> torch.optim.Adam(<span class="bu">list</span>(encoder.parameters()) <span class="op">+</span> <span class="bu">list</span>(decoder.parameters()), lr<span class="op">=</span><span class="fl">1e-4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="bd23ae73" class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set X to a torch tensor:</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>X_torch <span class="op">=</span> torch.from_numpy(X).<span class="bu">float</span>()</span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5000</span>):</span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>    opt.zero_grad()</span>
-<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>    z <span class="op">=</span> encoder(X_torch)</span>
-<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>    rec_loss <span class="op">=</span> F.mse_loss(decoder(z), X_torch)</span>
-<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> rec_loss</span>
-<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># If you want, you can even add an L1 penalty on the latent space</span></span>
-<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># to try to encourage sparsity by uncommenting the line below:</span></span>
-<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>    <span class="co">#loss += 1e-3 * torch.mean(torch.abs(z))</span></span>
-<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a>    loss.backward()</span>
-<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>    opt.step()</span>
-<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (i<span class="op">+</span><span class="dv">1</span>) <span class="op">%</span> <span class="dv">100</span> <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f'Epoch </span><span class="sc">{</span>i<span class="sc">:4}</span><span class="ss">: rec = </span><span class="sc">{</span>rec_loss<span class="sc">:.5g}</span><span class="ss">'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="bd23ae73" class="cell" data-execution_count="32">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set X to a torch tensor:</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>X_torch <span class="op">=</span> torch.from_numpy(X).<span class="bu">float</span>()</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5000</span>):</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>    opt.zero_grad()</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>    z <span class="op">=</span> encoder(X_torch)</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>    rec_loss <span class="op">=</span> F.mse_loss(decoder(z), X_torch)</span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> rec_loss</span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># If you want, you can even add an L1 penalty on the latent space</span></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># to try to encourage sparsity by uncommenting the line below:</span></span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>    <span class="co">#loss += 1e-3 * torch.mean(torch.abs(z))</span></span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>    loss.backward()</span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>    opt.step()</span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (i<span class="op">+</span><span class="dv">1</span>) <span class="op">%</span> <span class="dv">100</span> <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f'Epoch </span><span class="sc">{</span>i<span class="sc">:4}</span><span class="ss">: rec = </span><span class="sc">{</span>rec_loss<span class="sc">:.5g}</span><span class="ss">'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch   99: rec = 0.39166
-Epoch  199: rec = 0.31308
-Epoch  299: rec = 0.048501
-Epoch  399: rec = 0.023062
-Epoch  499: rec = 0.015194
-Epoch  599: rec = 0.010049
-Epoch  699: rec = 0.0068286
-Epoch  799: rec = 0.0048156
-Epoch  899: rec = 0.0035384
-Epoch  999: rec = 0.0026096
-Epoch 1099: rec = 0.0018915
-Epoch 1199: rec = 0.001313
-Epoch 1299: rec = 0.00084967
-Epoch 1399: rec = 0.00053819
-Epoch 1499: rec = 0.00027124
-Epoch 1599: rec = 0.00014737
-Epoch 1699: rec = 0.00010135
-Epoch 1799: rec = 8.2536e-05
-Epoch 1899: rec = 7.4167e-05
-Epoch 1999: rec = 6.9067e-05
-Epoch 2099: rec = 6.5697e-05
-Epoch 2199: rec = 6.2941e-05
-Epoch 2299: rec = 6.0584e-05
-Epoch 2399: rec = 5.8694e-05
-Epoch 2499: rec = 5.6992e-05
-Epoch 2599: rec = 5.5272e-05
-Epoch 2699: rec = 5.3765e-05
-Epoch 2799: rec = 5.2397e-05
-Epoch 2899: rec = 5.1138e-05
-Epoch 2999: rec = 5.0006e-05
-Epoch 3099: rec = 4.8935e-05
-Epoch 3199: rec = 4.7868e-05
-Epoch 3299: rec = 4.6667e-05
-Epoch 3399: rec = 4.5643e-05
-Epoch 3499: rec = 4.4691e-05
-Epoch 3599: rec = 4.3831e-05
-Epoch 3699: rec = 4.3016e-05
-Epoch 3799: rec = 4.2142e-05
-Epoch 3899: rec = 4.1268e-05
-Epoch 3999: rec = 4.0287e-05
-Epoch 4099: rec = 3.9385e-05
-Epoch 4199: rec = 3.8568e-05
-Epoch 4299: rec = 3.7773e-05
-Epoch 4399: rec = 3.7031e-05
-Epoch 4499: rec = 3.6334e-05
-Epoch 4599: rec = 3.5686e-05
-Epoch 4699: rec = 3.5056e-05
-Epoch 4799: rec = 3.4465e-05
-Epoch 4899: rec = 3.388e-05
-Epoch 4999: rec = 3.332e-05</code></pre>
+<pre><code>Epoch   99: rec = 0.40929
+Epoch  199: rec = 0.23014
+Epoch  299: rec = 0.17192
+Epoch  399: rec = 0.08683
+Epoch  499: rec = 0.024894
+Epoch  599: rec = 0.020454
+Epoch  699: rec = 0.01756
+Epoch  799: rec = 0.014212
+Epoch  899: rec = 0.010387
+Epoch  999: rec = 0.0063558
+Epoch 1099: rec = 0.0026084
+Epoch 1199: rec = 0.00080792
+Epoch 1299: rec = 0.00029069
+Epoch 1399: rec = 0.00013794
+Epoch 1499: rec = 8.568e-05
+Epoch 1599: rec = 6.6051e-05
+Epoch 1699: rec = 5.6111e-05
+Epoch 1799: rec = 4.9817e-05
+Epoch 1899: rec = 4.5558e-05
+Epoch 1999: rec = 4.2186e-05
+Epoch 2099: rec = 3.9551e-05
+Epoch 2199: rec = 3.7508e-05
+Epoch 2299: rec = 3.5774e-05
+Epoch 2399: rec = 3.4289e-05
+Epoch 2499: rec = 3.2967e-05
+Epoch 2599: rec = 3.1778e-05
+Epoch 2699: rec = 3.0707e-05
+Epoch 2799: rec = 2.9727e-05
+Epoch 2899: rec = 2.8708e-05
+Epoch 2999: rec = 2.7818e-05
+Epoch 3099: rec = 2.6984e-05
+Epoch 3199: rec = 2.6262e-05
+Epoch 3299: rec = 2.5617e-05
+Epoch 3399: rec = 2.5047e-05
+Epoch 3499: rec = 2.4514e-05
+Epoch 3599: rec = 2.4024e-05
+Epoch 3699: rec = 2.3561e-05
+Epoch 3799: rec = 2.3133e-05
+Epoch 3899: rec = 2.2714e-05
+Epoch 3999: rec = 2.2328e-05
+Epoch 4099: rec = 2.1939e-05
+Epoch 4199: rec = 2.1573e-05
+Epoch 4299: rec = 2.1222e-05
+Epoch 4399: rec = 2.097e-05
+Epoch 4499: rec = 2.0674e-05
+Epoch 4599: rec = 2.0318e-05
+Epoch 4699: rec = 1.9966e-05
+Epoch 4799: rec = 1.9887e-05
+Epoch 4899: rec = 1.9318e-05
+Epoch 4999: rec = 1.9042e-05</code></pre>
 </div>
 </div>
 <p>Now that the autoencoder has been trained, let’s take a look at the standard deviation of the embedded points (i.e., in <span class="math inline">\(z\)</span>). We can sort the latent dimensions according to which dimensions have the highest standard deviation in Z.</p>
-<div id="bd8b7ee3" class="cell" data-execution_count="34">
+<div id="bd8b7ee3" class="cell" data-execution_count="33">
 <details class="code-fold">
 <summary>Show Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>encoder.<span class="bu">eval</span>()</span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>decoder.<span class="bu">eval</span>()</span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Embed the data into Z using the trained encoder</span></span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>    z <span class="op">=</span> encoder(X_torch)</span>
-<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Now let's sort the latent codes by which ones have the</span></span>
-<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a><span class="co"># largest standard deviation in Z:</span></span>
-<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>idx <span class="op">=</span> z.std(<span class="dv">0</span>).argsort(descending<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>plt.figure()</span>
-<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>plt.bar(np.arange(z.std(<span class="dv">0</span>).size(<span class="op">-</span><span class="dv">1</span>)), z.std(<span class="dv">0</span>)[idx])</span>
-<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'latent STDs (autoencoder)'</span>)</span>
-<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>encoder.<span class="bu">eval</span>()</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>decoder.<span class="bu">eval</span>()</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Embed the data into Z using the trained encoder</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>    z <span class="op">=</span> encoder(X_torch)</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Now let's sort the latent codes by which ones have the</span></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a><span class="co"># largest standard deviation in Z:</span></span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>idx <span class="op">=</span> z.std(<span class="dv">0</span>).argsort(descending<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>plt.figure()</span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>plt.bar(np.arange(z.std(<span class="dv">0</span>).size(<span class="op">-</span><span class="dv">1</span>)), z.std(<span class="dv">0</span>)[idx])</span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'latent STDs (autoencoder)'</span>)</span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -1350,15 +1375,15 @@ Epoch 4999: rec = 3.332e-05</code></pre>
 </div>
 </div>
 <p>As with before, we can plot some of the data points in Z space:</p>
-<div id="56c13164" class="cell" data-execution_count="35">
+<div id="56c13164" class="cell" data-execution_count="34">
 <details class="code-fold">
 <summary>Show Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>plt.figure()</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>plt.scatter(z[:, idx[<span class="dv">0</span>]].cpu().detach().numpy(), z[:, idx[<span class="dv">1</span>]].cpu().detach().numpy(), s<span class="op">=</span><span class="dv">10</span>)</span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>plt.gca().set_aspect(<span class="st">'equal'</span>)</span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'$z_0$'</span>)</span>
-<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'$z_1$'</span>)</span>
-<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>plt.figure()</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>plt.scatter(z[:, idx[<span class="dv">0</span>]].cpu().detach().numpy(), z[:, idx[<span class="dv">1</span>]].cpu().detach().numpy(), s<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>plt.gca().set_aspect(<span class="st">'equal'</span>)</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'$z_0$'</span>)</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'$z_1$'</span>)</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -1369,16 +1394,15 @@ Epoch 4999: rec = 3.332e-05</code></pre>
 </div>
 </div>
 <p>We can also plot the covariance among the latent codes of the embedded data:</p>
-<div id="d35b2114" class="cell">
+<div id="d35b2114" class="cell" data-execution_count="35">
 <details class="code-fold">
 <summary>Show Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>cov <span class="op">=</span> z.T[idx].cov().detach().cpu().numpy()</span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>plt.figure()</span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>plt.matshow(cov, cmap<span class="op">=</span><span class="st">'Reds'</span>)</span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i, j), var <span class="kw">in</span> np.ndenumerate(cov):</span>
-<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>    plt.gca().text(j, i, <span class="st">'</span><span class="sc">{:.3e}</span><span class="st">'</span>.<span class="bu">format</span>(var), ha<span class="op">=</span><span class="st">'center'</span>, va<span class="op">=</span><span class="st">'center'</span>)</span>
-<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Latent Covariance Matrix'</span>)</span>
-<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>cov <span class="op">=</span> z.T[idx].cov().detach().cpu().numpy()</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>plt.matshow(cov, cmap<span class="op">=</span><span class="st">'Reds'</span>)</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i, j), var <span class="kw">in</span> np.ndenumerate(cov):</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>    plt.gca().text(j, i, <span class="st">'</span><span class="sc">{:.3e}</span><span class="st">'</span>.<span class="bu">format</span>(var), ha<span class="op">=</span><span class="st">'center'</span>, va<span class="op">=</span><span class="st">'center'</span>)</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Latent Covariance Matrix'</span>)</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -1389,19 +1413,19 @@ Epoch 4999: rec = 3.332e-05</code></pre>
 </div>
 </div>
 <p>We can also get a general idea about how well we are reconstructing the original data by comparing the ground truth values versus predicted (i.e., encoded then decoded) data points – this is often called a parity plot:</p>
-<div id="8cfde234" class="cell" data-execution_count="37">
+<div id="8cfde234" class="cell" data-execution_count="36">
 <details class="code-fold">
 <summary>Show Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>X_ <span class="op">=</span> decoder(z).detach()</span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(X_torch.size(<span class="op">-</span><span class="dv">1</span>)):</span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>    plt.figure(figsize<span class="op">=</span>(<span class="dv">3</span>,<span class="dv">3</span>))</span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>    plt.scatter(X[:, i], X_[:, i], s<span class="op">=</span><span class="dv">3</span>)</span>
-<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>    plt.gca().set_aspect(<span class="st">'equal'</span>)</span>
-<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(<span class="st">'groundtruth'</span>)</span>
-<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>    plt.ylabel(<span class="st">'reconstruction'</span>)</span>
-<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="st">'$x_</span><span class="sc">{}</span><span class="st">$'</span>.<span class="bu">format</span>(i))</span>
-<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>    plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>X_ <span class="op">=</span> decoder(z).detach()</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(X_torch.size(<span class="op">-</span><span class="dv">1</span>)):</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>    plt.figure(figsize<span class="op">=</span>(<span class="dv">3</span>,<span class="dv">3</span>))</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>    plt.scatter(X[:, i], X_[:, i], s<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>    plt.gca().set_aspect(<span class="st">'equal'</span>)</span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(<span class="st">'groundtruth'</span>)</span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>    plt.ylabel(<span class="st">'reconstruction'</span>)</span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="st">'$x_</span><span class="sc">{}</span><span class="st">$'</span>.<span class="bu">format</span>(i))</span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>    plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -1426,22 +1450,18 @@ Epoch 4999: rec = 3.332e-05</code></pre>
 </div>
 </div>
 <p>Lastly, we can visualize a pairplot of the latent space to see how the different dimensions correlate with each other:</p>
-<div id="7db81439" class="cell" data-execution_count="38">
+<div id="7db81439" class="cell" data-execution_count="37">
 <details class="code-fold">
 <summary>Show Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(z.cpu().detach().numpy(), columns<span class="op">=</span>[<span class="ss">f'z</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">'</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(z.shape[<span class="dv">1</span>])])</span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>plt.figure()</span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>sns.pairplot(df)</span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>plt.suptitle(<span class="st">'Latent Space Pairplot'</span>, y<span class="op">=</span><span class="fl">1.02</span>)</span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(z.cpu().detach().numpy(), columns<span class="op">=</span>[<span class="ss">f'z</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">'</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(z.shape[<span class="dv">1</span>])])</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>sns.pairplot(df)</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>plt.suptitle(<span class="st">'Latent Space Pairplot'</span>, y<span class="op">=</span><span class="fl">1.02</span>)</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-display">
-<pre><code>&lt;Figure size 640x480 with 0 Axes&gt;</code></pre>
-</div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="review_neural_networks_files/figure-html/cell-38-output-2.png" class="img-fluid figure-img"></p>
+<p><img src="review_neural_networks_files/figure-html/cell-38-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1455,105 +1475,109 @@ Epoch 4999: rec = 3.332e-05</code></pre>
 <p>Image above from: Qiuyi Chen and Mark Fuge, <a href="https://arxiv.org/abs/2404.17773">“Least Volume Analysis”</a></p>
 <p>In general, the idea behind least volume is that we want to encourage the latent space to take up as little volume as possible, while still being able to reconstruct the data well. This can be achieved by adding a regularization term to the loss function that penalizes the volume of the latent space. A simple way to do this is to penalize the geometric mean of the standard deviation of the latent dimensions, which encourages the latent space to be small in all dimensions. Specifically, we can minimize the product of all elements of the latent code’s standard deviation vector <span class="math inline">\(\prod \sigma\)</span>, which is equivalent to minimizing the exponential of the mean of the log of the standard deviation vector:</p>
 <p><code>vol_loss = torch.exp(torch.log(z.std(0) + η).mean())</code></p>
-<p>We add a small constant <code>η</code> to avoid numerical issues when any one of the standard deviation’s in any dimension approaches zero – that is when the autoencoder eliminates a dimension, and thus <span class="math inline">\(\prod \sigma\)</span> would have a zero in the product. This loss term can be added to the reconstruction loss, weighted by a hyperparameter <code>λ</code>, to form the total loss.</p>
-<p>In principle, while this loss can encourage the latent space to reduce its volume, there is one catch: the autoencoder could simply scale up the weights in the encoder and decoder to make the latent space arbitrarily small, while still being able to reconstruct the data well. To prevent this, we have to prevent the decoder from being able to arbitrarily increase its weights, and one easy way to enforce this is through <em>spectral normalization</em> on the weights of the decoder, which constrains the Lipschitz constant of the decoder to be at most 1. By preventing the decoder from scaling up its weights too much, and the encoder cannot easily defeat the volume penalty by isotropically shrinking the weights, and thus the only way to achieve a good volume penalty is to actually reduce dimensions.</p>
+<p>We add a small constant <code>η</code> to avoid numerical issues when any one of the standard deviations in any dimension approaches zero – that is when the autoencoder eliminates a dimension, and thus <span class="math inline">\(\prod \sigma\)</span> would have a zero in the product. This loss term can be added to the reconstruction loss, weighted by a hyperparameter <code>λ</code>, to form the total loss.</p>
+<p>In principle, while this loss can encourage the latent space to reduce its volume, there is one catch: the autoencoder could simply scale up the weights in the encoder and decoder to make the latent space arbitrarily small, while still being able to reconstruct the data well. To prevent this, we have to prevent the decoder from being able to arbitrarily increase its weights, and one easy way to enforce this is through <em>spectral normalization</em> on the weights of the decoder, which constrains the Lipschitz constant of the decoder to be at most 1. Because the decoder cannot scale up its weights too much, the encoder cannot easily defeat the volume penalty by isotropically shrinking the weights, and thus the only way to achieve a good volume penalty is to actually reduce dimensions.</p>
 <p>Fun Fact: It turns out that in the case of an Autoencoder that only uses Linear layers, and with no activation functions, the least volume penalty is equivalent to PCA. That is, PCA can be seen as a special case of Least Volume Autoencoder. For more details on the mathematical proof, see <a href="https://arxiv.org/html/2404.17773v2#Thmtheorem15">Proposition 15</a> in the original paper.</p>
 <p>Below code implements the spectral normalized decoder:</p>
-<div id="af9d65dd" class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch.nn.utils.parametrizations <span class="im">import</span> spectral_norm</span>
+<div id="af9d65dd" class="cell" data-execution_count="38">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch.nn.utils.parametrizations <span class="im">import</span> spectral_norm</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> SNLinearCombo(_Combo):</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, in_features, out_features, activation<span class="op">=</span>nn.LeakyReLU(<span class="fl">0.2</span>)):</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.model <span class="op">=</span> nn.Sequential(</span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>            spectral_norm(nn.Linear(in_features, out_features)),</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>            activation</span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> SNMLP(MLP):</span>
+<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(</span>
+<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>, in_features: <span class="bu">int</span>, out_features: <span class="bu">int</span>, layer_width: <span class="bu">list</span>,</span>
+<span id="cb44-14"><a href="#cb44-14" aria-hidden="true" tabindex="-1"></a>        combo<span class="op">=</span>SNLinearCombo):</span>
+<span id="cb44-15"><a href="#cb44-15" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>(in_features, out_features, layer_width, combo)</span>
+<span id="cb44-16"><a href="#cb44-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-17"><a href="#cb44-17" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> _build_model(<span class="va">self</span>, combo):</span>
+<span id="cb44-18"><a href="#cb44-18" aria-hidden="true" tabindex="-1"></a>        model <span class="op">=</span> nn.Sequential()</span>
+<span id="cb44-19"><a href="#cb44-19" aria-hidden="true" tabindex="-1"></a>        idx <span class="op">=</span> <span class="op">-</span><span class="dv">1</span></span>
+<span id="cb44-20"><a href="#cb44-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> idx, (in_ftr, out_ftr) <span class="kw">in</span> <span class="bu">enumerate</span>(<span class="va">self</span>.layer_sizes[:<span class="op">-</span><span class="dv">1</span>]):</span>
+<span id="cb44-21"><a href="#cb44-21" aria-hidden="true" tabindex="-1"></a>            model.add_module(<span class="bu">str</span>(idx), combo(in_ftr, out_ftr))</span>
+<span id="cb44-22"><a href="#cb44-22" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Note here is the main difference: the last layer also has spectral normalization</span></span>
+<span id="cb44-23"><a href="#cb44-23" aria-hidden="true" tabindex="-1"></a>        <span class="co"># This was not the case in the previous MLP definition</span></span>
+<span id="cb44-24"><a href="#cb44-24" aria-hidden="true" tabindex="-1"></a>        model.add_module(<span class="bu">str</span>(idx<span class="op">+</span><span class="dv">1</span>), spectral_norm(nn.Linear(<span class="op">*</span><span class="va">self</span>.layer_sizes[<span class="op">-</span><span class="dv">1</span>])))</span>
+<span id="cb44-25"><a href="#cb44-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> model</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="8053d7aa" class="cell" data-execution_count="39">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>width <span class="op">=</span> ambient_dim <span class="op">*</span> <span class="dv">16</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(SEED)</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Note in particular the lack of the bottleneck choice below</span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="co"># That is, we don't need to actually pick a bottleneck dimension -- LVA tries to determine this automatically, like PCA</span></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>encoder <span class="op">=</span> MLP(ambient_dim, ambient_dim, [width] <span class="op">*</span> <span class="dv">4</span>)</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Note also the change in the decoder to have spectral normalization</span></span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>decoder <span class="op">=</span> SNMLP(ambient_dim, ambient_dim, [width] <span class="op">*</span> <span class="dv">4</span>)</span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>opt <span class="op">=</span> torch.optim.Adam(<span class="bu">list</span>(encoder.parameters()) <span class="op">+</span> <span class="bu">list</span>(decoder.parameters()), lr<span class="op">=</span><span class="fl">1e-3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="315abc36" class="cell" data-execution_count="40">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>η, λ <span class="op">=</span> <span class="fl">0.01</span>, <span class="fl">0.01</span></span>
 <span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> SNLinearCombo(_Combo):</span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, in_features, out_features, activation<span class="op">=</span>nn.LeakyReLU(<span class="fl">0.2</span>)):</span>
-<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
-<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.model <span class="op">=</span> nn.Sequential(</span>
-<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>            spectral_norm(nn.Linear(in_features, out_features)),</span>
-<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>            activation</span>
-<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> SNMLP(MLP):</span>
-<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(</span>
-<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>, in_features: <span class="bu">int</span>, out_features: <span class="bu">int</span>, layer_width: <span class="bu">list</span>,</span>
-<span id="cb46-14"><a href="#cb46-14" aria-hidden="true" tabindex="-1"></a>        combo<span class="op">=</span>SNLinearCombo):</span>
-<span id="cb46-15"><a href="#cb46-15" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>(in_features, out_features, layer_width, combo)</span>
-<span id="cb46-16"><a href="#cb46-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-17"><a href="#cb46-17" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> _build_model(<span class="va">self</span>, combo):</span>
-<span id="cb46-18"><a href="#cb46-18" aria-hidden="true" tabindex="-1"></a>        model <span class="op">=</span> nn.Sequential()</span>
-<span id="cb46-19"><a href="#cb46-19" aria-hidden="true" tabindex="-1"></a>        idx <span class="op">=</span> <span class="op">-</span><span class="dv">1</span></span>
-<span id="cb46-20"><a href="#cb46-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> idx, (in_ftr, out_ftr) <span class="kw">in</span> <span class="bu">enumerate</span>(<span class="va">self</span>.layer_sizes[:<span class="op">-</span><span class="dv">1</span>]):</span>
-<span id="cb46-21"><a href="#cb46-21" aria-hidden="true" tabindex="-1"></a>            model.add_module(<span class="bu">str</span>(idx), combo(in_ftr, out_ftr))</span>
-<span id="cb46-22"><a href="#cb46-22" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Note here is the main difference: the last layer also has spectral normalization</span></span>
-<span id="cb46-23"><a href="#cb46-23" aria-hidden="true" tabindex="-1"></a>        <span class="co"># This was not the case in the previous MLP definition</span></span>
-<span id="cb46-24"><a href="#cb46-24" aria-hidden="true" tabindex="-1"></a>        model.add_module(<span class="bu">str</span>(idx<span class="op">+</span><span class="dv">1</span>), spectral_norm(nn.Linear(<span class="op">*</span><span class="va">self</span>.layer_sizes[<span class="op">-</span><span class="dv">1</span>])))</span>
-<span id="cb46-25"><a href="#cb46-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> model</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div id="8053d7aa" class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>width <span class="op">=</span> ambient_dim <span class="op">*</span> <span class="dv">16</span></span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Note in particular the lack of the bottleneck choice below</span></span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="co"># That is, we don't need to actually pick a bottleneck dimension -- LVA automatically determines this, like PCA</span></span>
-<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>encoder <span class="op">=</span> MLP(ambient_dim, ambient_dim, [width] <span class="op">*</span> <span class="dv">4</span>)</span>
-<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Note also the change in the decoder to have spectral normalization</span></span>
-<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>decoder <span class="op">=</span> SNMLP(ambient_dim, ambient_dim, [width] <span class="op">*</span> <span class="dv">4</span>)</span>
-<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>opt <span class="op">=</span> torch.optim.Adam(<span class="bu">list</span>(encoder.parameters()) <span class="op">+</span> <span class="bu">list</span>(decoder.parameters()), lr<span class="op">=</span><span class="fl">1e-3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div id="315abc36" class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>η, λ <span class="op">=</span> <span class="fl">0.01</span>, <span class="fl">0.01</span></span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">20000</span>):</span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>    opt.zero_grad()</span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>    z <span class="op">=</span> encoder(X_torch)</span>
-<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>    rec_loss <span class="op">=</span> F.mse_loss(decoder(z), X_torch)</span>
-<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Note below the least volume loss</span></span>
-<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>    vol_loss <span class="op">=</span> torch.exp(torch.log(z.std(<span class="dv">0</span>) <span class="op">+</span> η).mean())</span>
-<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> rec_loss <span class="op">+</span> λ <span class="op">*</span> vol_loss</span>
-<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>    loss.backward()</span>
-<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a>    opt.step()</span>
-<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (i<span class="op">+</span><span class="dv">1</span>) <span class="op">%</span> <span class="dv">1000</span> <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb48-15"><a href="#cb48-15" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Print floats with 5 significant digits and fill epoch with leading spaces if under 4 digits</span></span>
-<span id="cb48-16"><a href="#cb48-16" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f'Epoch </span><span class="sc">{</span>i<span class="sc">:4}</span><span class="ss">: rec = </span><span class="sc">{</span>rec_loss<span class="sc">:.5g}</span><span class="ss">, vol = </span><span class="sc">{</span>vol_loss<span class="sc">:.5g}</span><span class="ss">'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">20000</span>):</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>    opt.zero_grad()</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>    z <span class="op">=</span> encoder(X_torch)</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>    rec_loss <span class="op">=</span> F.mse_loss(decoder(z), X_torch)</span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Note below the least volume loss</span></span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>    vol_loss <span class="op">=</span> torch.exp(torch.log(z.std(<span class="dv">0</span>) <span class="op">+</span> η).mean())</span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> rec_loss <span class="op">+</span> λ <span class="op">*</span> vol_loss</span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>    loss.backward()</span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a>    opt.step()</span>
+<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-14"><a href="#cb46-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (i<span class="op">+</span><span class="dv">1</span>) <span class="op">%</span> <span class="dv">1000</span> <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb46-15"><a href="#cb46-15" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Print floats with 5 significant digits and fill epoch with leading spaces if under 4 digits</span></span>
+<span id="cb46-16"><a href="#cb46-16" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f'Epoch </span><span class="sc">{</span>i<span class="sc">:4}</span><span class="ss">: rec = </span><span class="sc">{</span>rec_loss<span class="sc">:.5g}</span><span class="ss">, vol = </span><span class="sc">{</span>vol_loss<span class="sc">:.5g}</span><span class="ss">'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch  999: rec = 0.015768, vol = 0.20888
-Epoch 1999: rec = 0.0093937, vol = 0.2092
-Epoch 2999: rec = 0.0075273, vol = 0.21866
-Epoch 3999: rec = 0.0061228, vol = 0.26539
-Epoch 4999: rec = 0.0049839, vol = 0.23421
-Epoch 5999: rec = 0.0042767, vol = 0.1931
-Epoch 6999: rec = 0.0035521, vol = 0.17556
-Epoch 7999: rec = 0.0034988, vol = 0.22726
-Epoch 8999: rec = 0.0025694, vol = 0.1861
-Epoch 9999: rec = 0.0028511, vol = 0.202
-Epoch 10999: rec = 0.0022147, vol = 0.17631
-Epoch 11999: rec = 0.0021955, vol = 0.17034
-Epoch 12999: rec = 0.0020662, vol = 0.19222
-Epoch 13999: rec = 0.0019016, vol = 0.20411
-Epoch 14999: rec = 0.0015431, vol = 0.15869
-Epoch 15999: rec = 0.0014341, vol = 0.18272
-Epoch 16999: rec = 0.0015622, vol = 0.18977
-Epoch 17999: rec = 0.0013786, vol = 0.17417
-Epoch 18999: rec = 0.0017483, vol = 0.15937
-Epoch 19999: rec = 0.0014537, vol = 0.20069</code></pre>
+<pre><code>Epoch  999: rec = 0.019993, vol = 0.25259
+Epoch 1999: rec = 0.012999, vol = 0.14682
+Epoch 2999: rec = 0.008948, vol = 0.16614
+Epoch 3999: rec = 0.0064253, vol = 0.1986
+Epoch 4999: rec = 0.0050592, vol = 0.18064
+Epoch 5999: rec = 0.004051, vol = 0.19895
+Epoch 6999: rec = 0.0032618, vol = 0.25393
+Epoch 7999: rec = 0.0031347, vol = 0.1629
+Epoch 8999: rec = 0.0025588, vol = 0.16762
+Epoch 9999: rec = 0.0021646, vol = 0.17437
+Epoch 10999: rec = 0.0020381, vol = 0.20021
+Epoch 11999: rec = 0.0016874, vol = 0.18912
+Epoch 12999: rec = 0.001661, vol = 0.17726
+Epoch 13999: rec = 0.001643, vol = 0.16763
+Epoch 14999: rec = 0.001322, vol = 0.17991
+Epoch 15999: rec = 0.001266, vol = 0.1733
+Epoch 16999: rec = 0.0011751, vol = 0.17318
+Epoch 17999: rec = 0.00116, vol = 0.18069
+Epoch 18999: rec = 0.001134, vol = 0.22345
+Epoch 19999: rec = 0.0010831, vol = 0.18435</code></pre>
 </div>
 </div>
-<div id="851546c4" class="cell" data-execution_count="42">
+<div id="851546c4" class="cell" data-execution_count="41">
 <details class="code-fold">
 <summary>Show Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">10</span>))</span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> fig.add_subplot(projection<span class="op">=</span><span class="st">'3d'</span>)</span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>X_P <span class="op">=</span> decoder(encoder(X_torch)).detach().numpy()</span>
-<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="co">#X_P = decoded.detach().numpy()</span></span>
-<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>ax.scatter(X[:,<span class="dv">0</span>], X[:,<span class="dv">1</span>], X[:,<span class="dv">2</span>],alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
-<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>ax.scatter(X_P[:,<span class="dv">0</span>], X_P[:,<span class="dv">1</span>], X_P[:,<span class="dv">2</span>])</span>
-<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'$X_0$'</span>)</span>
-<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'$X_1$'</span>)</span>
-<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>ax.set_zlabel(<span class="st">'$X_2$'</span>)</span>
-<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a>ax.elev<span class="op">=</span><span class="dv">25</span></span>
-<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a>ax.azim<span class="op">=</span><span class="dv">10</span></span>
-<span id="cb50-13"><a href="#cb50-13" aria-hidden="true" tabindex="-1"></a>plt.legend([<span class="st">'Original Data'</span>,<span class="st">'Reconstructed Data'</span>])</span>
-<span id="cb50-14"><a href="#cb50-14" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"AE Reconstruction"</span>)</span>
-<span id="cb50-15"><a href="#cb50-15" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">10</span>))</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> fig.add_subplot(projection<span class="op">=</span><span class="st">'3d'</span>)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>encoder.<span class="bu">eval</span>()</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>decoder.<span class="bu">eval</span>()</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>    X_P <span class="op">=</span> decoder(encoder(X_torch)).numpy()</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a><span class="co">#X_P = decoded.detach().numpy()</span></span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>ax.scatter(X[:,<span class="dv">0</span>], X[:,<span class="dv">1</span>], X[:,<span class="dv">2</span>],alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>ax.scatter(X_P[:,<span class="dv">0</span>], X_P[:,<span class="dv">1</span>], X_P[:,<span class="dv">2</span>])</span>
+<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'$X_0$'</span>)</span>
+<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'$X_1$'</span>)</span>
+<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a>ax.set_zlabel(<span class="st">'$X_2$'</span>)</span>
+<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a>ax.elev<span class="op">=</span><span class="dv">25</span></span>
+<span id="cb48-15"><a href="#cb48-15" aria-hidden="true" tabindex="-1"></a>ax.azim<span class="op">=</span><span class="dv">10</span></span>
+<span id="cb48-16"><a href="#cb48-16" aria-hidden="true" tabindex="-1"></a>plt.legend([<span class="st">'Original Data'</span>,<span class="st">'Reconstructed Data'</span>])</span>
+<span id="cb48-17"><a href="#cb48-17" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Least-volume AE reconstruction"</span>)</span>
+<span id="cb48-18"><a href="#cb48-18" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -1563,33 +1587,33 @@ Epoch 19999: rec = 0.0014537, vol = 0.20069</code></pre>
 </div>
 </div>
 </div>
-<div id="b9a56c84" class="cell" data-execution_count="43">
+<div id="b9a56c84" class="cell" data-execution_count="42">
 <details class="code-fold">
 <summary>Show Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>encoder.<span class="bu">eval</span>()</span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>decoder.<span class="bu">eval</span>()</span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
-<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>    z <span class="op">=</span> encoder(X_torch)</span>
-<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>idx <span class="op">=</span> z.std(<span class="dv">0</span>).argsort(descending<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>plt.scatter(z[:, idx[<span class="dv">0</span>]].cpu().detach().numpy(), z[:, idx[<span class="dv">1</span>]].cpu().detach().numpy(), s<span class="op">=</span><span class="dv">10</span>)</span>
-<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>plt.gca().set_aspect(<span class="st">'equal'</span>)</span>
-<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'$z_0$'</span>)</span>
-<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'$z_1$'</span>)</span>
-<span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb51-13"><a href="#cb51-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-14"><a href="#cb51-14" aria-hidden="true" tabindex="-1"></a>plt.scatter(z[:, idx[<span class="dv">0</span>]].cpu().detach().numpy(), z[:, idx[<span class="dv">2</span>]].cpu().detach().numpy(),s<span class="op">=</span><span class="dv">10</span>)</span>
-<span id="cb51-15"><a href="#cb51-15" aria-hidden="true" tabindex="-1"></a>plt.gca().set_aspect(<span class="st">'equal'</span>)</span>
-<span id="cb51-16"><a href="#cb51-16" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'$z_0$'</span>)</span>
-<span id="cb51-17"><a href="#cb51-17" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'$z_2$'</span>)</span>
-<span id="cb51-18"><a href="#cb51-18" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb51-19"><a href="#cb51-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-20"><a href="#cb51-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the latent STDs by magnitude in the sorted order:</span></span>
-<span id="cb51-21"><a href="#cb51-21" aria-hidden="true" tabindex="-1"></a>plt.figure()</span>
-<span id="cb51-22"><a href="#cb51-22" aria-hidden="true" tabindex="-1"></a>plt.bar(np.arange(z.std(<span class="dv">0</span>).size(<span class="op">-</span><span class="dv">1</span>)), z.std(<span class="dv">0</span>)[idx])</span>
-<span id="cb51-23"><a href="#cb51-23" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'latent STDs (autoencoder)'</span>)</span>
-<span id="cb51-24"><a href="#cb51-24" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>encoder.<span class="bu">eval</span>()</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>decoder.<span class="bu">eval</span>()</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>    z <span class="op">=</span> encoder(X_torch)</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>idx <span class="op">=</span> z.std(<span class="dv">0</span>).argsort(descending<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>plt.scatter(z[:, idx[<span class="dv">0</span>]].cpu().detach().numpy(), z[:, idx[<span class="dv">1</span>]].cpu().detach().numpy(), s<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>plt.gca().set_aspect(<span class="st">'equal'</span>)</span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'$z_0$'</span>)</span>
+<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'$z_1$'</span>)</span>
+<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-14"><a href="#cb49-14" aria-hidden="true" tabindex="-1"></a>plt.scatter(z[:, idx[<span class="dv">0</span>]].cpu().detach().numpy(), z[:, idx[<span class="dv">2</span>]].cpu().detach().numpy(),s<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb49-15"><a href="#cb49-15" aria-hidden="true" tabindex="-1"></a>plt.gca().set_aspect(<span class="st">'equal'</span>)</span>
+<span id="cb49-16"><a href="#cb49-16" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'$z_0$'</span>)</span>
+<span id="cb49-17"><a href="#cb49-17" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'$z_2$'</span>)</span>
+<span id="cb49-18"><a href="#cb49-18" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb49-19"><a href="#cb49-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-20"><a href="#cb49-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the latent STDs by magnitude in the sorted order:</span></span>
+<span id="cb49-21"><a href="#cb49-21" aria-hidden="true" tabindex="-1"></a>plt.figure()</span>
+<span id="cb49-22"><a href="#cb49-22" aria-hidden="true" tabindex="-1"></a>plt.bar(np.arange(z.std(<span class="dv">0</span>).size(<span class="op">-</span><span class="dv">1</span>)), z.std(<span class="dv">0</span>)[idx])</span>
+<span id="cb49-23"><a href="#cb49-23" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'latent STDs (least-volume autoencoder)'</span>)</span>
+<span id="cb49-24"><a href="#cb49-24" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -1613,16 +1637,17 @@ Epoch 19999: rec = 0.0014537, vol = 0.20069</code></pre>
 </div>
 </div>
 </div>
+<p>Compare this bar chart with the one for the plain autoencoder above. The plain autoencoder spread the curve over all three latent dimensions (standard deviations of about 2.0, 1.5 and 1.1), while the least-volume autoencoder keeps far fewer: in this run, one dimension carries almost everything (a standard deviation of about 31) and the other two have collapsed to about 0.005 and 0.001. Do not read too much into the exact count, though. With <span class="math inline">\(\lambda = 0.01\)</span> it is not guaranteed; with other random seeds the same code keeps two active dimensions instead of one.</p>
 <p>Plotting the latent code covariances:</p>
-<div id="b940839f" class="cell" data-execution_count="44">
+<div id="b940839f" class="cell" data-execution_count="43">
 <details class="code-fold">
 <summary>Show Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>cov <span class="op">=</span> z.T[idx].cov().detach().cpu().numpy()</span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>plt.matshow(cov, cmap<span class="op">=</span><span class="st">'cool'</span>)</span>
-<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i, j), var <span class="kw">in</span> np.ndenumerate(cov):</span>
-<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>    plt.gca().text(j, i, <span class="st">'</span><span class="sc">{:.2e}</span><span class="st">'</span>.<span class="bu">format</span>(var), ha<span class="op">=</span><span class="st">'center'</span>, va<span class="op">=</span><span class="st">'center'</span>)</span>
-<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Latent Covariance Matrix'</span>)</span>
-<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>cov <span class="op">=</span> z.T[idx].cov().detach().cpu().numpy()</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>plt.matshow(cov, cmap<span class="op">=</span><span class="st">'cool'</span>)</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i, j), var <span class="kw">in</span> np.ndenumerate(cov):</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>    plt.gca().text(j, i, <span class="st">'</span><span class="sc">{:.2e}</span><span class="st">'</span>.<span class="bu">format</span>(var), ha<span class="op">=</span><span class="st">'center'</span>, va<span class="op">=</span><span class="st">'center'</span>)</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Latent Covariance Matrix'</span>)</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -1632,40 +1657,36 @@ Epoch 19999: rec = 0.0014537, vol = 0.20069</code></pre>
 </div>
 </div>
 </div>
-<div id="84d46ee6" class="cell" data-execution_count="45">
+<div id="84d46ee6" class="cell" data-execution_count="44">
 <details class="code-fold">
 <summary>Show Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(z.cpu().detach().numpy(), columns<span class="op">=</span>[<span class="ss">f'z</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">'</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(z.shape[<span class="dv">1</span>])])</span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>plt.figure()</span>
-<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>sns.pairplot(df)</span>
-<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>plt.suptitle(<span class="st">'Latent Space Pairplot'</span>, y<span class="op">=</span><span class="fl">1.02</span>)</span>
-<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(z.cpu().detach().numpy(), columns<span class="op">=</span>[<span class="ss">f'z</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">'</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(z.shape[<span class="dv">1</span>])])</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>sns.pairplot(df)</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>plt.suptitle(<span class="st">'Latent Space Pairplot'</span>, y<span class="op">=</span><span class="fl">1.02</span>)</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-display">
-<pre><code>&lt;Figure size 640x480 with 0 Axes&gt;</code></pre>
-</div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="review_neural_networks_files/figure-html/cell-45-output-2.png" class="img-fluid figure-img"></p>
+<p><img src="review_neural_networks_files/figure-html/cell-45-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Let’s check again the reconstruction errors:</p>
-<div id="1137be39" class="cell" data-execution_count="46">
+<div id="1137be39" class="cell" data-execution_count="45">
 <details class="code-fold">
 <summary>Show Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>X_ <span class="op">=</span> decoder(z).detach()</span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(X_torch.size(<span class="op">-</span><span class="dv">1</span>)):</span>
-<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>    plt.figure(figsize<span class="op">=</span>(<span class="dv">3</span>,<span class="dv">3</span>))</span>
-<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>    plt.scatter(X[:, i], X_[:, i], s<span class="op">=</span><span class="dv">3</span>)</span>
-<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>    plt.gca().set_aspect(<span class="st">'equal'</span>)</span>
-<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(<span class="st">'groundtruth'</span>)</span>
-<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a>    plt.ylabel(<span class="st">'reconstruction'</span>)</span>
-<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="st">'$x_</span><span class="sc">{}</span><span class="st">$'</span>.<span class="bu">format</span>(i))</span>
-<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a>    plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>X_ <span class="op">=</span> decoder(z).detach()</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(X_torch.size(<span class="op">-</span><span class="dv">1</span>)):</span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>    plt.figure(figsize<span class="op">=</span>(<span class="dv">3</span>,<span class="dv">3</span>))</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>    plt.scatter(X[:, i], X_[:, i], s<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>    plt.gca().set_aspect(<span class="st">'equal'</span>)</span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(<span class="st">'groundtruth'</span>)</span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>    plt.ylabel(<span class="st">'reconstruction'</span>)</span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="st">'$x_</span><span class="sc">{}</span><span class="st">$'</span>.<span class="bu">format</span>(i))</span>
+<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a>    plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -1685,6 +1706,298 @@ Epoch 19999: rec = 0.0014537, vol = 0.20069</code></pre>
 <div>
 <figure class="figure">
 <p><img src="review_neural_networks_files/figure-html/cell-46-output-3.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="exercises" class="level2" data-number="9.5">
+<h2 data-number="9.5" class="anchored" data-anchor-id="exercises"><span class="header-section-number">9.5</span> Exercises</h2>
+<p>The exercises reuse the chapter’s data, networks and training loops, so run the chapter’s cells first. Rough time estimates are in the titles.</p>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Exercise 1 (~10 min): Count the parameters
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Each <code>nn.Linear(n_in, n_out)</code> layer holds a weight matrix with <code>n_out</code> rows and <code>n_in</code> columns and a bias vector with <code>n_out</code> entries. Counting them by hand is a quick check that you know what a network definition actually builds. You can check your counts afterwards with <code>sum(p.numel() for p in model.parameters())</code>.</p>
+<ul>
+<li><ol type="a">
+<li>How many trainable parameters does the chapter’s first autoencoder, <code>AutoEncoder(D_orig, num_latent, num_hidden)</code> with <code>D_orig = 3</code>, <code>num_latent = 3</code> and <code>num_hidden = 5</code>, have? Count layer by layer through the <code>Encoder</code> and <code>Decoder</code> classes. Why do the <code>nn.ReLU()</code> layers add nothing to the count?</li>
+</ol></li>
+<li><ol start="2" type="a">
+<li>How many trainable parameters does the least-volume encoder, <code>MLP(ambient_dim, ambient_dim, [width] * 4)</code> with <code>ambient_dim = 3</code> and <code>width = 48</code>, have? Its layers are built in a loop by <code>MLP._build_model</code>. Which layers hold most of the parameters, and why?</li>
+</ol></li>
+</ul>
+</div>
+</div>
+<div id="a628383a" class="cell" data-execution_count="46">
+<details class="code-fold">
+<summary>Show Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># You can use this code cell for this exercise, if you like.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<hr>
+<p>Exercise 2 changes the loss function. Run the cell below. It copies the training targets <code>y_train</code> into <code>y_train_faulty</code> and replaces two readings with the value 3, as a faulty sensor might. It also defines <code>make_mlp(seed)</code>, which builds the chapter’s deep network from the list-expansion cell (four hidden layers of 7 ReLU units) with fresh random weights. The default seed is the chapter’s <code>SEED</code>.</p>
+<div id="5416a849" class="cell" data-execution_count="47">
+<details class="code-fold">
+<summary>Show Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Two faulty sensor readings: copy the training targets and corrupt two of them</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>faulty_points <span class="op">=</span> [<span class="dv">3</span>, <span class="dv">10</span>]  <span class="co"># the readings at x = 0.010 and x = -0.559</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>y_train_faulty <span class="op">=</span> y_train.copy()</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>y_train_faulty[faulty_points] <span class="op">=</span> <span class="fl">3.0</span></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> make_mlp(seed<span class="op">=</span>SEED, activation<span class="op">=</span>nn.ReLU, hidden_size<span class="op">=</span><span class="dv">7</span>, num_hidden_layers<span class="op">=</span><span class="dv">3</span>):</span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""The chapter's deep network (1 -&gt; 7 -&gt; 7 -&gt; 7 -&gt; 7 -&gt; 1) with fresh random weights."""</span></span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a>    torch.manual_seed(seed)</span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a>    layers <span class="op">=</span> [nn.Linear(<span class="dv">1</span>, hidden_size), activation()]</span>
+<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(num_hidden_layers):</span>
+<span id="cb54-12"><a href="#cb54-12" aria-hidden="true" tabindex="-1"></a>        layers.append(nn.Linear(hidden_size, hidden_size))</span>
+<span id="cb54-13"><a href="#cb54-13" aria-hidden="true" tabindex="-1"></a>        layers.append(activation())</span>
+<span id="cb54-14"><a href="#cb54-14" aria-hidden="true" tabindex="-1"></a>    layers.append(nn.Linear(hidden_size, <span class="dv">1</span>))</span>
+<span id="cb54-15"><a href="#cb54-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> nn.Sequential(<span class="op">*</span>layers)</span>
+<span id="cb54-16"><a href="#cb54-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-17"><a href="#cb54-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-18"><a href="#cb54-18" aria-hidden="true" tabindex="-1"></a>plt.figure()</span>
+<span id="cb54-19"><a href="#cb54-19" aria-hidden="true" tabindex="-1"></a>plt.scatter(X_train, y_train_faulty, c<span class="op">=</span><span class="st">"tab:blue"</span>, s<span class="op">=</span><span class="dv">20</span>, label<span class="op">=</span><span class="st">"training data"</span>)</span>
+<span id="cb54-20"><a href="#cb54-20" aria-hidden="true" tabindex="-1"></a>plt.scatter(X_train[faulty_points], y_train_faulty[faulty_points], c<span class="op">=</span><span class="st">"tab:red"</span>, s<span class="op">=</span><span class="dv">60</span>, label<span class="op">=</span><span class="st">"faulty readings"</span>)</span>
+<span id="cb54-21"><a href="#cb54-21" aria-hidden="true" tabindex="-1"></a>plt.plot(X_plot, true_func(X_plot), <span class="st">"k--"</span>, lw<span class="op">=</span><span class="dv">1</span>, label<span class="op">=</span><span class="st">"true function"</span>)</span>
+<span id="cb54-22"><a href="#cb54-22" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"x"</span>)</span>
+<span id="cb54-23"><a href="#cb54-23" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"y"</span>)</span>
+<span id="cb54-24"><a href="#cb54-24" aria-hidden="true" tabindex="-1"></a>plt.legend(loc<span class="op">=</span><span class="st">"center left"</span>, bbox_to_anchor<span class="op">=</span>(<span class="fl">1.0</span>, <span class="fl">0.5</span>))</span>
+<span id="cb54-25"><a href="#cb54-25" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="review_neural_networks_files/figure-html/cell-48-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Exercise 2 (~15 min): Change the loss
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The chapter trains every network with the mean squared error, <code>nn.MSELoss()</code>. Here you change that choice and see what it does to the fit.</p>
+<ul>
+<li><ol type="a">
+<li>Copy the chapter’s training loop and train two networks from <code>make_mlp()</code> on <code>y_train_faulty</code>: one with <code>nn.MSELoss()</code> and one with the mean absolute error, <code>nn.L1Loss()</code>. Plot both fits together with the data. How do the two fits differ near the faulty readings and away from them? Why is the squared loss pulled so much more toward the faulty readings?</li>
+</ol></li>
+<li><ol start="2" type="a">
+<li>(Optional) Suppose you know that the response is symmetric, <span class="math inline">\(f(x) = f(-x)\)</span>. Go back to the clean <code>y_train</code> and add the term <code>torch.mean((model(x_extra) - model(-x_extra))**2)</code> to the loss, where <code>x_extra</code> is a tensor of extra inputs that you choose, for example <code>torch.linspace(0, 1.5, 31).reshape(-1, 1)</code>. These inputs need no measured outputs. Compare the fits with and without this term, especially outside <span class="math inline">\([-1, 1]\)</span> and for <span class="math inline">\(x &gt; 0.25\)</span>, where the training data are sparse. Why can a term that uses no measured outputs improve the fit?</li>
+</ol></li>
+</ul>
+</div>
+</div>
+<div id="c9595906" class="cell" data-execution_count="48">
+<details class="code-fold">
+<summary>Show Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># You can use this code cell for this exercise, if you like.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<hr>
+<p>Run the cell below to produce the figure for Exercise 3. It trains the chapter’s deep network three times, each time with a different activation function, using the chapter’s settings (Adam with learning rate 0.05, 5000 epochs, mean squared error). This takes about a minute. The shaded bands mark <span class="math inline">\(|x| &gt; 1\)</span>, where there are no training data.</p>
+<div id="3243ca70" class="cell" data-execution_count="49">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="review_neural_networks_files/figure-html/cell-50-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Exercise 3 (~10 min): Match the activation
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Fits A, B and C above were trained with ReLU, Tanh and ELU activations, in some order.</p>
+<ul>
+<li><ol type="a">
+<li>Which activation produced which fit, and why? Use the chapter’s gallery of activation functions and say what gave each one away.</li>
+</ol></li>
+<li><ol start="2" type="a">
+<li>Why does the shape of the activation function show up most clearly outside the training data?</li>
+</ol></li>
+<li><ol start="3" type="a">
+<li>Check one of your answers: set <code>activation</code> in the chapter’s list-expansion cell to the activation you picked for one of the fits, re-run that cell and the training and plotting cells below it, and compare. Which features of the fit come back, and why might the details differ?</li>
+</ol></li>
+<li><ol start="4" type="a">
+<li>(Optional) Keep <code>activation = nn.ReLU</code> and re-run the list-expansion cell and the training cells with a few other seeds, for example <code>torch.manual_seed(0)</code> up to <code>torch.manual_seed(9)</code> in place of <code>torch.manual_seed(SEED)</code>. For some seeds the fit is a flat line. Why does this happen with ReLU?</li>
+</ol></li>
+</ul>
+</div>
+</div>
+<div id="7101f068" class="cell" data-execution_count="50">
+<details class="code-fold">
+<summary>Show Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># You can use this code cell for this exercise, if you like.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<hr>
+<p>Exercise 4 compares the chapter’s volume penalty with two simpler ones. The first cell below sets up the penalties for part (a): the chapter’s geometric mean is written for you, and <code>naive_volume</code> and <code>mean_std</code> are left for you to fill in.</p>
+<p>The second cell plots precomputed training runs for parts (b) and (c). Each run trains the chapter’s least-volume autoencoder on the chapter’s curve for 5000 steps without any penalty, so that it starts from a good three-dimensional code, and then for 10000 more steps with one of the penalties at <span class="math inline">\(\lambda = 0.01\)</span> (the dotted line marks the switch). The top row shows the sorted latent standard deviations. The middle row shows how hard the penalty pushes on each of them, <span class="math inline">\(|\lambda\, \partial P / \partial \sigma_i|\)</span>, the gradient of the weighted penalty <span class="math inline">\(\lambda P\)</span> with respect to each standard deviation <span class="math inline">\(\sigma_i\)</span>. The bottom row shows the reconstruction error, as a running median over 500 steps, with the run that never gets a penalty in gray. The figure shows seed 0; the data file also holds seeds 1 and 2, which you can see by changing <code>seed</code> in the cell.</p>
+<div id="b9c5789f" class="cell" data-execution_count="51">
+<details class="code-fold">
+<summary>Show Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> geometric_volume(std, eta<span class="op">=</span><span class="fl">0.01</span>):</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""The chapter's least-volume penalty: the geometric mean of the (shifted) standard deviations."""</span></span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> torch.exp(torch.log(std <span class="op">+</span> eta).mean())</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> naive_volume(std):</span>
+<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""The product of the standard deviations (write this one)."""</span></span>
+<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">pass</span></span>
+<span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-10"><a href="#cb57-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-11"><a href="#cb57-11" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> mean_std(std):</span>
+<span id="cb57-12"><a href="#cb57-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""The arithmetic mean of the standard deviations (write this one)."""</span></span>
+<span id="cb57-13"><a href="#cb57-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">pass</span></span>
+<span id="cb57-14"><a href="#cb57-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-15"><a href="#cb57-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-16"><a href="#cb57-16" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> compare_penalties(penalties, std_values<span class="op">=</span>((<span class="fl">2.0</span>, <span class="fl">1.5</span>, <span class="fl">0.01</span>), (<span class="fl">2.0</span>, <span class="fl">1.5</span>, <span class="fl">0.0</span>))):</span>
+<span id="cb57-17"><a href="#cb57-17" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Print each penalty's value and its gradient with respect to each standard deviation."""</span></span>
+<span id="cb57-18"><a href="#cb57-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> values <span class="kw">in</span> std_values:</span>
+<span id="cb57-19"><a href="#cb57-19" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"std = </span><span class="sc">{</span>values<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb57-20"><a href="#cb57-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> penalty <span class="kw">in</span> penalties:</span>
+<span id="cb57-21"><a href="#cb57-21" aria-hidden="true" tabindex="-1"></a>            std <span class="op">=</span> torch.tensor(values, requires_grad<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb57-22"><a href="#cb57-22" aria-hidden="true" tabindex="-1"></a>            value <span class="op">=</span> penalty(std)</span>
+<span id="cb57-23"><a href="#cb57-23" aria-hidden="true" tabindex="-1"></a>            value.backward()</span>
+<span id="cb57-24"><a href="#cb57-24" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>penalty<span class="sc">.</span><span class="va">__name__</span><span class="sc">:&gt;16}</span><span class="ss">: value </span><span class="sc">{</span>value<span class="sc">.</span>item()<span class="sc">:.4f}</span><span class="ss">, gradient </span><span class="sc">{</span>np<span class="sc">.</span><span class="bu">round</span>(std.grad.numpy(), <span class="dv">4</span>)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb57-25"><a href="#cb57-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-26"><a href="#cb57-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-27"><a href="#cb57-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Add naive_volume and mean_std to this list once you have written them</span></span>
+<span id="cb57-28"><a href="#cb57-28" aria-hidden="true" tabindex="-1"></a>compare_penalties([geometric_volume])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>std = (2.0, 1.5, 0.01)
+  geometric_volume: value 0.3930, gradient [0.0652 0.0868 6.5501]
+std = (2.0, 1.5, 0.0)
+  geometric_volume: value 0.3119, gradient [ 0.0517  0.0689 10.3977]</code></pre>
+</div>
+</div>
+<div id="ba1bf723" class="cell" data-execution_count="52">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="review_neural_networks_files/figure-html/cell-53-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Exercise 4 (~15 min): Three ways to penalize volume
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The chapter penalizes the geometric mean of the latent standard deviations, <span class="math inline">\(\left(\prod_{i=1}^{d} (\sigma_i + \eta)\right)^{1/d}\)</span>, computed as <code>torch.exp(torch.log(z.std(0) + η).mean())</code>. Two simpler choices come to mind: the volume itself, <span class="math inline">\(\prod_{i=1}^{d} \sigma_i\)</span>, and the arithmetic mean, <span class="math inline">\(\frac{1}{d}\sum_{i=1}^{d} \sigma_i\)</span>.</p>
+<ul>
+<li><ol type="a">
+<li>Write <code>naive_volume(std)</code> and <code>mean_std(std)</code> in the first cell above and add them to the <code>compare_penalties</code> call. For <span class="math inline">\(\sigma = (2.0, 1.5, 0.01)\)</span> and <span class="math inline">\(\sigma = (2.0, 1.5, 0)\)</span> with <span class="math inline">\(\eta = 0.01\)</span>, which penalty pushes hardest on which dimension? Why does the product stop pushing on the first two dimensions once the third is zero?</li>
+</ol></li>
+<li><ol start="2" type="a">
+<li>In the figure, which penalties remove the third dimension? Compare the middle row with your numbers from (a): why does the push on the two surviving dimensions drop by several orders of magnitude under the product, but not under the other two penalties?</li>
+</ol></li>
+<li><ol start="3" type="a">
+<li>Why is the reconstruction error with the arithmetic mean several times larger than with the other two penalties? Why is the way the geometric mean spreads its push over the dimensions what we want from a volume penalty?</li>
+</ol></li>
+</ul>
+</div>
+</div>
+<hr>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Exercise 5 (~10 min): Count the linear pieces
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A network with one hidden layer of <span class="math inline">\(h\)</span> ReLU units computes <span class="math inline">\(f(x) = b + \sum_{j=1}^{h} v_j \max(0,\, w_j x + c_j)\)</span>. The cell below fits such networks to the chapter’s training data for the widths in <code>hidden_units</code>, with three seeds each (Adam with learning rate 0.02, 2500 epochs), and plots the fits over <span class="math inline">\([-1.5, 1.5]\)</span>.</p>
+<ul>
+<li><ol type="a">
+<li>Before you run anything: what is the largest number of linear pieces that a network with <span class="math inline">\(h\)</span> units can produce? Why?</li>
+</ol></li>
+<li><ol start="2" type="a">
+<li>Run the cell as it is, with <code>hidden_units = [2]</code>. How many linear pieces does each fit have? Why can none of them follow the W shape of the data?</li>
+</ol></li>
+<li><ol start="3" type="a">
+<li>Change the list to <code>[2, 4, 6, 8, 16]</code> and re-run the cell (about a minute). How many units does the network need before it follows the W in all three seeds? The W needs only four linear pieces, so why does the network need more units than that? Exercise 3(d) may help.</li>
+</ol></li>
+</ul>
+</div>
+</div>
+<div id="6754ced0" class="cell" data-execution_count="53">
+<details class="code-fold">
+<summary>Show Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fit_relu_layer(h, seed, epochs<span class="op">=</span><span class="dv">2500</span>, learning_rate<span class="op">=</span><span class="fl">0.02</span>):</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Fit a network with one hidden layer of h ReLU units to the chapter's training data."""</span></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>    torch.manual_seed(seed)</span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>    net <span class="op">=</span> nn.Sequential(nn.Linear(<span class="dv">1</span>, h), nn.ReLU(), nn.Linear(h, <span class="dv">1</span>))</span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>    optimizer <span class="op">=</span> torch.optim.Adam(net.parameters(), lr<span class="op">=</span>learning_rate)</span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a>    inputs, targets <span class="op">=</span> torch.from_numpy(X_train), torch.from_numpy(y_train)</span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(epochs):</span>
+<span id="cb59-8"><a href="#cb59-8" aria-hidden="true" tabindex="-1"></a>        loss <span class="op">=</span> nn.functional.mse_loss(net(inputs), targets)</span>
+<span id="cb59-9"><a href="#cb59-9" aria-hidden="true" tabindex="-1"></a>        optimizer.zero_grad()</span>
+<span id="cb59-10"><a href="#cb59-10" aria-hidden="true" tabindex="-1"></a>        loss.backward()</span>
+<span id="cb59-11"><a href="#cb59-11" aria-hidden="true" tabindex="-1"></a>        optimizer.step()</span>
+<span id="cb59-12"><a href="#cb59-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> net</span>
+<span id="cb59-13"><a href="#cb59-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-14"><a href="#cb59-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-15"><a href="#cb59-15" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_relu_fits(hidden_units, seeds<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">6</span>, <span class="dv">9</span>)):</span>
+<span id="cb59-16"><a href="#cb59-16" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""One column per width h, one row per seed."""</span></span>
+<span id="cb59-17"><a href="#cb59-17" aria-hidden="true" tabindex="-1"></a>    x_fine <span class="op">=</span> np.linspace(<span class="op">-</span><span class="fl">1.5</span>, <span class="fl">1.5</span>, <span class="dv">601</span>).reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>).astype(np.float32)</span>
+<span id="cb59-18"><a href="#cb59-18" aria-hidden="true" tabindex="-1"></a>    fig, axes <span class="op">=</span> plt.subplots(<span class="bu">len</span>(seeds), <span class="bu">len</span>(hidden_units), figsize<span class="op">=</span>(<span class="fl">3.2</span> <span class="op">*</span> <span class="bu">len</span>(hidden_units) <span class="op">+</span> <span class="dv">1</span>, <span class="fl">2.6</span> <span class="op">*</span> <span class="bu">len</span>(seeds)),</span>
+<span id="cb59-19"><a href="#cb59-19" aria-hidden="true" tabindex="-1"></a>                             sharex<span class="op">=</span><span class="va">True</span>, sharey<span class="op">=</span><span class="va">True</span>, squeeze<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb59-20"><a href="#cb59-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> col, h <span class="kw">in</span> <span class="bu">enumerate</span>(hidden_units):</span>
+<span id="cb59-21"><a href="#cb59-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> row, seed <span class="kw">in</span> <span class="bu">enumerate</span>(seeds):</span>
+<span id="cb59-22"><a href="#cb59-22" aria-hidden="true" tabindex="-1"></a>            net <span class="op">=</span> fit_relu_layer(h, seed)</span>
+<span id="cb59-23"><a href="#cb59-23" aria-hidden="true" tabindex="-1"></a>            <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb59-24"><a href="#cb59-24" aria-hidden="true" tabindex="-1"></a>                prediction <span class="op">=</span> net(torch.from_numpy(x_fine)).numpy()</span>
+<span id="cb59-25"><a href="#cb59-25" aria-hidden="true" tabindex="-1"></a>            ax <span class="op">=</span> axes[row, col]</span>
+<span id="cb59-26"><a href="#cb59-26" aria-hidden="true" tabindex="-1"></a>            ax.plot(x_fine, true_func(x_fine), <span class="st">"k--"</span>, lw<span class="op">=</span><span class="fl">0.8</span>)</span>
+<span id="cb59-27"><a href="#cb59-27" aria-hidden="true" tabindex="-1"></a>            ax.plot(x_fine, prediction, <span class="st">"tab:blue"</span>, lw<span class="op">=</span><span class="fl">1.5</span>)</span>
+<span id="cb59-28"><a href="#cb59-28" aria-hidden="true" tabindex="-1"></a>            ax.scatter(X_train, y_train, c<span class="op">=</span><span class="st">"tab:red"</span>, s<span class="op">=</span><span class="dv">8</span>, zorder<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb59-29"><a href="#cb59-29" aria-hidden="true" tabindex="-1"></a>            ax.set_ylim(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>)</span>
+<span id="cb59-30"><a href="#cb59-30" aria-hidden="true" tabindex="-1"></a>            ax.set_title(<span class="ss">f"h = </span><span class="sc">{</span>h<span class="sc">}</span><span class="ss">, seed </span><span class="sc">{</span>seed<span class="sc">}</span><span class="ss">"</span>, fontsize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb59-31"><a href="#cb59-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> ax <span class="kw">in</span> axes[<span class="op">-</span><span class="dv">1</span>]:</span>
+<span id="cb59-32"><a href="#cb59-32" aria-hidden="true" tabindex="-1"></a>        ax.set_xlabel(<span class="st">"x"</span>)</span>
+<span id="cb59-33"><a href="#cb59-33" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb59-34"><a href="#cb59-34" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb59-35"><a href="#cb59-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-36"><a href="#cb59-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-37"><a href="#cb59-37" aria-hidden="true" tabindex="-1"></a><span class="co"># For part (c), change this to [2, 4, 6, 8, 16]</span></span>
+<span id="cb59-38"><a href="#cb59-38" aria-hidden="true" tabindex="-1"></a>hidden_units <span class="op">=</span> [<span class="dv">2</span>]</span>
+<span id="cb59-39"><a href="#cb59-39" aria-hidden="true" tabindex="-1"></a>plot_relu_fits(hidden_units)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="review_neural_networks_files/figure-html/cell-54-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>

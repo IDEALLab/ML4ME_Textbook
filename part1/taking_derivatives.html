@@ -63,7 +63,26 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -145,7 +164,7 @@ window.Quarto = {
 
 </head>
 
-<body class="nav-sidebar floating quarto-light">
+<body class="nav-sidebar floating slimcontent quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -432,7 +451,7 @@ window.Quarto = {
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../part1/index.html">Foundational Skills</a></li><li class="breadcrumb-item"><a href="../part1/taking_derivatives.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Taking Derivatives with Automatic Differentiation</span></a></li></ol></nav>
 <div class="quarto-title">
@@ -868,7 +887,7 @@ Difference to true gradient:
 </div>
 </section>
 </section>
-<section id="pytorch-autograd-example-with-optimization" class="level2" data-number="5.3">
+<section id="pytorch-autograd-example-with-optimization" class="level2 page-columns page-full" data-number="5.3">
 <h2 data-number="5.3" class="anchored" data-anchor-id="pytorch-autograd-example-with-optimization"><span class="header-section-number">5.3</span> PyTorch Autograd Example with Optimization</h2>
 <p>This example shows how to use AD and PyTorch to perform gradient based optimization on a simple test function</p>
 <div id="9331d0cb" class="cell" data-execution_count="21">
@@ -923,7 +942,7 @@ Difference to true gradient:
 <pre><code>tensor([-16.5000,  19.5000])</code></pre>
 </div>
 </div>
-<section id="using-automatic-differentiation-for-optimization" class="level3" data-number="5.3.1">
+<section id="using-automatic-differentiation-for-optimization" class="level3 page-columns page-full" data-number="5.3.1">
 <h3 data-number="5.3.1" class="anchored" data-anchor-id="using-automatic-differentiation-for-optimization"><span class="header-section-number">5.3.1</span> Using Automatic Differentiation for Optimization</h3>
 <p>Automatic Differentiation can now gives us an gradient, which a gradient-based optimizer can then use to perform gradient descent, as we covered in a previous chapter, where the main difference is now we do not have to compute the gradients manually. Recall from our introduction to gradient descent that <span class="math inline">\(w_{t+1} = w_t - \alpha\, \nabla J(w_t)\)</span>, and that we had covered the use of momentum to accelerate and stablize vanilla SGD. As a reminder, the gradient descent with momentum step looked like the following:</p>
 <p><span class="math display">\[
@@ -932,8 +951,10 @@ v_{t+1} &amp;= \beta\, v_t + \nabla_w J(w_t) \\
 w_{t+1} &amp;= w_t - \alpha\, v_{t+1}
 \end{aligned}
 \]</span></p>
-<p>We saw with normalization that having different dimensions or curvatures in the loss landscape could induce slow convergence behavior (even with momentum), and so more advanced versions of GD are used in practice, with one of the most widely used variants being the Adam Optimizer (<span class="citation" data-cites="kingma2015adam">(<a href="../references.html#ref-kingma2015adam" role="doc-biblioref"><strong>kingma2015adam?</strong></a>)</span>), which we’ll state below and then define how this differs from regular momentum. Importantly, the original Adam paper defined the momentum term with a different symbol (<span class="math inline">\(m_t\)</span> instead of <span class="math inline">\(v_t\)</span> which we used above, and re-purposes the symbol <span class="math inline">\(v_t\)</span> to scale coordiante dimensions):</p>
-<p><span class="math display">\[
+<p>We saw with normalization that having different dimensions or curvatures in the loss landscape could induce slow convergence behavior (even with momentum), and so more advanced versions of GD are used in practice, with one of the most widely used variants being the Adam Optimizer (<span class="citation" data-cites="kingma2015adam">Kingma and Ba (<a href="../references.html#ref-kingma2015adam" role="doc-biblioref">2015</a>)</span>), which we’ll state below and then define how this differs from regular momentum. Importantly, the original Adam paper defined the momentum term with a different symbol (<span class="math inline">\(m_t\)</span> instead of <span class="math inline">\(v_t\)</span> which we used above, and re-purposes the symbol <span class="math inline">\(v_t\)</span> to scale coordiante dimensions):</p>
+<div class="no-row-height column-margin column-container"><div id="ref-kingma2015adam" class="csl-entry" role="listitem">
+Kingma, Diederik P., and Jimmy Ba. 2015. <span>“Adam: A Method for Stochastic Optimization.”</span> <em>International Conference on Learning Representations (ICLR)</em>. <a href="https://arxiv.org/abs/1412.6980">https://arxiv.org/abs/1412.6980</a>.
+</div></div><p><span class="math display">\[
 \begin{aligned}
 m_t &amp;= \beta_1\, m_{t-1} + (1 - \beta_1)\, \nabla_w J(w_t), \qquad v_t = \beta_2\, v_{t-1} + (1 - \beta_2)\, \nabla_w J(w_t)^2, \\
 w_{t+1} &amp;= w_t - \alpha\, \frac{\hat{m}_t}{\sqrt{\hat{v}_t} + \epsilon}, \qquad \hat{m}_t = \frac{m_t}{1 - \beta_1^t}, \quad \hat{v}_t = \frac{v_t}{1 - \beta_2^t}.
@@ -1881,6 +1902,7 @@ delta = 0 K: float32: value nan, derivative nan; float64: value nan, derivative 
 <div id="38b8f873" class="cell" data-execution_count="51">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># You can use this code cell for this exercise, if you like.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+
 
 
 </section>
