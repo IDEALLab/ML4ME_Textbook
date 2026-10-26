@@ -4,3 +4,6 @@ The original pages at cs.stanford.edu/people/karpathy/convnetjs went offline in 
 Demo pages, styles and scripts come from github.com/karpathy/convnetjs (master).
 The compiled library demo/js/convnet.js is not in that repository, so it comes from the
 convnetjs 0.3.0 npm package. The Google Analytics snippet was removed from the pages.
+
+Local change: demo/js/convnet.js adds an ELU activation, written as activation:'elu'.
+It is not part of the original ConvNetJS library.
