@@ -1,5 +1,7 @@
 project:
   type: book
+  resources:
+    - part2/convnetjs/**
   #output-dir: docs
 
 book:
