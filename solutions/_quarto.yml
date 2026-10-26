@@ -21,6 +21,7 @@ book:
     - distribution_distance_solutions.ipynb
     # - introduction_to_inference_solutions.ipynb
     # - introduction_to_probabilistic_programming_solutions.ipynb
+    - review_neural_networks_solutions.ipynb
 
 bibliography: ../references.bib
 
