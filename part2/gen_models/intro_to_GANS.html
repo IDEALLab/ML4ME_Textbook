@@ -84,7 +84,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-fd0503e23dce65854c81c5baaade3bdf.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-fd33a4952e9ae2782db733e1f7710525.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -417,12 +417,13 @@ window.Quarto = {
   </ul></li>
   <li><a href="#a-simple-generative-adversarial-network-gan" id="toc-a-simple-generative-adversarial-network-gan" class="nav-link" data-scroll-target="#a-simple-generative-adversarial-network-gan"><span class="header-section-number">10.5</span> A Simple Generative Adversarial Network (GAN)</a></li>
   <li><a href="#basic-training-loop" id="toc-basic-training-loop" class="nav-link" data-scroll-target="#basic-training-loop"><span class="header-section-number">10.6</span> Basic Training Loop</a></li>
-  <li><a href="#conditional-generation-examples" id="toc-conditional-generation-examples" class="nav-link" data-scroll-target="#conditional-generation-examples"><span class="header-section-number">10.7</span> Conditional Generation Examples</a>
+  <li><a href="#what-the-discriminator-looks-like" id="toc-what-the-discriminator-looks-like" class="nav-link" data-scroll-target="#what-the-discriminator-looks-like"><span class="header-section-number">10.7</span> What the Discriminator Looks Like</a></li>
+  <li><a href="#conditional-generation-examples" id="toc-conditional-generation-examples" class="nav-link" data-scroll-target="#conditional-generation-examples"><span class="header-section-number">10.8</span> Conditional Generation Examples</a>
   <ul class="collapse">
-  <li><a href="#conditional-example-a-one-hot-mode-conditioning" id="toc-conditional-example-a-one-hot-mode-conditioning" class="nav-link" data-scroll-target="#conditional-example-a-one-hot-mode-conditioning"><span class="header-section-number">10.7.1</span> Conditional Example A — One-Hot Mode Conditioning</a></li>
-  <li><a href="#conditional-example-b-continuous-radius-conditioning" id="toc-conditional-example-b-continuous-radius-conditioning" class="nav-link" data-scroll-target="#conditional-example-b-continuous-radius-conditioning"><span class="header-section-number">10.7.2</span> Conditional Example B — Continuous Radius Conditioning</a></li>
+  <li><a href="#conditional-example-a-one-hot-mode-conditioning" id="toc-conditional-example-a-one-hot-mode-conditioning" class="nav-link" data-scroll-target="#conditional-example-a-one-hot-mode-conditioning"><span class="header-section-number">10.8.1</span> Conditional Example A — One-Hot Mode Conditioning</a></li>
+  <li><a href="#conditional-example-b-continuous-radius-conditioning" id="toc-conditional-example-b-continuous-radius-conditioning" class="nav-link" data-scroll-target="#conditional-example-b-continuous-radius-conditioning"><span class="header-section-number">10.8.2</span> Conditional Example B — Continuous Radius Conditioning</a></li>
   </ul></li>
-  <li><a href="#summary-and-next-steps" id="toc-summary-and-next-steps" class="nav-link" data-scroll-target="#summary-and-next-steps"><span class="header-section-number">10.8</span> Summary and Next Steps:</a></li>
+  <li><a href="#summary-and-next-steps" id="toc-summary-and-next-steps" class="nav-link" data-scroll-target="#summary-and-next-steps"><span class="header-section-number">10.9</span> Summary and Next Steps</a></li>
   </ul>
 </nav>
     </div>
@@ -461,6 +462,16 @@ window.Quarto = {
 
 
 <p>In this chapter, we will build geometric intuition for push-forward generative models, which are essentially trying to transport probability distributions from one space to another. We will start with simple linear maps to gain a sense of how they modify a simple 2D data space, then scale up to a small MLP GAN on a ring-of-Gaussians toy dataset. We will also talk about common metrics to evaluate generative models. Even though GANs may be comparatively simple compared to more advanced generative models that we will explore later, they will nevertheless be useful in building intuition for how push-forward generative models work.</p>
+<p><strong>Learning Objectives</strong></p>
+<p>By the end of this chapter, you should be able to:</p>
+<ol type="1">
+<li>Describe a generative model as a push-forward map from a latent distribution, and say which of the three operations (forward map, inverse map, density) a GAN actually does.</li>
+<li>Map the terms of the GAN objective to the discriminator and generator steps of the training loop.</li>
+<li>Explain how each network’s update depends on the other: the generator moves its samples up the discriminator’s logit in an attempt to fool the discriminator, and the discriminator reshapes its logit around the current samples in an attempt to classify them correctly.</li>
+<li>State the ideal end point of training (<span class="math inline">\(D = 1/2\)</span> everywhere, discriminator loss <span class="math inline">\(2 \ln 2\)</span>, generator loss <span class="math inline">\(\ln 2\)</span>) and compare a training run’s losses with it.</li>
+<li>Explain why a single summary statistic of the samples, such as the chapter’s variance-based diversity, cannot certify coverage or quality.</li>
+<li>Check conditional generated samples against the engineering requirement with a simulator and a constraint check.</li>
+</ol>
 <div id="9774db43" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Show Code</summary>
@@ -501,7 +512,7 @@ window.Quarto = {
 </div>
 <section id="what-are-generative-models-really-doing" class="level2" data-number="10.1">
 <h2 data-number="10.1" class="anchored" data-anchor-id="what-are-generative-models-really-doing"><span class="header-section-number">10.1</span> What are Generative Models really doing?</h2>
-<p>Fundamentally, generative models are really just functions that transform a probability distribution from one space to another – you can think of them as “distribution transformers” or, move intuitively, as moving probability mass around in space. As an analogy, consider that you are sitting in a sandbox with a smooth mound of sand in front of you – the 2D Gaussian that we will use below is not too far from this, actually. A generative model is kind of like your hands, which you can use to push the sand around, creating hills and valleys, and moving the sand from one place to another. In this way, we are essentially moving the probability mass (sand, in this analogy) from a simple distribution (the smooth mound of sand) to a more complex distribution (the hills and valleys that you create with your hands). Different models that we will explore later (e.g., VAEs, normalizing flows, diffusion models) have different ways of doing this, but the core goal is the same, and they essentially all try to do one or more of three operations:</p>
+<p>Fundamentally, generative models are really just functions that transform a probability distribution from one space to another – you can think of them as “distribution transformers” or, more intuitively, as moving probability mass around in space. As an analogy, consider that you are sitting in a sandbox with a smooth mound of sand in front of you – the 2D Gaussian that we will use below is not too far from this, actually. A generative model is kind of like your hands, which you can use to push the sand around, creating hills and valleys, and moving the sand from one place to another. In this way, we are essentially moving the probability mass (sand, in this analogy) from a simple distribution (the smooth mound of sand) to a more complex distribution (the hills and valleys that you create with your hands). Different models that we will explore later (e.g., VAEs, normalizing flows, diffusion models) have different ways of doing this, but the core goal is the same, and they essentially all try to do one or more of three operations:</p>
 <ul>
 <li><span class="math inline">\(f(z) \rightarrow x\)</span>: Mapping points from one space (typically called the <em>latent space</em>) to another (typically, the <em>data space</em>).</li>
 <li><span class="math inline">\(f^{-1}(x) \rightarrow z\)</span>: Mapping points from data space back to latent space.</li>
@@ -537,17 +548,17 @@ window.Quarto = {
 </div>
 <div id="8825fc61" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Linear push-forward demo with interactive sliders</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> linear_pushforward_demo(A: np.ndarray, b: np.ndarray, n: <span class="bu">int</span> <span class="op">=</span> <span class="dv">1000</span>, seed: <span class="bu">int</span> <span class="op">=</span> RNG_SEED):</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> linear_pushforward_demo(W: np.ndarray, b: np.ndarray, n: <span class="bu">int</span> <span class="op">=</span> <span class="dv">1000</span>, seed: <span class="bu">int</span> <span class="op">=</span> RNG_SEED):</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    rng <span class="op">=</span> np.random.default_rng(seed)</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    z <span class="op">=</span> rng.standard_normal(size<span class="op">=</span>(n, <span class="dv">2</span>))</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> (z <span class="op">@</span> A.T) <span class="op">+</span> b</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> (z <span class="op">@</span> W.T) <span class="op">+</span> b</span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> z, x</span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Default transform</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>A0 <span class="op">=</span> np.array([[<span class="fl">1.2</span>, <span class="fl">0.4</span>],[<span class="fl">0.0</span>, <span class="fl">0.8</span>]], dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>W0 <span class="op">=</span> np.array([[<span class="fl">1.2</span>, <span class="fl">0.4</span>],[<span class="fl">0.0</span>, <span class="fl">0.8</span>]], dtype<span class="op">=</span><span class="bu">float</span>)</span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>b0 <span class="op">=</span> np.array([<span class="fl">0.0</span>, <span class="fl">0.0</span>], dtype<span class="op">=</span><span class="bu">float</span>)</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>z_lin, x_lin <span class="op">=</span> linear_pushforward_demo(A0, b0, n<span class="op">=</span><span class="dv">2000</span>)</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>plot_pushforward(z_lin, x_lin, title<span class="op">=</span><span class="st">'x = A z + b'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>z_lin, x_lin <span class="op">=</span> linear_pushforward_demo(W0, b0, n<span class="op">=</span><span class="dv">2000</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>plot_pushforward(z_lin, x_lin, title<span class="op">=</span><span class="st">'x = W z + b'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -562,10 +573,10 @@ window.Quarto = {
 <summary>Show Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> interact <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> _interactive_pushforward(a11<span class="op">=</span><span class="fl">1.2</span>, a12<span class="op">=</span><span class="fl">0.4</span>, a21<span class="op">=</span><span class="fl">0.0</span>, a22<span class="op">=</span><span class="fl">0.8</span>, bx<span class="op">=</span><span class="fl">0.0</span>, by<span class="op">=</span><span class="fl">0.0</span>):</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>        A <span class="op">=</span> np.array([[a11, a12],[a21, a22]], dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>        W <span class="op">=</span> np.array([[a11, a12],[a21, a22]], dtype<span class="op">=</span><span class="bu">float</span>)</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        b <span class="op">=</span> np.array([bx, by], dtype<span class="op">=</span><span class="bu">float</span>)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>        z, x <span class="op">=</span> linear_pushforward_demo(A, b, n<span class="op">=</span><span class="dv">2000</span>)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        plot_pushforward(z, x, title<span class="op">=</span><span class="ss">f'x = A z + b'</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>        z, x <span class="op">=</span> linear_pushforward_demo(W, b, n<span class="op">=</span><span class="dv">2000</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        plot_pushforward(z, x, title<span class="op">=</span><span class="ss">f'x = W z + b'</span>)</span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    interact(</span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        _interactive_pushforward,</span>
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        a11<span class="op">=</span>FloatSlider(<span class="bu">min</span><span class="op">=-</span><span class="fl">2.0</span>, <span class="bu">max</span><span class="op">=</span><span class="fl">2.0</span>, step<span class="op">=</span><span class="fl">0.05</span>, value<span class="op">=</span><span class="fl">1.2</span>, description<span class="op">=</span><span class="st">'a11'</span>),</span>
@@ -577,8 +588,15 @@ window.Quarto = {
 <span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="intro_to_GANS_files/figure-html/cell-5-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"c90663e6511449f496d76fd226408310","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+{"model_id":"4ae2d6b830db47ccaaca5da0ed2c510c","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
 </script>
 </div>
 </div>
@@ -615,8 +633,8 @@ window.Quarto = {
 </section>
 <section id="what-is-a-generative-adversarial-network-gan" class="level2 page-columns page-full" data-number="10.4">
 <h2 data-number="10.4" class="anchored" data-anchor-id="what-is-a-generative-adversarial-network-gan"><span class="header-section-number">10.4</span> What is a Generative Adversarial Network (GAN)?</h2>
-<p>A Generative Adversarial Network (GAN) is a framework for training generative models using two competing neural networks: a <strong>generator</strong> and a <strong>discriminator</strong>. The generator, <span class="math inline">\(G\)</span>, learns to map random noise from a latent space (e.g., <span class="math inline">\(z \sim p_z(z)\)</span> or <span class="math inline">\(f(z)=x\)</span>, where <span class="math inline">\(G\)</span> functions as <span class="math inline">\(f\)</span> here) to data space, aiming to produce samples that resemble the real data. It is tempting to want to train just the Generator by minimizing Mean Squared Error between <span class="math inline">\(z\)</span> and <span class="math inline">\(f(z)=x\)</span>, except we have one big problem for right now – we do not know apriori which samples of <span class="math inline">\(x\)</span> correspond to which samples of <span class="math inline">\(z\)</span>, and so it is not straightforward to compute this MSE.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> Instead, what we will do is train a separate network, the Discriminator, that can help us push the samples produced by the Generator closer to the real data distribution.</p>
-<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Indeed, we will return to this idea in later notebooks once we have introduced the concept of Optimal Transport, which solves this mapping problem, but for now, let’s assume that we don’t know how to do this.</p></div></div><p>Specifically, the discriminator, <span class="math inline">\(D\)</span>, tries to distinguish between real data samples and those produced by the generator and our loss function will encourage the discriminator to become better and better at this task. In turn, the generator will be trained to produce samples that the discriminator classifies as real – that is to try to fool the disciminator.</p>
+<p>A Generative Adversarial Network (GAN) is a framework for training generative models using two competing neural networks: a <strong>generator</strong> and a <strong>discriminator</strong>. The generator, <span class="math inline">\(G\)</span>, learns to map random noise from a latent space (e.g., <span class="math inline">\(z \sim p_z(z)\)</span> or <span class="math inline">\(f(z)=x\)</span>, where <span class="math inline">\(G\)</span> functions as <span class="math inline">\(f\)</span> here) to data space, aiming to produce samples that resemble the real data. It is tempting to want to train just the Generator by minimizing Mean Squared Error between <span class="math inline">\(f(z)\)</span> and a real sample <span class="math inline">\(x\)</span>, except we have one big problem for right now – we do not know a priori which samples of <span class="math inline">\(x\)</span> correspond to which samples of <span class="math inline">\(z\)</span>, and so it is not straightforward to compute this MSE.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> Instead, what we will do is train a separate network, the Discriminator, that can help us push the samples produced by the Generator closer to the real data distribution.</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Indeed, we will return to this idea in later notebooks once we have introduced the concept of Optimal Transport, which solves this mapping problem, but for now, let’s assume that we don’t know how to do this.</p></div></div><p>Specifically, the discriminator, <span class="math inline">\(D\)</span>, tries to distinguish between real data samples and those produced by the generator and our loss function will encourage the discriminator to become better and better at this task. In turn, the generator will be trained to produce samples that the discriminator classifies as real – that is to try to fool the discriminator.</p>
 <p>The two networks are trained simultaneously in something called a <em>minimax game</em>:</p>
 <ul>
 <li>The <strong>generator</strong> tries to “fool” the discriminator by generating realistic samples.</li>
@@ -624,7 +642,7 @@ window.Quarto = {
 </ul>
 <section id="mathematical-formulation" class="level3" data-number="10.4.1">
 <h3 data-number="10.4.1" class="anchored" data-anchor-id="mathematical-formulation"><span class="header-section-number">10.4.1</span> Mathematical Formulation</h3>
-<p>The standard GAN objective, as introduced by Goodfellow et al.&nbsp;(2014), is:</p>
+<p>The standard GAN objective, as introduced by <span class="citation" data-cites="goodfellow2014generative">(<a href="../../references.html#ref-goodfellow2014generative" role="doc-biblioref"><strong>goodfellow2014generative?</strong></a>)</span>, is:</p>
 <p><span class="math display">\[
 \min_G \max_D \; V(D, G) = \mathbb{E}_{x \sim p_{\text{data}}(x)} \left[ \log D(x) \right] + \mathbb{E}_{z \sim p_z(z)} \left[ \log (1 - D(G(z))) \right]
 \]</span></p>
@@ -634,12 +652,29 @@ window.Quarto = {
 <li><span class="math inline">\(G(z)\)</span>: Generator’s output given latent input <span class="math inline">\(z\)</span>.</li>
 <li><span class="math inline">\(D(x)\)</span>: Discriminator’s estimate of the probability that <span class="math inline">\(x\)</span> is real.</li>
 </ul>
-<p>The generator and discriminator are typically neural networks trained with stochastic gradient descent. The generator improves by producing samples that the discriminator cannot distinguish from real data (the second term on the right-hand side of the equation above), while the discriminator improves by getting better at distinguishing real from fake (the first term on the right-hand side of the equation above).</p>
+<p>The generator and discriminator are typically neural networks trained with stochastic gradient descent. The generator improves by producing samples that the discriminator cannot distinguish from real data (the second term on the right-hand side of the equation above), while the discriminator improves by getting better at distinguishing real from fake (it maximizes both terms: scoring real data high and generated data low).</p>
+<p>Two terms from classification will help us read the training code. A classifier that gives a probability <span class="math inline">\(p\)</span> that its input is real can just as well give the <em>logit</em> of that probability, its log-odds:</p>
+<p><span class="math display">\[
+\operatorname{logit}(p) = \log \frac{p}{1-p}, \qquad p = \sigma(s) = \frac{1}{1 + e^{-s}}.
+\]</span></p>
+<p>The sigmoid <span class="math inline">\(\sigma\)</span> is the inverse of the logit: it maps a logit <span class="math inline">\(s\)</span> back to a probability. A logit of 0 means <span class="math inline">\(p = 0.5\)</span>, a positive logit means “more likely real” and a negative logit means “more likely fake”. A logit can take any real value, so networks usually output it instead of <span class="math inline">\(p\)</span>. Our discriminator does this too: its last layer outputs a logit <span class="math inline">\(\ell(x)\)</span>, and <span class="math inline">\(D(x) = \sigma(\ell(x))\)</span>.</p>
+<p>A classifier like this is trained with the <em>binary cross-entropy</em> (BCE) between a label <span class="math inline">\(y \in \{0, 1\}\)</span> and the predicted probability <span class="math inline">\(p\)</span>:</p>
+<p><span class="math display">\[
+\mathrm{BCE}(p, y) = -\left[ y \log p + (1-y) \log (1-p) \right].
+\]</span></p>
+<p>Only one of the two terms is active for each sample, so the BCE is <span class="math inline">\(-\log\)</span> of the probability that the classifier gave to the correct label. It is 0 when the classifier is confident and right, and it grows without bound when the classifier is confident and wrong: <span class="math inline">\(p = 0.01\)</span> for a real sample costs <span class="math inline">\(-\log 0.01 \approx 4.6\)</span>. This is the log loss from the classification losses in <a href="../../part1/reviewing_supervised_linear_models.html">Reviewing Supervised Linear Models</a>, written for labels 0 and 1 instead of <span class="math inline">\(\pm 1\)</span>.</p>
+<p>In the training loop below, <code>loss_d = bce(d_real, torch.ones_like(d_real)) + bce(d_fake, torch.zeros_like(d_fake))</code> labels the real samples 1 and the generated samples 0. Per sample, it is <span class="math inline">\(-\log D(x) - \log(1 - D(G(z)))\)</span>, which is minus the per-sample <span class="math inline">\(V(D, G)\)</span>. So minimizing this loss maximizes <span class="math inline">\(V\)</span>. <code>nn.BCEWithLogitsLoss</code> takes the logits <code>d_real</code> and <code>d_fake</code> and applies the sigmoid inside, which is numerically more stable than taking the log of a sigmoid in two steps.</p>
+<p>In practice, the generator does not minimize the second term above directly. Early in training, the discriminator easily rejects fakes, so <span class="math inline">\(D(G(z)) \approx 0\)</span>. There, <span class="math inline">\(\log(1 - D(G(z)))\)</span> is almost flat, and the generator gets almost no gradient. So instead of minimizing <span class="math inline">\(\mathbb{E}_{z}[\log(1 - D(G(z)))]\)</span>, the generator minimizes the <em>non-saturating</em> loss:</p>
+<p><span class="math display">\[
+\mathcal{L}_G = -\mathbb{E}_{z \sim p_z(z)} \left[ \log D(G(z)) \right],
+\]</span></p>
+<p>which has the same goal (push <span class="math inline">\(D(G(z))\)</span> toward 1) but provides stronger gradients when the generator is doing badly. This is what <code>loss_g = bce(dg, torch.ones_like(dg))</code> computes in the training loop below.</p>
+<p>Goodfellow et al.&nbsp;proposed this switch in the original GAN paper, in its Section 3 <span class="citation" data-cites="goodfellow2014generative">(<a href="../../references.html#ref-goodfellow2014generative" role="doc-biblioref"><strong>goodfellow2014generative?</strong></a>)</span>. The two generator losses have the same end point, <span class="math inline">\(p_G = p_{\text{data}}\)</span> with <span class="math inline">\(D = 1/2\)</span> everywhere, and both push <span class="math inline">\(D(G(z))\)</span> toward 1. But they are not the same objective. With the best discriminator for the current generator, the original minimax objective equals <span class="math inline">\(-\log 4 + 2\,\mathrm{JS}(p_{\text{data}} \parallel p_G)\)</span>, so the generator minimizes the Jensen-Shannon (JS) divergence. The non-saturating loss instead follows the gradient of <span class="math inline">\(\mathrm{KL}(p_G \parallel p_{\text{data}}) - 2\,\mathrm{JS}(p_{\text{data}} \parallel p_G)\)</span> <span class="citation" data-cites="arjovsky2017towards">(<a href="../../references.html#ref-arjovsky2017towards" role="doc-biblioref"><strong>arjovsky2017towards?</strong></a>)</span>. Its reverse Kullback-Leibler (KL) term punishes samples where there are no data much more than it punishes parts of the data that get no samples. This is one reason why GANs tend to drop modes rather than produce garbage. We met both divergences, and the mode-seeking behavior of the reverse KL, in <a href="../../part1/distribution_distance.html">Measuring Distribution Distances</a>.</p>
 </section>
 </section>
 <section id="a-simple-generative-adversarial-network-gan" class="level2" data-number="10.5">
 <h2 data-number="10.5" class="anchored" data-anchor-id="a-simple-generative-adversarial-network-gan"><span class="header-section-number">10.5</span> A Simple Generative Adversarial Network (GAN)</h2>
-<p>Now we will define a small GAN and see how it moves probability mass around after passing samples through the Generator. You can feel free to modify the architecture below if you like and see how that impacts the below results, but for now we will use a single hidden layer MLP with LeakyReLU activation for both the Generator and Discriminator.</p>
+<p>Now we will define a small GAN and see how it moves probability mass around after passing samples through the Generator. You can feel free to modify the architecture below if you like and see how that impacts the below results, but for now we will use an MLP with two hidden layers and LeakyReLU activations for both the Generator and Discriminator.</p>
 <div id="127cec2e" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MLPGenerator(nn.Module):</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, noise_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>, hidden_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">256</span>, out_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>):</span>
@@ -758,8 +793,8 @@ Epoch 120/120 | D 1.368 | G 0.732 | Div 4.444</code></pre>
 <ul>
 <li>Upper Left: Any training losses for the model, as a function of training epoch. In the case of a GAN, this will plot both the Generator and Discriminator losses. This plot type allows us to assess something about the convergence and stability of training.</li>
 <li>Upper Right: The Sample Diversity, as a function of Epoch. This is computing and plotting the variance of <span class="math inline">\(\mathbf{x}\)</span> as a function of epoch, where <span class="math inline">\(\mathbf{x}\)</span> are samples drawn from the Generator at each epoch. This plot type allows us one way to assess whether the model is suffering from mode collapse (i.e., low diversity in the generated samples) or not.</li>
-<li>Lower Right: A plot of the real data samples (in light grey) and samples drawn from the Generator (in reddish-orange). This plot type allows us to visually assess how well the model is capturing the data distribution. This will be easy to compare in this simple 2D case, but will be harder in higher dimensions, and in those cases you might have to resort to just comparing selected samples or overall distribution summary statistics.</li>
-<li>Lower Right: This plot will vary depending on the specific model we are studying, but in this case it will show the specific scores of the Discriminator (often called the “Critic”) with respect to its classification accuracy on real vs.&nbsp;fake samples. In the context of a GAN model, this allows us to assess how well a Generator is fooling the discriminator, since a well-trained Generator should produce samples that the Discriminator classifies as real, and thus both the “Real Score” and “Fake Score” should have around 50% accuracy. (i.e., the Discriminator is effectively guessing randomly).</li>
+<li>Lower Left: A plot of the real data samples (in light grey) and samples drawn from the Generator (in reddish-orange). This plot type allows us to visually assess how well the model is capturing the data distribution. This will be easy to compare in this simple 2D case, but will be harder in higher dimensions, and in those cases you might have to resort to just comparing selected samples or overall distribution summary statistics.</li>
+<li>Lower Right: This plot will vary depending on the specific model we are studying, but in this case it will show the average raw output (the logit) of the Discriminator (often called the “Critic”) on real and on fake samples. A positive logit means the Discriminator thinks a sample is real, and a negative logit means it thinks the sample is fake. In the context of a GAN model, this allows us to assess how well a Generator is fooling the discriminator, since a well-trained Generator should produce samples that the Discriminator cannot tell apart from real ones, and thus both the “Real score” and “Fake score” should hover around 0, which corresponds to a probability of <span class="math inline">\(\sigma(0) = 0.5\)</span> (i.e., the Discriminator is effectively guessing randomly).</li>
 </ul>
 <div id="3dcd7ef2" class="cell" data-execution_count="9">
 <details class="code-fold">
@@ -838,306 +873,156 @@ Epoch 120/120 | D 1.368 | G 0.732 | Div 4.444</code></pre>
 <span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">'ipywidgets not available; skipping latent sliders.'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="intro_to_GANS_files/figure-html/cell-12-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"f078a3975fd548559bf429997200319a","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+{"model_id":"f6102d46863a4cae9190c672427e1f41","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
 </script>
 </div>
 </div>
 </section>
-<section id="conditional-generation-examples" class="level2" data-number="10.7">
-<h2 data-number="10.7" class="anchored" data-anchor-id="conditional-generation-examples"><span class="header-section-number">10.7</span> Conditional Generation Examples</h2>
-<p>So far, we’ve explored unconditional generative models that learn to produce samples from the overall data distribution. However, in many practical applications, we want to control what we generate by conditioning on additional information. For example, we might want to generate samples from a specific mode of the distribution, or generate samples with particular properties.</p>
-<p>In this section, we’ll explore two types of conditioning:</p>
-<ol type="1">
-<li><strong>Discrete Conditioning (One-Hot Mode Index):</strong> Condition the GAN on which Gaussian mode in our ring dataset the sample should come from.</li>
-<li><strong>Continuous Conditioning (Radius):</strong> Condition the GAN on a continuous scalar representing the radius from the origin.</li>
-</ol>
-<p>These conditioning strategies are widely applicable and form the basis for more complex conditional generation tasks, such as class-conditional image generation or text-to-image synthesis.</p>
-<section id="conditional-example-a-one-hot-mode-conditioning" class="level3" data-number="10.7.1">
-<h3 data-number="10.7.1" class="anchored" data-anchor-id="conditional-example-a-one-hot-mode-conditioning"><span class="header-section-number">10.7.1</span> Conditional Example A — One-Hot Mode Conditioning</h3>
-<p>In this example, we’ll condition the GAN on which of the 8 Gaussian modes in the ring dataset we want to generate from. We provide a one-hot encoded vector indicating the target mode to both the generator and discriminator.</p>
-<p>The key idea is simple: we concatenate the one-hot label to the inputs of both networks. The generator receives both random noise <span class="math inline">\(z\)</span> and the label <span class="math inline">\(y\)</span>, learning to map <span class="math inline">\((z, y) \rightarrow x\)</span>. The discriminator receives both the data point <span class="math inline">\(x\)</span> and the label <span class="math inline">\(y\)</span>, learning to distinguish real pairs <span class="math inline">\((x, y)\)</span> from fake pairs <span class="math inline">\((G(z, y), y)\)</span>.</p>
-<div id="dabfed35" class="cell" data-execution_count="12">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Conditional Generator: takes noise + one-hot label</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ConditionalMLPGenerator(nn.Module):</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, noise_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>, label_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">8</span>, hidden_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">256</span>, out_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>):</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.main <span class="op">=</span> nn.Sequential(</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>            nn.Linear(noise_dim <span class="op">+</span> label_dim, hidden_dim), nn.LeakyReLU(),</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>            nn.Linear(hidden_dim, hidden_dim), nn.LeakyReLU(),</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>            nn.Linear(hidden_dim, out_dim),</span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, z: torch.Tensor, y: torch.Tensor) <span class="op">-&gt;</span> torch.Tensor:</span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Concatenate noise and label</span></span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>        zy <span class="op">=</span> torch.cat([z, y], dim<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.main(zy)</span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Conditional Discriminator: takes data + one-hot label</span></span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ConditionalMLPDiscriminator(nn.Module):</span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, input_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>, label_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">8</span>, hidden_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">256</span>):</span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.main <span class="op">=</span> nn.Sequential(</span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>            nn.Linear(input_dim <span class="op">+</span> label_dim, hidden_dim), nn.LeakyReLU(<span class="fl">0.2</span>),</span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>            nn.Linear(hidden_dim, hidden_dim), nn.LeakyReLU(<span class="fl">0.2</span>),</span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>            nn.Linear(hidden_dim, <span class="dv">1</span>),</span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x: torch.Tensor, y: torch.Tensor) <span class="op">-&gt;</span> torch.Tensor:</span>
-<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>        xy <span class="op">=</span> torch.cat([x, y], dim<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.main(xy).squeeze(<span class="op">-</span><span class="dv">1</span>)</span>
-<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_conditional_gan_onehot(</span>
-<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>    data: np.ndarray, labels: np.ndarray, n_classes: <span class="bu">int</span> <span class="op">=</span> <span class="dv">8</span>, <span class="op">*</span>,</span>
-<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>    noise_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>, batch_size: <span class="bu">int</span> <span class="op">=</span> <span class="dv">256</span>, epochs: <span class="bu">int</span> <span class="op">=</span> <span class="dv">120</span>,</span>
-<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>    lr_g: <span class="bu">float</span> <span class="op">=</span> <span class="fl">2e-4</span>, lr_d: <span class="bu">float</span> <span class="op">=</span> <span class="fl">2e-4</span>, hidden_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">256</span>, print_every: <span class="bu">int</span> <span class="op">=</span> <span class="dv">40</span></span>
-<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> <span class="bu">tuple</span>[nn.Module, nn.Module, GanHistory]:</span>
-<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>    loader <span class="op">=</span> make_conditional_loader_onehot(data, labels, batch_size, n_classes)</span>
-<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>    G <span class="op">=</span> ConditionalMLPGenerator(noise_dim<span class="op">=</span>noise_dim, label_dim<span class="op">=</span>n_classes, hidden_dim<span class="op">=</span>hidden_dim).to(device)</span>
-<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>    D <span class="op">=</span> ConditionalMLPDiscriminator(input_dim<span class="op">=</span><span class="dv">2</span>, label_dim<span class="op">=</span>n_classes, hidden_dim<span class="op">=</span>hidden_dim).to(device)</span>
-<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>    opt_g <span class="op">=</span> optim.Adam(G.parameters(), lr<span class="op">=</span>lr_g, betas<span class="op">=</span>(<span class="fl">0.5</span>, <span class="fl">0.999</span>))</span>
-<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>    opt_d <span class="op">=</span> optim.Adam(D.parameters(), lr<span class="op">=</span>lr_d, betas<span class="op">=</span>(<span class="fl">0.5</span>, <span class="fl">0.999</span>))</span>
-<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>    bce <span class="op">=</span> nn.BCEWithLogitsLoss()</span>
-<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a>    hist <span class="op">=</span> GanHistory([], [], [], [], [])</span>
-<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> ep <span class="kw">in</span> <span class="bu">range</span>(epochs):</span>
-<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a>        d_losses, g_losses, real_scores, fake_scores <span class="op">=</span> [], [], [], []</span>
-<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> xb, yb <span class="kw">in</span> loader:</span>
-<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a>            xb, yb <span class="op">=</span> xb.to(device), yb.to(device)</span>
-<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Discriminator step</span></span>
-<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a>            z <span class="op">=</span> torch.randn(xb.size(<span class="dv">0</span>), noise_dim, device<span class="op">=</span>device)</span>
-<span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a>            <span class="cf">with</span> torch.no_grad():</span>
-<span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a>                x_fake <span class="op">=</span> G(z, yb)</span>
-<span id="cb14-49"><a href="#cb14-49" aria-hidden="true" tabindex="-1"></a>            opt_d.zero_grad()</span>
-<span id="cb14-50"><a href="#cb14-50" aria-hidden="true" tabindex="-1"></a>            d_real <span class="op">=</span> D(xb, yb)</span>
-<span id="cb14-51"><a href="#cb14-51" aria-hidden="true" tabindex="-1"></a>            d_fake <span class="op">=</span> D(x_fake, yb)</span>
-<span id="cb14-52"><a href="#cb14-52" aria-hidden="true" tabindex="-1"></a>            loss_d <span class="op">=</span> bce(d_real, torch.ones_like(d_real)) <span class="op">+</span> bce(d_fake, torch.zeros_like(d_fake))</span>
-<span id="cb14-53"><a href="#cb14-53" aria-hidden="true" tabindex="-1"></a>            loss_d.backward()</span>
-<span id="cb14-54"><a href="#cb14-54" aria-hidden="true" tabindex="-1"></a>            opt_d.step()</span>
-<span id="cb14-55"><a href="#cb14-55" aria-hidden="true" tabindex="-1"></a>            d_losses.append(<span class="bu">float</span>(loss_d.detach().cpu().item()))</span>
-<span id="cb14-56"><a href="#cb14-56" aria-hidden="true" tabindex="-1"></a>            real_scores.append(d_real.mean().item())</span>
-<span id="cb14-57"><a href="#cb14-57" aria-hidden="true" tabindex="-1"></a>            fake_scores.append(d_fake.mean().item())</span>
-<span id="cb14-58"><a href="#cb14-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-59"><a href="#cb14-59" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Generator step</span></span>
-<span id="cb14-60"><a href="#cb14-60" aria-hidden="true" tabindex="-1"></a>            z <span class="op">=</span> torch.randn(xb.size(<span class="dv">0</span>), noise_dim, device<span class="op">=</span>device)</span>
-<span id="cb14-61"><a href="#cb14-61" aria-hidden="true" tabindex="-1"></a>            opt_g.zero_grad()</span>
-<span id="cb14-62"><a href="#cb14-62" aria-hidden="true" tabindex="-1"></a>            xg <span class="op">=</span> G(z, yb)</span>
-<span id="cb14-63"><a href="#cb14-63" aria-hidden="true" tabindex="-1"></a>            dg <span class="op">=</span> D(xg, yb)</span>
-<span id="cb14-64"><a href="#cb14-64" aria-hidden="true" tabindex="-1"></a>            loss_g <span class="op">=</span> bce(dg, torch.ones_like(dg))</span>
-<span id="cb14-65"><a href="#cb14-65" aria-hidden="true" tabindex="-1"></a>            loss_g.backward()</span>
-<span id="cb14-66"><a href="#cb14-66" aria-hidden="true" tabindex="-1"></a>            opt_g.step()</span>
-<span id="cb14-67"><a href="#cb14-67" aria-hidden="true" tabindex="-1"></a>            g_losses.append(<span class="bu">float</span>(loss_g.detach().cpu().item()))</span>
-<span id="cb14-68"><a href="#cb14-68" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb14-69"><a href="#cb14-69" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> torch.no_grad():</span>
-<span id="cb14-70"><a href="#cb14-70" aria-hidden="true" tabindex="-1"></a>            z_eval <span class="op">=</span> torch.randn(<span class="dv">2048</span>, noise_dim, device<span class="op">=</span>device)</span>
-<span id="cb14-71"><a href="#cb14-71" aria-hidden="true" tabindex="-1"></a>            y_eval <span class="op">=</span> torch.nn.functional.one_hot(</span>
-<span id="cb14-72"><a href="#cb14-72" aria-hidden="true" tabindex="-1"></a>                torch.randint(<span class="dv">0</span>, n_classes, (<span class="dv">2048</span>,), device<span class="op">=</span>device), num_classes<span class="op">=</span>n_classes</span>
-<span id="cb14-73"><a href="#cb14-73" aria-hidden="true" tabindex="-1"></a>            ).to(torch.float32)</span>
-<span id="cb14-74"><a href="#cb14-74" aria-hidden="true" tabindex="-1"></a>            samples <span class="op">=</span> G(z_eval, y_eval)</span>
-<span id="cb14-75"><a href="#cb14-75" aria-hidden="true" tabindex="-1"></a>            div <span class="op">=</span> compute_diversity_metric(samples)</span>
-<span id="cb14-76"><a href="#cb14-76" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-77"><a href="#cb14-77" aria-hidden="true" tabindex="-1"></a>        hist.d_loss.append(<span class="bu">float</span>(np.mean(d_losses)))</span>
-<span id="cb14-78"><a href="#cb14-78" aria-hidden="true" tabindex="-1"></a>        hist.g_loss.append(<span class="bu">float</span>(np.mean(g_losses)))</span>
-<span id="cb14-79"><a href="#cb14-79" aria-hidden="true" tabindex="-1"></a>        hist.diversity.append(div)</span>
-<span id="cb14-80"><a href="#cb14-80" aria-hidden="true" tabindex="-1"></a>        hist.real_scores.append(<span class="bu">float</span>(np.mean(real_scores)))</span>
-<span id="cb14-81"><a href="#cb14-81" aria-hidden="true" tabindex="-1"></a>        hist.fake_scores.append(<span class="bu">float</span>(np.mean(fake_scores)))</span>
-<span id="cb14-82"><a href="#cb14-82" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (ep<span class="op">+</span><span class="dv">1</span>) <span class="op">%</span> <span class="bu">max</span>(<span class="dv">1</span>, print_every) <span class="op">==</span> <span class="dv">0</span> <span class="kw">or</span> ep<span class="op">==</span><span class="dv">0</span>:</span>
-<span id="cb14-83"><a href="#cb14-83" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"Epoch </span><span class="sc">{</span>ep<span class="op">+</span><span class="dv">1</span><span class="sc">:03d}</span><span class="ss">/</span><span class="sc">{</span>epochs<span class="sc">}</span><span class="ss"> | D </span><span class="sc">{</span>hist<span class="sc">.</span>d_loss[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:.3f}</span><span class="ss"> | G </span><span class="sc">{</span>hist<span class="sc">.</span>g_loss[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:.3f}</span><span class="ss"> | Div </span><span class="sc">{</span>div<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
-<span id="cb14-84"><a href="#cb14-84" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> G, D, hist</span>
-<span id="cb14-85"><a href="#cb14-85" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-86"><a href="#cb14-86" aria-hidden="true" tabindex="-1"></a><span class="co"># Train the conditional GAN</span></span>
-<span id="cb14-87"><a href="#cb14-87" aria-hidden="true" tabindex="-1"></a>G_cond_onehot, D_cond_onehot, H_cond_onehot <span class="op">=</span> train_conditional_gan_onehot(</span>
-<span id="cb14-88"><a href="#cb14-88" aria-hidden="true" tabindex="-1"></a>    X_ring, y_ring, n_classes<span class="op">=</span><span class="dv">8</span>, epochs<span class="op">=</span><span class="dv">480</span>, batch_size<span class="op">=</span><span class="dv">256</span>, </span>
-<span id="cb14-89"><a href="#cb14-89" aria-hidden="true" tabindex="-1"></a>    lr_g<span class="op">=</span><span class="fl">2e-4</span>, lr_d<span class="op">=</span><span class="fl">2e-4</span>, hidden_dim<span class="op">=</span><span class="dv">256</span>, noise_dim<span class="op">=</span><span class="dv">2</span>, print_every<span class="op">=</span><span class="dv">40</span></span>
-<span id="cb14-90"><a href="#cb14-90" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch 001/480 | D 1.250 | G 0.706 | Div 0.029
-Epoch 040/480 | D 1.399 | G 0.691 | Div 4.734
-Epoch 080/480 | D 1.386 | G 0.697 | Div 4.626
-Epoch 120/480 | D 1.387 | G 0.689 | Div 4.322
-Epoch 160/480 | D 1.385 | G 0.707 | Div 4.171
-Epoch 200/480 | D 1.401 | G 0.658 | Div 3.566
-Epoch 240/480 | D 1.390 | G 0.710 | Div 4.966
-Epoch 280/480 | D 1.387 | G 0.702 | Div 4.233
-Epoch 320/480 | D 1.384 | G 0.708 | Div 4.220
-Epoch 360/480 | D 1.386 | G 0.680 | Div 4.759
-Epoch 400/480 | D 1.388 | G 0.699 | Div 4.590
-Epoch 440/480 | D 1.387 | G 0.682 | Div 4.703
-Epoch 480/480 | D 1.388 | G 0.700 | Div 4.429</code></pre>
-</div>
-</div>
-<p>Now let’s visualize the conditional samples. We’ll generate samples for each of the 8 modes and plot them to see if the generator has learned to respect the conditioning signal.</p>
-<div id="842a41a0" class="cell" data-execution_count="13">
+<section id="what-the-discriminator-looks-like" class="level2" data-number="10.7">
+<h2 data-number="10.7" class="anchored" data-anchor-id="what-the-discriminator-looks-like"><span class="header-section-number">10.7</span> What the Discriminator Looks Like</h2>
+<p>What you will notice from the above code is that the generator isn’t really concerned with where the actual data is located. We can see this by noticing that in either loss formulation it only ever depends on <span class="math inline">\(\mathbb{E}_{z \sim p_{(z)}}\)</span>, and never on <span class="math inline">\(\mathbb{E}_{x \sim p_{\text{data}}(x)}\)</span>. Because of this, no gradients for the generator actually depend directly on the input data, and the only gradients that affect the generator come from its interplay with the discriminator! Look at the training loop again: <code>xb</code> only enters the discriminator step. The only thing that reaches the generator is the gradient of its loss, <span class="math inline">\(\mathcal{L}_G = -\log \sigma(\ell(G(z)))\)</span>, where <span class="math inline">\(\ell(G(z))\)</span> is the discriminator’s logit at <span class="math inline">\(G(z)\)</span>. That gradient flows back through the discriminator into each fake sample. So to gain a better understanding of what the generator learns, we can look at the discriminator’s logit as a map over the whole data space.</p>
+<p>What would a perfect discriminator draw on that map? For a fixed generator with sample density <span class="math inline">\(p_G\)</span>, the discriminator that maximizes <span class="math inline">\(V(D, G)\)</span> is</p>
+<p><span class="math display">\[
+D^*(x) = \frac{p_{\text{data}}(x)}{p_{\text{data}}(x) + p_G(x)}, \qquad \ell^*(x) = \log p_{\text{data}}(x) - \log p_G(x).
+\]</span></p>
+<p>The logit is positive where the data have more mass than the generator and negative where the generator puts too much mass. Each fake sample moves in the direction of <span class="math inline">\(-\nabla_x \mathcal{L}_G = (1 - \sigma(\ell))\, \nabla_x \ell\)</span>: essentially trying to move samples such that they increase in probability w.r.t the discriminator’s logit. Below we draw the logit as a color map (red is higher likelihood of the discriminator thinking the point is real, blue is where the discriminator thinks the point might be fake, and the black line is <span class="math inline">\(\ell = 0\)</span>), the real data is shown in gray, the generator’s samples are shown in orange, and optionally the green arrow shows the direction each generated sample would move to “make it more realistic” with respect to the discriminator.</p>
+<div id="dsee0002" class="cell" data-execution_count="12">
 <details class="code-fold">
 <summary>Show Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate conditional samples for each mode</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>G_cond_onehot.<span class="bu">eval</span>()</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>samples_by_label <span class="op">=</span> {}</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>n_samples_per_mode <span class="op">=</span> <span class="dv">100</span></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> label <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">8</span>):</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    z <span class="op">=</span> torch.randn(n_samples_per_mode, <span class="dv">2</span>, device<span class="op">=</span>device)</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> torch.nn.functional.one_hot(</span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>        torch.full((n_samples_per_mode,), label, device<span class="op">=</span>device), num_classes<span class="op">=</span><span class="dv">8</span></span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    ).to(torch.float32)</span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> torch.no_grad():</span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>        samples <span class="op">=</span> G_cond_onehot(z, y).cpu().numpy()</span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    samples_by_label[label] <span class="op">=</span> samples</span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>plot_conditional_samples_discrete(</span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>    samples_by_label, X_ring, y_ring, title<span class="op">=</span><span class="st">"Conditional GAN: One-Hot Mode Conditioning"</span></span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> copy</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co"># A fixed set of latent vectors, so every map below shows the same generator samples</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>Z_SHOW <span class="op">=</span> torch.randn(<span class="dv">500</span>, <span class="dv">2</span>, generator<span class="op">=</span>torch.Generator().manual_seed(RNG_SEED)).to(device)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> generator_push(D_net, x_fake):</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Direction that lowers the generator loss -log(sigmoid(logit)) at each fake sample</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> x_fake.clone().requires_grad_(<span class="va">True</span>)</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    loss_g <span class="op">=</span> nn.functional.binary_cross_entropy_with_logits(D_net(x), torch.ones(<span class="bu">len</span>(x), device<span class="op">=</span>device), reduction<span class="op">=</span><span class="st">'sum'</span>)</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    loss_g.backward()</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="op">-</span>x.grad</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_discriminator_map(D_net, G_net, ax<span class="op">=</span><span class="va">None</span>, arrows<span class="op">=</span><span class="va">False</span>, n_arrows<span class="op">=</span><span class="dv">150</span>, lim<span class="op">=</span><span class="va">None</span>, title<span class="op">=</span><span class="st">''</span>, X_real<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># D's logit over the data space, the real data (the ring unless X_real is given),</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># the generator's samples and (optionally) their push</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> X_real <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>        X_real <span class="op">=</span> X_ring</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> ax <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>        fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">6.5</span>, <span class="fl">5.5</span>))</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>        x_fake <span class="op">=</span> G_net(Z_SHOW)</span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>    fake_np <span class="op">=</span> x_fake.cpu().numpy()</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> lim <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Show at least [-5, 5] x [-5, 5], and widen the window if the generator's samples lie outside it</span></span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>        lim <span class="op">=</span> <span class="bu">max</span>(<span class="fl">5.0</span>, <span class="fl">1.1</span> <span class="op">*</span> np.percentile(np.<span class="bu">abs</span>(fake_np).<span class="bu">max</span>(axis<span class="op">=</span><span class="dv">1</span>), <span class="dv">99</span>))</span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>    grid_1d <span class="op">=</span> np.linspace(<span class="op">-</span>lim, lim, <span class="dv">201</span>)</span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>    xx, yy <span class="op">=</span> np.meshgrid(grid_1d, grid_1d)</span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>    grid <span class="op">=</span> torch.tensor(np.stack([xx.ravel(), yy.ravel()], axis<span class="op">=</span><span class="dv">1</span>), dtype<span class="op">=</span>torch.float32, device<span class="op">=</span>device)</span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>        logit <span class="op">=</span> D_net(grid).cpu().numpy().reshape(xx.shape)</span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>    v <span class="op">=</span> np.<span class="bu">abs</span>(logit).<span class="bu">max</span>()</span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>    im <span class="op">=</span> ax.contourf(xx, yy, logit, levels<span class="op">=</span>np.linspace(<span class="op">-</span>v, v, <span class="dv">31</span>), cmap<span class="op">=</span><span class="st">'RdBu_r'</span>)</span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>    ax.contour(xx, yy, logit, levels<span class="op">=</span>[<span class="dv">0</span>], colors<span class="op">=</span><span class="st">'k'</span>, linewidths<span class="op">=</span><span class="fl">0.8</span>)</span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>    ax.scatter(X_real[:<span class="dv">800</span>, <span class="dv">0</span>], X_real[:<span class="dv">800</span>, <span class="dv">1</span>], s<span class="op">=</span><span class="dv">4</span>, color<span class="op">=</span><span class="st">'0.35'</span>, alpha<span class="op">=</span><span class="fl">0.4</span>, label<span class="op">=</span><span class="st">'Real'</span>)</span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>    ax.scatter(fake_np[:, <span class="dv">0</span>], fake_np[:, <span class="dv">1</span>], s<span class="op">=</span><span class="dv">6</span>, color<span class="op">=</span><span class="st">'tab:orange'</span>, label<span class="op">=</span><span class="st">'Generated'</span>)</span>
+<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> arrows:</span>
+<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a>        push <span class="op">=</span> generator_push(D_net, x_fake[:n_arrows]).cpu().numpy()</span>
+<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a>        <span class="co"># The longest arrow is 16% of the window's half-width; only directions and relative lengths matter</span></span>
+<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a>        ax.quiver(fake_np[:n_arrows, <span class="dv">0</span>], fake_np[:n_arrows, <span class="dv">1</span>], push[:, <span class="dv">0</span>], push[:, <span class="dv">1</span>], color<span class="op">=</span><span class="st">'darkgreen'</span>,</span>
+<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a>                  angles<span class="op">=</span><span class="st">'xy'</span>, scale_units<span class="op">=</span><span class="st">'xy'</span>, scale<span class="op">=</span>np.linalg.norm(push, axis<span class="op">=</span><span class="dv">1</span>).<span class="bu">max</span>() <span class="op">/</span> (<span class="fl">0.16</span> <span class="op">*</span> lim), width<span class="op">=</span><span class="fl">0.004</span>)</span>
+<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a>    ax.set_xlim(<span class="op">-</span>lim, lim)</span>
+<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a>    ax.set_ylim(<span class="op">-</span>lim, lim)</span>
+<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a>    ax.set_aspect(<span class="st">'equal'</span>)</span>
+<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">'x1'</span>)</span>
+<span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(<span class="st">'x2'</span>)</span>
+<span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a>    ax.set_title(title, fontsize<span class="op">=</span><span class="dv">11</span>)</span>
+<span id="cb14-49"><a href="#cb14-49" aria-hidden="true" tabindex="-1"></a>    plt.colorbar(im, ax<span class="op">=</span>ax, fraction<span class="op">=</span><span class="fl">0.046</span>, label<span class="op">=</span><span class="st">'Discriminator logit'</span>)</span>
+<span id="cb14-50"><a href="#cb14-50" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ax</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+</div>
+<p>Let’s look at the map early in training, when the generator is still bad. The cell below trains a fresh generator and discriminator for only 2 epochs with the chapter’s settings and keeps them as <code>G_snap</code> and <code>D_snap</code> (the chapter’s <code>G</code> and <code>D</code> stay as they are).</p>
+<div id="dsee0004" class="cell" data-execution_count="13">
+<details class="code-fold">
+<summary>Show Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(RNG_SEED)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>G_snap, D_snap, H_snap <span class="op">=</span> train_vanilla_gan(X_ring, epochs<span class="op">=</span><span class="dv">2</span>, batch_size<span class="op">=</span><span class="dv">256</span>, lr_g<span class="op">=</span><span class="fl">2e-4</span>, lr_d<span class="op">=</span><span class="fl">2e-4</span>,</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>                                           hidden_dim<span class="op">=</span><span class="dv">256</span>, noise_dim<span class="op">=</span><span class="dv">2</span>, print_every<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>plot_discriminator_map(D_snap, G_snap, arrows<span class="op">=</span><span class="va">True</span>, title<span class="op">=</span><span class="st">'After 2 epochs: discriminator logit and generator push'</span>)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch 001/2 | D 1.128 | G 0.734 | Div 0.809
+Epoch 002/2 | D 1.040 | G 0.874 | Div 2.533</code></pre>
+</div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="intro_to_GANS_files/figure-html/cell-14-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="intro_to_GANS_files/figure-html/cell-14-output-2.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-</section>
-<section id="conditional-example-b-continuous-radius-conditioning" class="level3" data-number="10.7.2">
-<h3 data-number="10.7.2" class="anchored" data-anchor-id="conditional-example-b-continuous-radius-conditioning"><span class="header-section-number">10.7.2</span> Conditional Example B — Continuous Radius Conditioning</h3>
-<p>Instead of conditioning on discrete labels, we can also condition on continuous scalar values. In this example, we’ll condition the GAN on the radius (distance from the origin) of the generated samples. This allows us to control where on the ring samples are generated.</p>
-<p>To handle continuous conditioning, we typically embed the scalar through a small MLP before concatenating it with other inputs. This gives the network more flexibility in how it uses the conditioning signal.</p>
-<div id="87bf3fe2" class="cell" data-execution_count="14">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gen_models_utilities <span class="im">import</span> make_conditional_loader_radius, plot_conditional_samples_continuous</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Conditional Generator with radius embedding</span></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ConditionalMLPGeneratorRadius(nn.Module):</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, noise_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>, cond_emb_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">16</span>, hidden_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">256</span>, out_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>):</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Embed the scalar radius into a higher-dimensional space</span></span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.cond_embed <span class="op">=</span> nn.Sequential(</span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>            nn.Linear(<span class="dv">1</span>, cond_emb_dim),</span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>            nn.LeakyReLU(),</span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>            nn.Linear(cond_emb_dim, cond_emb_dim),</span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.main <span class="op">=</span> nn.Sequential(</span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>            nn.Linear(noise_dim <span class="op">+</span> cond_emb_dim, hidden_dim), nn.LeakyReLU(),</span>
-<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>            nn.Linear(hidden_dim, hidden_dim), nn.LeakyReLU(),</span>
-<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>            nn.Linear(hidden_dim, out_dim),</span>
-<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, z: torch.Tensor, r: torch.Tensor) <span class="op">-&gt;</span> torch.Tensor:</span>
-<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>        r_emb <span class="op">=</span> <span class="va">self</span>.cond_embed(r)</span>
-<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>        zr <span class="op">=</span> torch.cat([z, r_emb], dim<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.main(zr)</span>
-<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Conditional Discriminator with radius embedding</span></span>
-<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ConditionalMLPDiscriminatorRadius(nn.Module):</span>
-<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, input_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>, cond_emb_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">16</span>, hidden_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">256</span>):</span>
-<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
-<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.cond_embed <span class="op">=</span> nn.Sequential(</span>
-<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>            nn.Linear(<span class="dv">1</span>, cond_emb_dim),</span>
-<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a>            nn.LeakyReLU(),</span>
-<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a>            nn.Linear(cond_emb_dim, cond_emb_dim),</span>
-<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.main <span class="op">=</span> nn.Sequential(</span>
-<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a>            nn.Linear(input_dim <span class="op">+</span> cond_emb_dim, hidden_dim), nn.LeakyReLU(<span class="fl">0.2</span>),</span>
-<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a>            nn.Linear(hidden_dim, hidden_dim), nn.LeakyReLU(<span class="fl">0.2</span>),</span>
-<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a>            nn.Linear(hidden_dim, <span class="dv">1</span>),</span>
-<span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x: torch.Tensor, r: torch.Tensor) <span class="op">-&gt;</span> torch.Tensor:</span>
-<span id="cb17-38"><a href="#cb17-38" aria-hidden="true" tabindex="-1"></a>        r_emb <span class="op">=</span> <span class="va">self</span>.cond_embed(r)</span>
-<span id="cb17-39"><a href="#cb17-39" aria-hidden="true" tabindex="-1"></a>        xr <span class="op">=</span> torch.cat([x, r_emb], dim<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb17-40"><a href="#cb17-40" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.main(xr).squeeze(<span class="op">-</span><span class="dv">1</span>)</span>
-<span id="cb17-41"><a href="#cb17-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-42"><a href="#cb17-42" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_conditional_gan_radius(</span>
-<span id="cb17-43"><a href="#cb17-43" aria-hidden="true" tabindex="-1"></a>    data: np.ndarray, <span class="op">*</span>,</span>
-<span id="cb17-44"><a href="#cb17-44" aria-hidden="true" tabindex="-1"></a>    noise_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>, batch_size: <span class="bu">int</span> <span class="op">=</span> <span class="dv">256</span>, epochs: <span class="bu">int</span> <span class="op">=</span> <span class="dv">120</span>,</span>
-<span id="cb17-45"><a href="#cb17-45" aria-hidden="true" tabindex="-1"></a>    lr_g: <span class="bu">float</span> <span class="op">=</span> <span class="fl">2e-4</span>, lr_d: <span class="bu">float</span> <span class="op">=</span> <span class="fl">2e-4</span>, hidden_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">256</span>, print_every: <span class="bu">int</span> <span class="op">=</span> <span class="dv">40</span></span>
-<span id="cb17-46"><a href="#cb17-46" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> <span class="bu">tuple</span>[nn.Module, nn.Module, GanHistory]:</span>
-<span id="cb17-47"><a href="#cb17-47" aria-hidden="true" tabindex="-1"></a>    loader <span class="op">=</span> make_conditional_loader_radius(data, batch_size)</span>
-<span id="cb17-48"><a href="#cb17-48" aria-hidden="true" tabindex="-1"></a>    G <span class="op">=</span> ConditionalMLPGeneratorRadius(noise_dim<span class="op">=</span>noise_dim, hidden_dim<span class="op">=</span>hidden_dim).to(device)</span>
-<span id="cb17-49"><a href="#cb17-49" aria-hidden="true" tabindex="-1"></a>    D <span class="op">=</span> ConditionalMLPDiscriminatorRadius(input_dim<span class="op">=</span><span class="dv">2</span>, hidden_dim<span class="op">=</span>hidden_dim).to(device)</span>
-<span id="cb17-50"><a href="#cb17-50" aria-hidden="true" tabindex="-1"></a>    opt_g <span class="op">=</span> optim.Adam(G.parameters(), lr<span class="op">=</span>lr_g, betas<span class="op">=</span>(<span class="fl">0.5</span>, <span class="fl">0.999</span>))</span>
-<span id="cb17-51"><a href="#cb17-51" aria-hidden="true" tabindex="-1"></a>    opt_d <span class="op">=</span> optim.Adam(D.parameters(), lr<span class="op">=</span>lr_d, betas<span class="op">=</span>(<span class="fl">0.5</span>, <span class="fl">0.999</span>))</span>
-<span id="cb17-52"><a href="#cb17-52" aria-hidden="true" tabindex="-1"></a>    bce <span class="op">=</span> nn.BCEWithLogitsLoss()</span>
-<span id="cb17-53"><a href="#cb17-53" aria-hidden="true" tabindex="-1"></a>    hist <span class="op">=</span> GanHistory([], [], [], [], [])</span>
-<span id="cb17-54"><a href="#cb17-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-55"><a href="#cb17-55" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> ep <span class="kw">in</span> <span class="bu">range</span>(epochs):</span>
-<span id="cb17-56"><a href="#cb17-56" aria-hidden="true" tabindex="-1"></a>        d_losses, g_losses, real_scores, fake_scores <span class="op">=</span> [], [], [], []</span>
-<span id="cb17-57"><a href="#cb17-57" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> xb, rb <span class="kw">in</span> loader:</span>
-<span id="cb17-58"><a href="#cb17-58" aria-hidden="true" tabindex="-1"></a>            xb, rb <span class="op">=</span> xb.to(device), rb.to(device)</span>
-<span id="cb17-59"><a href="#cb17-59" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Discriminator step</span></span>
-<span id="cb17-60"><a href="#cb17-60" aria-hidden="true" tabindex="-1"></a>            z <span class="op">=</span> torch.randn(xb.size(<span class="dv">0</span>), noise_dim, device<span class="op">=</span>device)</span>
-<span id="cb17-61"><a href="#cb17-61" aria-hidden="true" tabindex="-1"></a>            <span class="cf">with</span> torch.no_grad():</span>
-<span id="cb17-62"><a href="#cb17-62" aria-hidden="true" tabindex="-1"></a>                x_fake <span class="op">=</span> G(z, rb)</span>
-<span id="cb17-63"><a href="#cb17-63" aria-hidden="true" tabindex="-1"></a>            opt_d.zero_grad()</span>
-<span id="cb17-64"><a href="#cb17-64" aria-hidden="true" tabindex="-1"></a>            d_real <span class="op">=</span> D(xb, rb)</span>
-<span id="cb17-65"><a href="#cb17-65" aria-hidden="true" tabindex="-1"></a>            d_fake <span class="op">=</span> D(x_fake, rb)</span>
-<span id="cb17-66"><a href="#cb17-66" aria-hidden="true" tabindex="-1"></a>            loss_d <span class="op">=</span> bce(d_real, torch.ones_like(d_real)) <span class="op">+</span> bce(d_fake, torch.zeros_like(d_fake))</span>
-<span id="cb17-67"><a href="#cb17-67" aria-hidden="true" tabindex="-1"></a>            loss_d.backward()</span>
-<span id="cb17-68"><a href="#cb17-68" aria-hidden="true" tabindex="-1"></a>            opt_d.step()</span>
-<span id="cb17-69"><a href="#cb17-69" aria-hidden="true" tabindex="-1"></a>            d_losses.append(<span class="bu">float</span>(loss_d.detach().cpu().item()))</span>
-<span id="cb17-70"><a href="#cb17-70" aria-hidden="true" tabindex="-1"></a>            real_scores.append(d_real.mean().item())</span>
-<span id="cb17-71"><a href="#cb17-71" aria-hidden="true" tabindex="-1"></a>            fake_scores.append(d_fake.mean().item())</span>
-<span id="cb17-72"><a href="#cb17-72" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-73"><a href="#cb17-73" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Generator step</span></span>
-<span id="cb17-74"><a href="#cb17-74" aria-hidden="true" tabindex="-1"></a>            z <span class="op">=</span> torch.randn(xb.size(<span class="dv">0</span>), noise_dim, device<span class="op">=</span>device)</span>
-<span id="cb17-75"><a href="#cb17-75" aria-hidden="true" tabindex="-1"></a>            opt_g.zero_grad()</span>
-<span id="cb17-76"><a href="#cb17-76" aria-hidden="true" tabindex="-1"></a>            xg <span class="op">=</span> G(z, rb)</span>
-<span id="cb17-77"><a href="#cb17-77" aria-hidden="true" tabindex="-1"></a>            dg <span class="op">=</span> D(xg, rb)</span>
-<span id="cb17-78"><a href="#cb17-78" aria-hidden="true" tabindex="-1"></a>            loss_g <span class="op">=</span> bce(dg, torch.ones_like(dg))</span>
-<span id="cb17-79"><a href="#cb17-79" aria-hidden="true" tabindex="-1"></a>            loss_g.backward()</span>
-<span id="cb17-80"><a href="#cb17-80" aria-hidden="true" tabindex="-1"></a>            opt_g.step()</span>
-<span id="cb17-81"><a href="#cb17-81" aria-hidden="true" tabindex="-1"></a>            g_losses.append(<span class="bu">float</span>(loss_g.detach().cpu().item()))</span>
-<span id="cb17-82"><a href="#cb17-82" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb17-83"><a href="#cb17-83" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> torch.no_grad():</span>
-<span id="cb17-84"><a href="#cb17-84" aria-hidden="true" tabindex="-1"></a>            z_eval <span class="op">=</span> torch.randn(<span class="dv">2048</span>, noise_dim, device<span class="op">=</span>device)</span>
-<span id="cb17-85"><a href="#cb17-85" aria-hidden="true" tabindex="-1"></a>            r_eval <span class="op">=</span> torch.norm(torch.randn(<span class="dv">2048</span>, <span class="dv">2</span>), dim<span class="op">=</span><span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>).to(device)</span>
-<span id="cb17-86"><a href="#cb17-86" aria-hidden="true" tabindex="-1"></a>            samples <span class="op">=</span> G(z_eval, r_eval)</span>
-<span id="cb17-87"><a href="#cb17-87" aria-hidden="true" tabindex="-1"></a>            div <span class="op">=</span> compute_diversity_metric(samples)</span>
-<span id="cb17-88"><a href="#cb17-88" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-89"><a href="#cb17-89" aria-hidden="true" tabindex="-1"></a>        hist.d_loss.append(<span class="bu">float</span>(np.mean(d_losses)))</span>
-<span id="cb17-90"><a href="#cb17-90" aria-hidden="true" tabindex="-1"></a>        hist.g_loss.append(<span class="bu">float</span>(np.mean(g_losses)))</span>
-<span id="cb17-91"><a href="#cb17-91" aria-hidden="true" tabindex="-1"></a>        hist.diversity.append(div)</span>
-<span id="cb17-92"><a href="#cb17-92" aria-hidden="true" tabindex="-1"></a>        hist.real_scores.append(<span class="bu">float</span>(np.mean(real_scores)))</span>
-<span id="cb17-93"><a href="#cb17-93" aria-hidden="true" tabindex="-1"></a>        hist.fake_scores.append(<span class="bu">float</span>(np.mean(fake_scores)))</span>
-<span id="cb17-94"><a href="#cb17-94" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (ep<span class="op">+</span><span class="dv">1</span>) <span class="op">%</span> <span class="bu">max</span>(<span class="dv">1</span>, print_every) <span class="op">==</span> <span class="dv">0</span> <span class="kw">or</span> ep<span class="op">==</span><span class="dv">0</span>:</span>
-<span id="cb17-95"><a href="#cb17-95" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"Epoch </span><span class="sc">{</span>ep<span class="op">+</span><span class="dv">1</span><span class="sc">:03d}</span><span class="ss">/</span><span class="sc">{</span>epochs<span class="sc">}</span><span class="ss"> | D </span><span class="sc">{</span>hist<span class="sc">.</span>d_loss[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:.3f}</span><span class="ss"> | G </span><span class="sc">{</span>hist<span class="sc">.</span>g_loss[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:.3f}</span><span class="ss"> | Div </span><span class="sc">{</span>div<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
-<span id="cb17-96"><a href="#cb17-96" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> G, D, hist</span>
-<span id="cb17-97"><a href="#cb17-97" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-98"><a href="#cb17-98" aria-hidden="true" tabindex="-1"></a><span class="co"># Train the conditional GAN with radius conditioning</span></span>
-<span id="cb17-99"><a href="#cb17-99" aria-hidden="true" tabindex="-1"></a>G_cond_radius, D_cond_radius, H_cond_radius <span class="op">=</span> train_conditional_gan_radius(</span>
-<span id="cb17-100"><a href="#cb17-100" aria-hidden="true" tabindex="-1"></a>    X_ring, epochs<span class="op">=</span><span class="dv">480</span>, batch_size<span class="op">=</span><span class="dv">256</span>, </span>
-<span id="cb17-101"><a href="#cb17-101" aria-hidden="true" tabindex="-1"></a>    lr_g<span class="op">=</span><span class="fl">2e-4</span>, lr_d<span class="op">=</span><span class="fl">2e-4</span>, hidden_dim<span class="op">=</span><span class="dv">256</span>, noise_dim<span class="op">=</span><span class="dv">2</span>, print_every<span class="op">=</span><span class="dv">40</span></span>
-<span id="cb17-102"><a href="#cb17-102" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Epoch 001/480 | D 1.295 | G 0.732 | Div 0.012
-Epoch 040/480 | D 1.100 | G 1.071 | Div 0.335
-Epoch 080/480 | D 1.265 | G 0.834 | Div 3.910
-Epoch 120/480 | D 1.242 | G 0.807 | Div 1.787
-Epoch 160/480 | D 1.284 | G 0.801 | Div 1.194
-Epoch 200/480 | D 1.323 | G 0.774 | Div 1.310
-Epoch 240/480 | D 1.341 | G 0.758 | Div 1.311
-Epoch 280/480 | D 1.351 | G 0.736 | Div 1.299
-Epoch 320/480 | D 1.355 | G 0.731 | Div 1.255
-Epoch 360/480 | D 1.367 | G 0.729 | Div 1.294
-Epoch 400/480 | D 1.362 | G 0.722 | Div 1.245
-Epoch 440/480 | D 1.359 | G 0.721 | Div 1.224
-Epoch 480/480 | D 1.365 | G 0.725 | Div 1.226</code></pre>
-</div>
-</div>
-<p>Now let’s generate samples at different radius values to see how the generator responds to continuous conditioning. We’ll sweep through several radius values and visualize the results.</p>
-<div id="bd0b8da8" class="cell" data-execution_count="17">
+<p>After two epochs the generator’s samples lie on an arc across the upper half of the ring, and the discriminator’s logit is negative (blue) around them. The logit is largest at the bottom left, where five of the eight modes have real data but no samples. Yet the green arrows do not point there, and many of them do not point at the nearest real cluster either. They point up the local slope of the logit. Along most of the arc that is upward and to the right, out of the blue basin over its nearest rim; at the right end of the arc it is down and to the right. The generator only uses the slope of the logit where it generated samples, and thus cannot see that there is a much higher slope toward the lower left corner.</p>
+<p>In the training loop the two players take turns: one discriminator step, then one generator step. The function below continues training from the snapshot with only one player, or with both in turns, for a given number of steps. It works on copies, so <code>G_snap</code> and <code>D_snap</code> stay as they are.</p>
+<div id="dsee0007" class="cell" data-execution_count="14">
 <details class="code-fold">
 <summary>Show Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate conditional samples for different radius values</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>G_cond_radius.<span class="bu">eval</span>()</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>samples_by_radius <span class="op">=</span> {}</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>n_samples_per_radius <span class="op">=</span> <span class="dv">800</span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>radius_values <span class="op">=</span> [<span class="op">-</span><span class="fl">1.0</span> , <span class="fl">0.01</span>, <span class="fl">0.5</span>, <span class="fl">1.5</span>, <span class="fl">1.7</span>, <span class="fl">2.0</span>, <span class="fl">2.5</span>, <span class="fl">3.0</span>, <span class="fl">3.5</span>, <span class="fl">4.0</span>]</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> r_val <span class="kw">in</span> radius_values:</span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    z <span class="op">=</span> torch.randn(n_samples_per_radius, <span class="dv">2</span>, device<span class="op">=</span>device)</span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> torch.full((n_samples_per_radius, <span class="dv">1</span>), r_val, device<span class="op">=</span>device)</span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> torch.no_grad():</span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>        samples <span class="op">=</span> G_cond_radius(z, r).cpu().numpy()</span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>    samples_by_radius[r_val] <span class="op">=</span> samples</span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>plot_conditional_samples_continuous(</span>
-<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>    samples_by_radius, X_ring, title<span class="op">=</span><span class="st">"Conditional GAN: Radius Conditioning"</span>, value_name<span class="op">=</span><span class="st">"radius"</span></span>
-<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_players(G_start, D_start, player<span class="op">=</span><span class="st">'alternate'</span>, steps<span class="op">=</span><span class="dv">200</span>, batch_size<span class="op">=</span><span class="dv">256</span>, lr<span class="op">=</span><span class="fl">2e-4</span>, seed<span class="op">=</span>RNG_SEED):</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Continue training copies of (G_start, D_start): 'G only', 'D only' or 'alternate' (D step, then G step)</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    torch.manual_seed(seed)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    G_new, D_new <span class="op">=</span> copy.deepcopy(G_start), copy.deepcopy(D_start)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    opt_g <span class="op">=</span> optim.Adam(G_new.parameters(), lr<span class="op">=</span>lr, betas<span class="op">=</span>(<span class="fl">0.5</span>, <span class="fl">0.999</span>))</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    opt_d <span class="op">=</span> optim.Adam(D_new.parameters(), lr<span class="op">=</span>lr, betas<span class="op">=</span>(<span class="fl">0.5</span>, <span class="fl">0.999</span>))</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    bce <span class="op">=</span> nn.BCEWithLogitsLoss()</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    X_t <span class="op">=</span> torch.from_numpy(X_ring).to(device)</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    ones <span class="op">=</span> torch.ones(batch_size, device<span class="op">=</span>device)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    zeros <span class="op">=</span> torch.zeros(batch_size, device<span class="op">=</span>device)</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> step <span class="kw">in</span> <span class="bu">range</span>(steps):</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> player <span class="kw">in</span> (<span class="st">'D only'</span>, <span class="st">'alternate'</span>):</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>            xb <span class="op">=</span> X_t[torch.randint(<span class="dv">0</span>, <span class="bu">len</span>(X_t), (batch_size,), device<span class="op">=</span>device)]</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>            <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>                x_fake <span class="op">=</span> G_new(torch.randn(batch_size, <span class="dv">2</span>, device<span class="op">=</span>device))</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>            opt_d.zero_grad()</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>            loss_d <span class="op">=</span> bce(D_new(xb), ones) <span class="op">+</span> bce(D_new(x_fake), zeros)</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>            loss_d.backward()</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>            opt_d.step()</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> player <span class="kw">in</span> (<span class="st">'G only'</span>, <span class="st">'alternate'</span>):</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>            opt_g.zero_grad()</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>            loss_g <span class="op">=</span> bce(D_new(G_new(torch.randn(batch_size, <span class="dv">2</span>, device<span class="op">=</span>device))), ones)</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>            loss_g.backward()</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>            opt_g.step()</span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> G_new, D_new</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<p>Use the controls below to choose which player trains and for how many steps, starting from the snapshot. The default trains both players in turns for 200 steps, as the chapter’s loop does.</p>
+<div id="dsee0009" class="cell" data-execution_count="15">
+<details class="code-fold">
+<summary>Show Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ipywidgets <span class="im">import</span> interact, Dropdown, IntSlider, Checkbox</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> show_players(player<span class="op">=</span><span class="st">'alternate'</span>, steps<span class="op">=</span><span class="dv">200</span>, arrows<span class="op">=</span><span class="va">False</span>):</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    G_new, D_new <span class="op">=</span> train_players(G_snap, D_snap, player<span class="op">=</span>player, steps<span class="op">=</span>steps)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    plot_discriminator_map(D_new, G_new, arrows<span class="op">=</span>arrows, title<span class="op">=</span><span class="ss">f'From the snapshot: </span><span class="sc">{</span>player<span class="sc">}</span><span class="ss">, </span><span class="sc">{</span>steps<span class="sc">}</span><span class="ss"> steps'</span>,</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>                           lim<span class="op">=</span><span class="dv">6</span>)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>interact(show_players,</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>         player<span class="op">=</span>Dropdown(options<span class="op">=</span>[<span class="st">'alternate'</span>, <span class="st">'G only'</span>, <span class="st">'D only'</span>], value<span class="op">=</span><span class="st">'alternate'</span>, description<span class="op">=</span><span class="st">'Train'</span>),</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>         steps<span class="op">=</span>IntSlider(<span class="bu">min</span><span class="op">=</span><span class="dv">0</span>, <span class="bu">max</span><span class="op">=</span><span class="dv">200</span>, step<span class="op">=</span><span class="dv">1</span>, value<span class="op">=</span><span class="dv">200</span>, description<span class="op">=</span><span class="st">'Steps'</span>, continuous_update<span class="op">=</span><span class="va">False</span>),</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>         arrows<span class="op">=</span>Checkbox(value<span class="op">=</span><span class="va">False</span>, description<span class="op">=</span><span class="st">'Arrows'</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -1146,11 +1031,323 @@ Epoch 480/480 | D 1.365 | G 0.725 | Div 1.226</code></pre>
 </figure>
 </div>
 </div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"6eb204f3d9f14b6083d12277431adf78","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+</div>
+<p>With both players taking turns, the samples spread over the ring within 200 steps, and the logit shrinks to within about <span class="math inline">\(\pm 1\)</span> (look at the color bar). Try the other two settings and different numbers of steps. What happens when only one of the two players learns?</p>
+</section>
+<section id="conditional-generation-examples" class="level2" data-number="10.8">
+<h2 data-number="10.8" class="anchored" data-anchor-id="conditional-generation-examples"><span class="header-section-number">10.8</span> Conditional Generation Examples</h2>
+<p>So far, we’ve explored unconditional generative models that learn to produce samples from the overall data distribution. However, in many practical applications, we want to control what we generate by conditioning on additional information. For example, we might want to generate samples from a specific mode of the distribution, or generate samples with particular properties.</p>
+<p>In this section, we’ll explore two types of conditioning:</p>
+<ol type="1">
+<li><strong>Discrete Conditioning (One-Hot Mode Index):</strong> Condition the GAN on which Gaussian mode in our ring dataset the sample should come from.</li>
+<li><strong>Continuous Conditioning (Radius):</strong> Condition the GAN on a continuous scalar representing the radius from the origin.</li>
+</ol>
+<p>These conditioning strategies are widely applicable and form the basis for more complex conditional generation tasks, such as class-conditional image generation or text-to-image synthesis.</p>
+<section id="conditional-example-a-one-hot-mode-conditioning" class="level3" data-number="10.8.1">
+<h3 data-number="10.8.1" class="anchored" data-anchor-id="conditional-example-a-one-hot-mode-conditioning"><span class="header-section-number">10.8.1</span> Conditional Example A — One-Hot Mode Conditioning</h3>
+<p>In this example, we’ll condition the GAN on which of the 8 Gaussian modes in the ring dataset we want to generate from. We provide a one-hot encoded vector indicating the target mode to both the generator and discriminator.</p>
+<p>The key idea is simple: we concatenate the one-hot label to the inputs of both networks. The generator receives both random noise <span class="math inline">\(z\)</span> and the label <span class="math inline">\(y\)</span>, learning to map <span class="math inline">\((z, y) \rightarrow x\)</span>. The discriminator receives both the data point <span class="math inline">\(x\)</span> and the label <span class="math inline">\(y\)</span>, learning to distinguish real pairs <span class="math inline">\((x, y)\)</span> from fake pairs <span class="math inline">\((G(z, y), y)\)</span>.</p>
+<div id="dabfed35" class="cell" data-execution_count="16">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Conditional Generator: takes noise + one-hot label</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ConditionalMLPGenerator(nn.Module):</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, noise_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>, label_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">8</span>, hidden_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">256</span>, out_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>):</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.main <span class="op">=</span> nn.Sequential(</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>            nn.Linear(noise_dim <span class="op">+</span> label_dim, hidden_dim), nn.LeakyReLU(),</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>            nn.Linear(hidden_dim, hidden_dim), nn.LeakyReLU(),</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>            nn.Linear(hidden_dim, out_dim),</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, z: torch.Tensor, y: torch.Tensor) <span class="op">-&gt;</span> torch.Tensor:</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Concatenate noise and label</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>        zy <span class="op">=</span> torch.cat([z, y], dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.main(zy)</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Conditional Discriminator: takes data + one-hot label</span></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ConditionalMLPDiscriminator(nn.Module):</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, input_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>, label_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">8</span>, hidden_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">256</span>):</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.main <span class="op">=</span> nn.Sequential(</span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>            nn.Linear(input_dim <span class="op">+</span> label_dim, hidden_dim), nn.LeakyReLU(<span class="fl">0.2</span>),</span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>            nn.Linear(hidden_dim, hidden_dim), nn.LeakyReLU(<span class="fl">0.2</span>),</span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>            nn.Linear(hidden_dim, <span class="dv">1</span>),</span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x: torch.Tensor, y: torch.Tensor) <span class="op">-&gt;</span> torch.Tensor:</span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>        xy <span class="op">=</span> torch.cat([x, y], dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.main(xy).squeeze(<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_conditional_gan_onehot(</span>
+<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a>    data: np.ndarray, labels: np.ndarray, n_classes: <span class="bu">int</span> <span class="op">=</span> <span class="dv">8</span>, <span class="op">*</span>,</span>
+<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a>    noise_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>, batch_size: <span class="bu">int</span> <span class="op">=</span> <span class="dv">256</span>, epochs: <span class="bu">int</span> <span class="op">=</span> <span class="dv">120</span>,</span>
+<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a>    lr_g: <span class="bu">float</span> <span class="op">=</span> <span class="fl">2e-4</span>, lr_d: <span class="bu">float</span> <span class="op">=</span> <span class="fl">2e-4</span>, hidden_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">256</span>, print_every: <span class="bu">int</span> <span class="op">=</span> <span class="dv">40</span></span>
+<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> <span class="bu">tuple</span>[nn.Module, nn.Module, GanHistory]:</span>
+<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a>    loader <span class="op">=</span> make_conditional_loader_onehot(data, labels, batch_size, n_classes)</span>
+<span id="cb19-34"><a href="#cb19-34" aria-hidden="true" tabindex="-1"></a>    G <span class="op">=</span> ConditionalMLPGenerator(noise_dim<span class="op">=</span>noise_dim, label_dim<span class="op">=</span>n_classes, hidden_dim<span class="op">=</span>hidden_dim).to(device)</span>
+<span id="cb19-35"><a href="#cb19-35" aria-hidden="true" tabindex="-1"></a>    D <span class="op">=</span> ConditionalMLPDiscriminator(input_dim<span class="op">=</span><span class="dv">2</span>, label_dim<span class="op">=</span>n_classes, hidden_dim<span class="op">=</span>hidden_dim).to(device)</span>
+<span id="cb19-36"><a href="#cb19-36" aria-hidden="true" tabindex="-1"></a>    opt_g <span class="op">=</span> optim.Adam(G.parameters(), lr<span class="op">=</span>lr_g, betas<span class="op">=</span>(<span class="fl">0.5</span>, <span class="fl">0.999</span>))</span>
+<span id="cb19-37"><a href="#cb19-37" aria-hidden="true" tabindex="-1"></a>    opt_d <span class="op">=</span> optim.Adam(D.parameters(), lr<span class="op">=</span>lr_d, betas<span class="op">=</span>(<span class="fl">0.5</span>, <span class="fl">0.999</span>))</span>
+<span id="cb19-38"><a href="#cb19-38" aria-hidden="true" tabindex="-1"></a>    bce <span class="op">=</span> nn.BCEWithLogitsLoss()</span>
+<span id="cb19-39"><a href="#cb19-39" aria-hidden="true" tabindex="-1"></a>    hist <span class="op">=</span> GanHistory([], [], [], [], [])</span>
+<span id="cb19-40"><a href="#cb19-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-41"><a href="#cb19-41" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> ep <span class="kw">in</span> <span class="bu">range</span>(epochs):</span>
+<span id="cb19-42"><a href="#cb19-42" aria-hidden="true" tabindex="-1"></a>        d_losses, g_losses, real_scores, fake_scores <span class="op">=</span> [], [], [], []</span>
+<span id="cb19-43"><a href="#cb19-43" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> xb, yb <span class="kw">in</span> loader:</span>
+<span id="cb19-44"><a href="#cb19-44" aria-hidden="true" tabindex="-1"></a>            xb, yb <span class="op">=</span> xb.to(device), yb.to(device)</span>
+<span id="cb19-45"><a href="#cb19-45" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Discriminator step</span></span>
+<span id="cb19-46"><a href="#cb19-46" aria-hidden="true" tabindex="-1"></a>            z <span class="op">=</span> torch.randn(xb.size(<span class="dv">0</span>), noise_dim, device<span class="op">=</span>device)</span>
+<span id="cb19-47"><a href="#cb19-47" aria-hidden="true" tabindex="-1"></a>            <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb19-48"><a href="#cb19-48" aria-hidden="true" tabindex="-1"></a>                x_fake <span class="op">=</span> G(z, yb)</span>
+<span id="cb19-49"><a href="#cb19-49" aria-hidden="true" tabindex="-1"></a>            opt_d.zero_grad()</span>
+<span id="cb19-50"><a href="#cb19-50" aria-hidden="true" tabindex="-1"></a>            d_real <span class="op">=</span> D(xb, yb)</span>
+<span id="cb19-51"><a href="#cb19-51" aria-hidden="true" tabindex="-1"></a>            d_fake <span class="op">=</span> D(x_fake, yb)</span>
+<span id="cb19-52"><a href="#cb19-52" aria-hidden="true" tabindex="-1"></a>            loss_d <span class="op">=</span> bce(d_real, torch.ones_like(d_real)) <span class="op">+</span> bce(d_fake, torch.zeros_like(d_fake))</span>
+<span id="cb19-53"><a href="#cb19-53" aria-hidden="true" tabindex="-1"></a>            loss_d.backward()</span>
+<span id="cb19-54"><a href="#cb19-54" aria-hidden="true" tabindex="-1"></a>            opt_d.step()</span>
+<span id="cb19-55"><a href="#cb19-55" aria-hidden="true" tabindex="-1"></a>            d_losses.append(<span class="bu">float</span>(loss_d.detach().cpu().item()))</span>
+<span id="cb19-56"><a href="#cb19-56" aria-hidden="true" tabindex="-1"></a>            real_scores.append(d_real.mean().item())</span>
+<span id="cb19-57"><a href="#cb19-57" aria-hidden="true" tabindex="-1"></a>            fake_scores.append(d_fake.mean().item())</span>
+<span id="cb19-58"><a href="#cb19-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-59"><a href="#cb19-59" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Generator step</span></span>
+<span id="cb19-60"><a href="#cb19-60" aria-hidden="true" tabindex="-1"></a>            z <span class="op">=</span> torch.randn(xb.size(<span class="dv">0</span>), noise_dim, device<span class="op">=</span>device)</span>
+<span id="cb19-61"><a href="#cb19-61" aria-hidden="true" tabindex="-1"></a>            opt_g.zero_grad()</span>
+<span id="cb19-62"><a href="#cb19-62" aria-hidden="true" tabindex="-1"></a>            xg <span class="op">=</span> G(z, yb)</span>
+<span id="cb19-63"><a href="#cb19-63" aria-hidden="true" tabindex="-1"></a>            dg <span class="op">=</span> D(xg, yb)</span>
+<span id="cb19-64"><a href="#cb19-64" aria-hidden="true" tabindex="-1"></a>            loss_g <span class="op">=</span> bce(dg, torch.ones_like(dg))</span>
+<span id="cb19-65"><a href="#cb19-65" aria-hidden="true" tabindex="-1"></a>            loss_g.backward()</span>
+<span id="cb19-66"><a href="#cb19-66" aria-hidden="true" tabindex="-1"></a>            opt_g.step()</span>
+<span id="cb19-67"><a href="#cb19-67" aria-hidden="true" tabindex="-1"></a>            g_losses.append(<span class="bu">float</span>(loss_g.detach().cpu().item()))</span>
+<span id="cb19-68"><a href="#cb19-68" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb19-69"><a href="#cb19-69" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb19-70"><a href="#cb19-70" aria-hidden="true" tabindex="-1"></a>            z_eval <span class="op">=</span> torch.randn(<span class="dv">2048</span>, noise_dim, device<span class="op">=</span>device)</span>
+<span id="cb19-71"><a href="#cb19-71" aria-hidden="true" tabindex="-1"></a>            y_eval <span class="op">=</span> torch.nn.functional.one_hot(</span>
+<span id="cb19-72"><a href="#cb19-72" aria-hidden="true" tabindex="-1"></a>                torch.randint(<span class="dv">0</span>, n_classes, (<span class="dv">2048</span>,), device<span class="op">=</span>device), num_classes<span class="op">=</span>n_classes</span>
+<span id="cb19-73"><a href="#cb19-73" aria-hidden="true" tabindex="-1"></a>            ).to(torch.float32)</span>
+<span id="cb19-74"><a href="#cb19-74" aria-hidden="true" tabindex="-1"></a>            samples <span class="op">=</span> G(z_eval, y_eval)</span>
+<span id="cb19-75"><a href="#cb19-75" aria-hidden="true" tabindex="-1"></a>            div <span class="op">=</span> compute_diversity_metric(samples)</span>
+<span id="cb19-76"><a href="#cb19-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-77"><a href="#cb19-77" aria-hidden="true" tabindex="-1"></a>        hist.d_loss.append(<span class="bu">float</span>(np.mean(d_losses)))</span>
+<span id="cb19-78"><a href="#cb19-78" aria-hidden="true" tabindex="-1"></a>        hist.g_loss.append(<span class="bu">float</span>(np.mean(g_losses)))</span>
+<span id="cb19-79"><a href="#cb19-79" aria-hidden="true" tabindex="-1"></a>        hist.diversity.append(div)</span>
+<span id="cb19-80"><a href="#cb19-80" aria-hidden="true" tabindex="-1"></a>        hist.real_scores.append(<span class="bu">float</span>(np.mean(real_scores)))</span>
+<span id="cb19-81"><a href="#cb19-81" aria-hidden="true" tabindex="-1"></a>        hist.fake_scores.append(<span class="bu">float</span>(np.mean(fake_scores)))</span>
+<span id="cb19-82"><a href="#cb19-82" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (ep<span class="op">+</span><span class="dv">1</span>) <span class="op">%</span> <span class="bu">max</span>(<span class="dv">1</span>, print_every) <span class="op">==</span> <span class="dv">0</span> <span class="kw">or</span> ep<span class="op">==</span><span class="dv">0</span>:</span>
+<span id="cb19-83"><a href="#cb19-83" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"Epoch </span><span class="sc">{</span>ep<span class="op">+</span><span class="dv">1</span><span class="sc">:03d}</span><span class="ss">/</span><span class="sc">{</span>epochs<span class="sc">}</span><span class="ss"> | D </span><span class="sc">{</span>hist<span class="sc">.</span>d_loss[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:.3f}</span><span class="ss"> | G </span><span class="sc">{</span>hist<span class="sc">.</span>g_loss[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:.3f}</span><span class="ss"> | Div </span><span class="sc">{</span>div<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb19-84"><a href="#cb19-84" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> G, D, hist</span>
+<span id="cb19-85"><a href="#cb19-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-86"><a href="#cb19-86" aria-hidden="true" tabindex="-1"></a><span class="co"># Train the conditional GAN</span></span>
+<span id="cb19-87"><a href="#cb19-87" aria-hidden="true" tabindex="-1"></a>G_cond_onehot, D_cond_onehot, H_cond_onehot <span class="op">=</span> train_conditional_gan_onehot(</span>
+<span id="cb19-88"><a href="#cb19-88" aria-hidden="true" tabindex="-1"></a>    X_ring, y_ring, n_classes<span class="op">=</span><span class="dv">8</span>, epochs<span class="op">=</span><span class="dv">480</span>, batch_size<span class="op">=</span><span class="dv">256</span>, </span>
+<span id="cb19-89"><a href="#cb19-89" aria-hidden="true" tabindex="-1"></a>    lr_g<span class="op">=</span><span class="fl">2e-4</span>, lr_d<span class="op">=</span><span class="fl">2e-4</span>, hidden_dim<span class="op">=</span><span class="dv">256</span>, noise_dim<span class="op">=</span><span class="dv">2</span>, print_every<span class="op">=</span><span class="dv">40</span></span>
+<span id="cb19-90"><a href="#cb19-90" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch 001/480 | D 1.272 | G 0.720 | Div 0.018
+Epoch 040/480 | D 1.403 | G 0.692 | Div 4.806
+Epoch 080/480 | D 1.387 | G 0.691 | Div 4.508
+Epoch 120/480 | D 1.387 | G 0.694 | Div 4.579
+Epoch 160/480 | D 1.382 | G 0.682 | Div 4.723
+Epoch 200/480 | D 1.393 | G 0.672 | Div 4.008
+Epoch 240/480 | D 1.385 | G 0.705 | Div 4.374
+Epoch 280/480 | D 1.389 | G 0.711 | Div 4.745
+Epoch 320/480 | D 1.388 | G 0.683 | Div 4.019
+Epoch 360/480 | D 1.385 | G 0.691 | Div 4.852
+Epoch 400/480 | D 1.384 | G 0.690 | Div 4.930
+Epoch 440/480 | D 1.388 | G 0.697 | Div 4.347
+Epoch 480/480 | D 1.388 | G 0.688 | Div 4.380</code></pre>
+</div>
+</div>
+<p>Now let’s visualize the conditional samples. We’ll generate samples for each of the 8 modes and plot them to see if the generator has learned to respect the conditioning signal.</p>
+<div id="842a41a0" class="cell" data-execution_count="17">
+<details class="code-fold">
+<summary>Show Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate conditional samples for each mode</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>G_cond_onehot.<span class="bu">eval</span>()</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>samples_by_label <span class="op">=</span> {}</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>n_samples_per_mode <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> label <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">8</span>):</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    z <span class="op">=</span> torch.randn(n_samples_per_mode, <span class="dv">2</span>, device<span class="op">=</span>device)</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> torch.nn.functional.one_hot(</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>        torch.full((n_samples_per_mode,), label, device<span class="op">=</span>device), num_classes<span class="op">=</span><span class="dv">8</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    ).to(torch.float32)</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>        samples <span class="op">=</span> G_cond_onehot(z, y).cpu().numpy()</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>    samples_by_label[label] <span class="op">=</span> samples</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>plot_conditional_samples_discrete(</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>    samples_by_label, X_ring, y_ring, title<span class="op">=</span><span class="st">"Conditional GAN: One-Hot Mode Conditioning"</span></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="intro_to_GANS_files/figure-html/cell-18-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="conditional-example-b-continuous-radius-conditioning" class="level3" data-number="10.8.2">
+<h3 data-number="10.8.2" class="anchored" data-anchor-id="conditional-example-b-continuous-radius-conditioning"><span class="header-section-number">10.8.2</span> Conditional Example B — Continuous Radius Conditioning</h3>
+<p>Instead of conditioning on discrete labels, we can also condition on continuous scalar values. In this example, we’ll condition the GAN on the radius (distance from the origin) of the generated samples. This allows us to control how far from the origin samples are generated.</p>
+<p>To handle continuous conditioning, we typically embed the scalar through a small MLP before concatenating it with other inputs. This gives the network more flexibility in how it uses the conditioning signal.</p>
+<div id="87bf3fe2" class="cell" data-execution_count="18">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gen_models_utilities <span class="im">import</span> make_conditional_loader_radius, plot_conditional_samples_continuous</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Conditional Generator with radius embedding</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ConditionalMLPGeneratorRadius(nn.Module):</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, noise_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>, cond_emb_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">16</span>, hidden_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">256</span>, out_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>):</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Embed the scalar radius into a higher-dimensional space</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.cond_embed <span class="op">=</span> nn.Sequential(</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>            nn.Linear(<span class="dv">1</span>, cond_emb_dim),</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>            nn.LeakyReLU(),</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>            nn.Linear(cond_emb_dim, cond_emb_dim),</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.main <span class="op">=</span> nn.Sequential(</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>            nn.Linear(noise_dim <span class="op">+</span> cond_emb_dim, hidden_dim), nn.LeakyReLU(),</span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>            nn.Linear(hidden_dim, hidden_dim), nn.LeakyReLU(),</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>            nn.Linear(hidden_dim, out_dim),</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, z: torch.Tensor, r: torch.Tensor) <span class="op">-&gt;</span> torch.Tensor:</span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>        r_emb <span class="op">=</span> <span class="va">self</span>.cond_embed(r)</span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>        zr <span class="op">=</span> torch.cat([z, r_emb], dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.main(zr)</span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Conditional Discriminator with radius embedding</span></span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ConditionalMLPDiscriminatorRadius(nn.Module):</span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, input_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>, cond_emb_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">16</span>, hidden_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">256</span>):</span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.cond_embed <span class="op">=</span> nn.Sequential(</span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>            nn.Linear(<span class="dv">1</span>, cond_emb_dim),</span>
+<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a>            nn.LeakyReLU(),</span>
+<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a>            nn.Linear(cond_emb_dim, cond_emb_dim),</span>
+<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.main <span class="op">=</span> nn.Sequential(</span>
+<span id="cb22-33"><a href="#cb22-33" aria-hidden="true" tabindex="-1"></a>            nn.Linear(input_dim <span class="op">+</span> cond_emb_dim, hidden_dim), nn.LeakyReLU(<span class="fl">0.2</span>),</span>
+<span id="cb22-34"><a href="#cb22-34" aria-hidden="true" tabindex="-1"></a>            nn.Linear(hidden_dim, hidden_dim), nn.LeakyReLU(<span class="fl">0.2</span>),</span>
+<span id="cb22-35"><a href="#cb22-35" aria-hidden="true" tabindex="-1"></a>            nn.Linear(hidden_dim, <span class="dv">1</span>),</span>
+<span id="cb22-36"><a href="#cb22-36" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb22-37"><a href="#cb22-37" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x: torch.Tensor, r: torch.Tensor) <span class="op">-&gt;</span> torch.Tensor:</span>
+<span id="cb22-38"><a href="#cb22-38" aria-hidden="true" tabindex="-1"></a>        r_emb <span class="op">=</span> <span class="va">self</span>.cond_embed(r)</span>
+<span id="cb22-39"><a href="#cb22-39" aria-hidden="true" tabindex="-1"></a>        xr <span class="op">=</span> torch.cat([x, r_emb], dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb22-40"><a href="#cb22-40" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.main(xr).squeeze(<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb22-41"><a href="#cb22-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-42"><a href="#cb22-42" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_conditional_gan_radius(</span>
+<span id="cb22-43"><a href="#cb22-43" aria-hidden="true" tabindex="-1"></a>    data: np.ndarray, <span class="op">*</span>,</span>
+<span id="cb22-44"><a href="#cb22-44" aria-hidden="true" tabindex="-1"></a>    noise_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span>, batch_size: <span class="bu">int</span> <span class="op">=</span> <span class="dv">256</span>, epochs: <span class="bu">int</span> <span class="op">=</span> <span class="dv">120</span>,</span>
+<span id="cb22-45"><a href="#cb22-45" aria-hidden="true" tabindex="-1"></a>    lr_g: <span class="bu">float</span> <span class="op">=</span> <span class="fl">2e-4</span>, lr_d: <span class="bu">float</span> <span class="op">=</span> <span class="fl">2e-4</span>, hidden_dim: <span class="bu">int</span> <span class="op">=</span> <span class="dv">256</span>, print_every: <span class="bu">int</span> <span class="op">=</span> <span class="dv">40</span></span>
+<span id="cb22-46"><a href="#cb22-46" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> <span class="bu">tuple</span>[nn.Module, nn.Module, GanHistory]:</span>
+<span id="cb22-47"><a href="#cb22-47" aria-hidden="true" tabindex="-1"></a>    loader <span class="op">=</span> make_conditional_loader_radius(data, batch_size)</span>
+<span id="cb22-48"><a href="#cb22-48" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Radii of the real data points, used to draw realistic conditioning values for evaluation</span></span>
+<span id="cb22-49"><a href="#cb22-49" aria-hidden="true" tabindex="-1"></a>    data_radii <span class="op">=</span> torch.norm(torch.from_numpy(data).to(torch.float32), dim<span class="op">=</span><span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>).to(device)</span>
+<span id="cb22-50"><a href="#cb22-50" aria-hidden="true" tabindex="-1"></a>    G <span class="op">=</span> ConditionalMLPGeneratorRadius(noise_dim<span class="op">=</span>noise_dim, hidden_dim<span class="op">=</span>hidden_dim).to(device)</span>
+<span id="cb22-51"><a href="#cb22-51" aria-hidden="true" tabindex="-1"></a>    D <span class="op">=</span> ConditionalMLPDiscriminatorRadius(input_dim<span class="op">=</span><span class="dv">2</span>, hidden_dim<span class="op">=</span>hidden_dim).to(device)</span>
+<span id="cb22-52"><a href="#cb22-52" aria-hidden="true" tabindex="-1"></a>    opt_g <span class="op">=</span> optim.Adam(G.parameters(), lr<span class="op">=</span>lr_g, betas<span class="op">=</span>(<span class="fl">0.5</span>, <span class="fl">0.999</span>))</span>
+<span id="cb22-53"><a href="#cb22-53" aria-hidden="true" tabindex="-1"></a>    opt_d <span class="op">=</span> optim.Adam(D.parameters(), lr<span class="op">=</span>lr_d, betas<span class="op">=</span>(<span class="fl">0.5</span>, <span class="fl">0.999</span>))</span>
+<span id="cb22-54"><a href="#cb22-54" aria-hidden="true" tabindex="-1"></a>    bce <span class="op">=</span> nn.BCEWithLogitsLoss()</span>
+<span id="cb22-55"><a href="#cb22-55" aria-hidden="true" tabindex="-1"></a>    hist <span class="op">=</span> GanHistory([], [], [], [], [])</span>
+<span id="cb22-56"><a href="#cb22-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-57"><a href="#cb22-57" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> ep <span class="kw">in</span> <span class="bu">range</span>(epochs):</span>
+<span id="cb22-58"><a href="#cb22-58" aria-hidden="true" tabindex="-1"></a>        d_losses, g_losses, real_scores, fake_scores <span class="op">=</span> [], [], [], []</span>
+<span id="cb22-59"><a href="#cb22-59" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> xb, rb <span class="kw">in</span> loader:</span>
+<span id="cb22-60"><a href="#cb22-60" aria-hidden="true" tabindex="-1"></a>            xb, rb <span class="op">=</span> xb.to(device), rb.to(device)</span>
+<span id="cb22-61"><a href="#cb22-61" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Discriminator step</span></span>
+<span id="cb22-62"><a href="#cb22-62" aria-hidden="true" tabindex="-1"></a>            z <span class="op">=</span> torch.randn(xb.size(<span class="dv">0</span>), noise_dim, device<span class="op">=</span>device)</span>
+<span id="cb22-63"><a href="#cb22-63" aria-hidden="true" tabindex="-1"></a>            <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb22-64"><a href="#cb22-64" aria-hidden="true" tabindex="-1"></a>                x_fake <span class="op">=</span> G(z, rb)</span>
+<span id="cb22-65"><a href="#cb22-65" aria-hidden="true" tabindex="-1"></a>            opt_d.zero_grad()</span>
+<span id="cb22-66"><a href="#cb22-66" aria-hidden="true" tabindex="-1"></a>            d_real <span class="op">=</span> D(xb, rb)</span>
+<span id="cb22-67"><a href="#cb22-67" aria-hidden="true" tabindex="-1"></a>            d_fake <span class="op">=</span> D(x_fake, rb)</span>
+<span id="cb22-68"><a href="#cb22-68" aria-hidden="true" tabindex="-1"></a>            loss_d <span class="op">=</span> bce(d_real, torch.ones_like(d_real)) <span class="op">+</span> bce(d_fake, torch.zeros_like(d_fake))</span>
+<span id="cb22-69"><a href="#cb22-69" aria-hidden="true" tabindex="-1"></a>            loss_d.backward()</span>
+<span id="cb22-70"><a href="#cb22-70" aria-hidden="true" tabindex="-1"></a>            opt_d.step()</span>
+<span id="cb22-71"><a href="#cb22-71" aria-hidden="true" tabindex="-1"></a>            d_losses.append(<span class="bu">float</span>(loss_d.detach().cpu().item()))</span>
+<span id="cb22-72"><a href="#cb22-72" aria-hidden="true" tabindex="-1"></a>            real_scores.append(d_real.mean().item())</span>
+<span id="cb22-73"><a href="#cb22-73" aria-hidden="true" tabindex="-1"></a>            fake_scores.append(d_fake.mean().item())</span>
+<span id="cb22-74"><a href="#cb22-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-75"><a href="#cb22-75" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Generator step</span></span>
+<span id="cb22-76"><a href="#cb22-76" aria-hidden="true" tabindex="-1"></a>            z <span class="op">=</span> torch.randn(xb.size(<span class="dv">0</span>), noise_dim, device<span class="op">=</span>device)</span>
+<span id="cb22-77"><a href="#cb22-77" aria-hidden="true" tabindex="-1"></a>            opt_g.zero_grad()</span>
+<span id="cb22-78"><a href="#cb22-78" aria-hidden="true" tabindex="-1"></a>            xg <span class="op">=</span> G(z, rb)</span>
+<span id="cb22-79"><a href="#cb22-79" aria-hidden="true" tabindex="-1"></a>            dg <span class="op">=</span> D(xg, rb)</span>
+<span id="cb22-80"><a href="#cb22-80" aria-hidden="true" tabindex="-1"></a>            loss_g <span class="op">=</span> bce(dg, torch.ones_like(dg))</span>
+<span id="cb22-81"><a href="#cb22-81" aria-hidden="true" tabindex="-1"></a>            loss_g.backward()</span>
+<span id="cb22-82"><a href="#cb22-82" aria-hidden="true" tabindex="-1"></a>            opt_g.step()</span>
+<span id="cb22-83"><a href="#cb22-83" aria-hidden="true" tabindex="-1"></a>            g_losses.append(<span class="bu">float</span>(loss_g.detach().cpu().item()))</span>
+<span id="cb22-84"><a href="#cb22-84" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb22-85"><a href="#cb22-85" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb22-86"><a href="#cb22-86" aria-hidden="true" tabindex="-1"></a>            z_eval <span class="op">=</span> torch.randn(<span class="dv">2048</span>, noise_dim, device<span class="op">=</span>device)</span>
+<span id="cb22-87"><a href="#cb22-87" aria-hidden="true" tabindex="-1"></a>            r_eval <span class="op">=</span> data_radii[torch.randint(<span class="dv">0</span>, data_radii.size(<span class="dv">0</span>), (<span class="dv">2048</span>,), device<span class="op">=</span>device)]</span>
+<span id="cb22-88"><a href="#cb22-88" aria-hidden="true" tabindex="-1"></a>            samples <span class="op">=</span> G(z_eval, r_eval)</span>
+<span id="cb22-89"><a href="#cb22-89" aria-hidden="true" tabindex="-1"></a>            div <span class="op">=</span> compute_diversity_metric(samples)</span>
+<span id="cb22-90"><a href="#cb22-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-91"><a href="#cb22-91" aria-hidden="true" tabindex="-1"></a>        hist.d_loss.append(<span class="bu">float</span>(np.mean(d_losses)))</span>
+<span id="cb22-92"><a href="#cb22-92" aria-hidden="true" tabindex="-1"></a>        hist.g_loss.append(<span class="bu">float</span>(np.mean(g_losses)))</span>
+<span id="cb22-93"><a href="#cb22-93" aria-hidden="true" tabindex="-1"></a>        hist.diversity.append(div)</span>
+<span id="cb22-94"><a href="#cb22-94" aria-hidden="true" tabindex="-1"></a>        hist.real_scores.append(<span class="bu">float</span>(np.mean(real_scores)))</span>
+<span id="cb22-95"><a href="#cb22-95" aria-hidden="true" tabindex="-1"></a>        hist.fake_scores.append(<span class="bu">float</span>(np.mean(fake_scores)))</span>
+<span id="cb22-96"><a href="#cb22-96" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (ep<span class="op">+</span><span class="dv">1</span>) <span class="op">%</span> <span class="bu">max</span>(<span class="dv">1</span>, print_every) <span class="op">==</span> <span class="dv">0</span> <span class="kw">or</span> ep<span class="op">==</span><span class="dv">0</span>:</span>
+<span id="cb22-97"><a href="#cb22-97" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"Epoch </span><span class="sc">{</span>ep<span class="op">+</span><span class="dv">1</span><span class="sc">:03d}</span><span class="ss">/</span><span class="sc">{</span>epochs<span class="sc">}</span><span class="ss"> | D </span><span class="sc">{</span>hist<span class="sc">.</span>d_loss[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:.3f}</span><span class="ss"> | G </span><span class="sc">{</span>hist<span class="sc">.</span>g_loss[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:.3f}</span><span class="ss"> | Div </span><span class="sc">{</span>div<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb22-98"><a href="#cb22-98" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> G, D, hist</span>
+<span id="cb22-99"><a href="#cb22-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-100"><a href="#cb22-100" aria-hidden="true" tabindex="-1"></a><span class="co"># Train the conditional GAN with radius conditioning</span></span>
+<span id="cb22-101"><a href="#cb22-101" aria-hidden="true" tabindex="-1"></a>G_cond_radius, D_cond_radius, H_cond_radius <span class="op">=</span> train_conditional_gan_radius(</span>
+<span id="cb22-102"><a href="#cb22-102" aria-hidden="true" tabindex="-1"></a>    X_ring, epochs<span class="op">=</span><span class="dv">480</span>, batch_size<span class="op">=</span><span class="dv">256</span>, </span>
+<span id="cb22-103"><a href="#cb22-103" aria-hidden="true" tabindex="-1"></a>    lr_g<span class="op">=</span><span class="fl">2e-4</span>, lr_d<span class="op">=</span><span class="fl">2e-4</span>, hidden_dim<span class="op">=</span><span class="dv">256</span>, noise_dim<span class="op">=</span><span class="dv">2</span>, print_every<span class="op">=</span><span class="dv">40</span></span>
+<span id="cb22-104"><a href="#cb22-104" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch 001/480 | D 1.271 | G 0.751 | Div 0.014
+Epoch 040/480 | D 1.287 | G 0.766 | Div 4.688
+Epoch 080/480 | D 1.288 | G 0.767 | Div 4.356
+Epoch 120/480 | D 1.306 | G 0.772 | Div 4.473
+Epoch 160/480 | D 1.335 | G 0.758 | Div 4.527
+Epoch 200/480 | D 1.352 | G 0.745 | Div 4.411
+Epoch 240/480 | D 1.361 | G 0.734 | Div 4.652
+Epoch 280/480 | D 1.364 | G 0.728 | Div 4.435
+Epoch 320/480 | D 1.365 | G 0.721 | Div 4.446
+Epoch 360/480 | D 1.365 | G 0.728 | Div 4.633
+Epoch 400/480 | D 1.364 | G 0.733 | Div 4.670
+Epoch 440/480 | D 1.366 | G 0.722 | Div 4.713
+Epoch 480/480 | D 1.366 | G 0.730 | Div 4.461</code></pre>
+</div>
+</div>
+<p>Now let’s generate samples at different radius values to see how the generator responds to continuous conditioning. We’ll sweep through several radius values and visualize the results.</p>
+<div id="bd0b8da8" class="cell" data-execution_count="19">
+<details class="code-fold">
+<summary>Show Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate conditional samples for different radius values</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>G_cond_radius.<span class="bu">eval</span>()</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>samples_by_radius <span class="op">=</span> {}</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>n_samples_per_radius <span class="op">=</span> <span class="dv">800</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>radius_values <span class="op">=</span> [<span class="op">-</span><span class="fl">1.0</span> , <span class="fl">0.01</span>, <span class="fl">0.5</span>, <span class="fl">1.5</span>, <span class="fl">1.7</span>, <span class="fl">2.0</span>, <span class="fl">2.5</span>, <span class="fl">3.0</span>, <span class="fl">3.5</span>, <span class="fl">4.0</span>]</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> r_val <span class="kw">in</span> radius_values:</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    z <span class="op">=</span> torch.randn(n_samples_per_radius, <span class="dv">2</span>, device<span class="op">=</span>device)</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> torch.full((n_samples_per_radius, <span class="dv">1</span>), r_val, device<span class="op">=</span>device)</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>        samples <span class="op">=</span> G_cond_radius(z, r).cpu().numpy()</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>    samples_by_radius[r_val] <span class="op">=</span> samples</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>plot_conditional_samples_continuous(</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>    samples_by_radius, X_ring, title<span class="op">=</span><span class="st">"Conditional GAN: Radius Conditioning"</span>, value_name<span class="op">=</span><span class="st">"radius"</span></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="intro_to_GANS_files/figure-html/cell-20-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
 </div>
 </section>
 </section>
-<section id="summary-and-next-steps" class="level2 page-columns page-full" data-number="10.8">
-<h2 data-number="10.8" class="anchored" data-anchor-id="summary-and-next-steps"><span class="header-section-number">10.8</span> Summary and Next Steps:</h2>
+<section id="summary-and-next-steps" class="level2 page-columns page-full" data-number="10.9">
+<h2 data-number="10.9" class="anchored" data-anchor-id="summary-and-next-steps"><span class="header-section-number">10.9</span> Summary and Next Steps</h2>
 <p>OK, so we have seen how a basic GAN is set up and trained, and covered some diagnostic plots that give us insight into how the training went. This gave us the following sets of useful tools:</p>
 <ul>
 <li>We could learn a forward mapping function <span class="math inline">\(f(z) \rightarrow x\)</span> that could push forward a given sample in <span class="math inline">\(z\)</span> to a corresponding sample in <span class="math inline">\(x\)</span>. This could learn distributions that were far more complex than a simple linear map could achieve above.</li>
@@ -1159,10 +1356,10 @@ Epoch 480/480 | D 1.365 | G 0.725 | Div 1.226</code></pre>
 </ul>
 <p>Unfortunately, GANs did not give us any of the following properties, which will turn out to be useful later and motivate other types of generative models:</p>
 <ul>
-<li>We did not learn an inverse mapping <span class="math inline">\(f^{-1}(x) \rightarrow z\)</span>. This means that we cannot easily encode real data samples into the latent space, which would be useful for many applications. For example, if I wanted to slightly modify <span class="math inline">\(x\)</span> – e.g., <span class="math inline">\(x^\prime = x+\delta x\)</span> – and compute the corresponding latent coordinate <span class="math inline">\(z^\prime = z+\delta z\)</span>, GANS do not provide a built-it mechanism to do this.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> We will see how both Variational Autoencoders (VAEs) and Normalizing Flows (NFs) address this problem.</li>
+<li>We did not learn an inverse mapping <span class="math inline">\(f^{-1}(x) \rightarrow z\)</span>. This means that we cannot easily encode real data samples into the latent space, which would be useful for many applications. For example, if I wanted to slightly modify <span class="math inline">\(x\)</span> – e.g., <span class="math inline">\(x^\prime = x+\delta x\)</span> – and compute the corresponding latent coordinate <span class="math inline">\(z^\prime = z+\delta z\)</span>, GANs do not provide a built-in mechanism to do this.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> We will see how both Variational Autoencoders (VAEs) and Normalizing Flows (NFs) address this problem.</li>
 <li>We also cannot yet easily talk about or compute probability mappings between <span class="math inline">\(p(x)\)</span> and <span class="math inline">\(p(z)\)</span>, which would be useful for computing likelihoods of data samples or for evaluating how well the model fits the data distribution, both of which are quite useful. Again, we will see later how both VAEs and NFs address this problem.</li>
 </ul>
-<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;Of course, I could try to get at this another way, for example, by applying automatic differentiation to the Generator to compute <span class="math inline">\(\frac{\partial f}{\partial z}\)</span> and then use that to estimate <span class="math inline">\(\delta z \approx (\frac{\partial f}{\partial z})^{-1} \delta x\)</span>, but this requires extra work on our part and this is not always straightforward, especially if the Jacobian is ill-conditioned.</p></div></div><p>Before we move beyond GANs, however, we will first explore some of the complex training dynamics and other subtle issues that arise when applying them in practice. This will help you build up your intuition and experience in how to assess problems in generative models and will serve as a strong basis upon which to launch into more complex models later. It will also give us an opportunity to introduce the concept of <strong>Optimal Transport</strong>, which will be useful in its own right applications later on, and will also help us understand some of the limitations of GANs should you encounter their use in the future.</p>
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;Of course, I could try to get at this another way, for example, by applying automatic differentiation to the Generator to compute <span class="math inline">\(\frac{\partial f}{\partial z}\)</span> and then use that to estimate <span class="math inline">\(\delta z \approx (\frac{\partial f}{\partial z})^{-1} \delta x\)</span>, but this requires extra work on our part and this is not always straightforward, especially if the Jacobian is ill-conditioned.</p></div></div><p>Before we move beyond GANs, however, we will first explore some of the complex training dynamics and other subtle issues that arise when applying them in practice. This will help you build up your intuition and experience in how to assess problems in generative models and will serve as a strong basis upon which to launch into more complex models later. It will also give us an opportunity to introduce the concept of <strong>Optimal Transport</strong>, which will be useful in its own right later on, and will also help us understand some of the limitations of GANs should you encounter their use in the future.</p>
 
 
 </section>
