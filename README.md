@@ -26,7 +26,7 @@ session opens in your browser with every package this book needs already install
 - **Your work is not saved on the server.** A session shuts down after about 10 minutes of
   inactivity, and everything in it is discarded. To keep your changes, download the notebook
   (right-click the file → *Download*) before you leave. You can upload it again next time.
-- Sessions are limited to roughly 1–2 GB of memory and have **no GPU**. That is plenty for Part 1
+- Sessions are limited to roughly 1 to 2 GB of memory and have **no GPU**. That is plenty for Part 1
   and most exercises. For the heavier generative-model notebooks in Part 2, use the local setup
   or Colab (below).
 - If a launch fails with a capacity message, wait a minute and try again. Binder is a free,
@@ -41,16 +41,38 @@ It is separate from the local setup below, so changing one does not affect the o
 
 **For students who prefer a cloud-based environment without local installation:**
 
-1. **Go to [colab.research.google.com](https://colab.research.google.com)**
-2. **Sign in with your Google account**
-3. **Click "New Notebook"**
-4. **Upload any `.ipynb` file from this book** (from the `notebooks` folder)
-5. **Install the few packages Colab does not ship** by running this in the first cell
-   (PyTorch, NumPy, pandas, scikit-learn and matplotlib are already installed on Colab):
-   ```python
-   !pip install --quiet pyro-ppl torchdiffeq geomloss gymnasium engibench
+1. **Open the notebook straight from GitHub.** Take the notebook's GitHub address and replace
+   `https://github.com/` with `https://colab.research.google.com/github/`. For example:
    ```
-6. **Enable GPU (optional):** Runtime → Change runtime type → GPU → Save
+   https://colab.research.google.com/github/IDEALLab/ML4ME_Textbook/blob/main/part2/gen_models/intro_to_GANS.ipynb
+   ```
+   Sign in with your Google account when asked.
+2. **Add a setup cell at the very top and run it first.** Colab only downloads the notebook
+   itself. It does not download the helper files and data that sit next to it in this
+   repository, so imports such as `from gen_models_utilities import ...` fail without this cell.
+   Click **+ Code** above the first cell, paste the following, and change `NOTEBOOK_FOLDER`
+   to the folder your notebook is in (`part1`, `part2`, `part2/gen_models`, `part3` or `problems`):
+   ```python
+   NOTEBOOK_FOLDER = "part2/gen_models"  # <-- change to your notebook's folder
+
+   import os
+   if not os.path.exists("/content/ML4ME_Textbook"):
+       !git clone -q --depth 1 https://github.com/IDEALLab/ML4ME_Textbook.git /content/ML4ME_Textbook
+   %cd /content/ML4ME_Textbook/{NOTEBOOK_FOLDER}
+   %pip install -q pyro-ppl torchdiffeq geomloss "gymnasium[classic-control]"
+   ```
+   This downloads the repository and moves into the notebook's folder, so helper files and
+   data are found. It also installs the few packages Colab does not ship (PyTorch, NumPy,
+   pandas, scikit-learn and matplotlib are already installed). It takes under a minute.
+3. **Only for notebooks that use EngiBench** (`EngiBench_GAN_pitfalls`,
+   `EngiBench_latent_gen_models`), also run:
+   ```python
+   %pip install -q engibench
+   ```
+   Pip will print red warnings about dependency conflicts with Google packages such as
+   `bigframes`. These are harmless and can be ignored. If the import still fails, use
+   Runtime → Restart session and run the cells again.
+4. **Enable GPU (optional):** Runtime → Change runtime type → GPU → Save
 
 **Benefits:**
 - No local installation required
@@ -58,7 +80,9 @@ It is separate from the local setup below, so changing one does not affect the o
 - Runs entirely in your browser
 - Most packages pre-installed
 
-**Note:** You will need to reinstall packages each time you start a new Colab session.
+**Note:** Colab resets when a session ends, so run the setup cell again each time you open
+the notebook. Your edits are not saved to this repository. Use File → Save a copy in Drive
+to keep them.
 
 ---
 
@@ -229,7 +253,7 @@ VS Code provides an integrated development environment with excellent Jupyter su
 
 #### Binder: launch is stuck on "Building" or "Launching"
 - **Solution:** The first launch after the book is updated rebuilds the environment, which can
-  take 5–15 minutes. Leave the tab open. If it fails outright, wait a minute and click the badge again.
+  take 5 to 15 minutes. Leave the tab open. If it fails outright, wait a minute and click the badge again.
 
 #### Binder: my changes are gone
 - **Solution:** Binder sessions are temporary and end after ~10 minutes of inactivity. Download your
@@ -240,11 +264,9 @@ VS Code provides an integrated development environment with excellent Jupyter su
 - **Solution:** The session ran out of memory (about 2 GB). Reduce the dataset or model size, or
   run that notebook locally or on Colab.
 
-#### Colab: "Package not found" error
-- **Solution:** Run the package installation cell first:
-  ```python
-  !pip install --quiet pyro-ppl torchdiffeq geomloss gymnasium engibench
-  ```
+#### Colab: "Package not found" or "No module named gen_models_utilities" error
+- **Solution:** Run the setup cell from the [Google Colab section](#-alternative-google-colab-requires-a-google-account)
+  first, with `NOTEBOOK_FOLDER` set to the folder your notebook is in.
 
 #### Colab: "CUDA out of memory" error
 - **Solution:** 
@@ -252,7 +274,7 @@ VS Code provides an integrated development environment with excellent Jupyter su
   2. Or use CPU: Runtime → Change runtime type → CPU → Save
 
 #### Colab: Notebook disconnects after inactivity
-- **Solution:** This is normal - just reconnect and re-run the package installation cell
+- **Solution:** This is normal. Reconnect and re-run the setup cell.
 
 ### 🔗 Useful Commands
 
