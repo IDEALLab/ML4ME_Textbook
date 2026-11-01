@@ -23,6 +23,7 @@ book:
     # - introduction_to_probabilistic_programming_solutions.ipynb
     - review_neural_networks_solutions.ipynb
     - intro_to_GANS_solutions.ipynb
+    - score_matching_solutions.ipynb
 
 bibliography: ../references.bib
 
