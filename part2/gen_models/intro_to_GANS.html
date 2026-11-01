@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.10.19">
+<meta name="generator" content="quarto-1.10.20">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -63,7 +63,26 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -81,7 +100,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-17888a1159294d3eb470f19f6f52f5a5.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../../site_libs/bootstrap/bootstrap-fd33a4952e9ae2782db733e1f7710525.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -424,6 +443,7 @@ window.Quarto = {
   <li><a href="#conditional-example-b-continuous-radius-conditioning" id="toc-conditional-example-b-continuous-radius-conditioning" class="nav-link" data-scroll-target="#conditional-example-b-continuous-radius-conditioning"><span class="header-section-number">10.8.2</span> Conditional Example B — Continuous Radius Conditioning</a></li>
   </ul></li>
   <li><a href="#summary-and-next-steps" id="toc-summary-and-next-steps" class="nav-link" data-scroll-target="#summary-and-next-steps"><span class="header-section-number">10.9</span> Summary and Next Steps</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">10.10</span> Exercises</a></li>
   </ul>
 </nav>
     </div>
@@ -468,7 +488,6 @@ window.Quarto = {
 <li>Describe a generative model as a push-forward map from a latent distribution, and say which of the three operations (forward map, inverse map, density) a GAN actually does.</li>
 <li>Map the terms of the GAN objective to the discriminator and generator steps of the training loop.</li>
 <li>Explain how each network’s update depends on the other: the generator moves its samples up the discriminator’s logit in an attempt to fool the discriminator, and the discriminator reshapes its logit around the current samples in an attempt to classify them correctly.</li>
-<li>State the ideal end point of training (<span class="math inline">\(D = 1/2\)</span> everywhere, discriminator loss <span class="math inline">\(2 \ln 2\)</span>, generator loss <span class="math inline">\(\ln 2\)</span>) and compare a training run’s losses with it.</li>
 <li>Explain why a single summary statistic of the samples, such as the chapter’s variance-based diversity, cannot certify coverage or quality.</li>
 <li>Check conditional generated samples against the engineering requirement with a simulator and a constraint check.</li>
 </ol>
@@ -596,7 +615,7 @@ window.Quarto = {
 </div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"4ae2d6b830db47ccaaca5da0ed2c510c","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+{"model_id":"dd4348ca87834f62af8e6471a17d7769","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
 </script>
 </div>
 </div>
@@ -640,10 +659,10 @@ window.Quarto = {
 <li>The <strong>generator</strong> tries to “fool” the discriminator by generating realistic samples.</li>
 <li>The <strong>discriminator</strong> tries to correctly classify real vs.&nbsp;generated samples.</li>
 </ul>
-<section id="mathematical-formulation" class="level3" data-number="10.4.1">
+<section id="mathematical-formulation" class="level3 page-columns page-full" data-number="10.4.1">
 <h3 data-number="10.4.1" class="anchored" data-anchor-id="mathematical-formulation"><span class="header-section-number">10.4.1</span> Mathematical Formulation</h3>
-<p>The standard GAN objective, as introduced by <span class="citation" data-cites="goodfellow2014generative">(<a href="../../references.html#ref-goodfellow2014generative" role="doc-biblioref"><strong>goodfellow2014generative?</strong></a>)</span>, is:</p>
-<p><span class="math display">\[
+<p>The standard GAN objective, as introduced by <span class="citation" data-cites="goodfellow2014generative">Goodfellow et al. (<a href="../../references.html#ref-goodfellow2014generative" role="doc-biblioref">2014</a>)</span>, is:</p>
+<div class="no-row-height column-margin column-container"></div><p><span class="math display">\[
 \min_G \max_D \; V(D, G) = \mathbb{E}_{x \sim p_{\text{data}}(x)} \left[ \log D(x) \right] + \mathbb{E}_{z \sim p_z(z)} \left[ \log (1 - D(G(z))) \right]
 \]</span></p>
 <ul>
@@ -669,8 +688,12 @@ window.Quarto = {
 \mathcal{L}_G = -\mathbb{E}_{z \sim p_z(z)} \left[ \log D(G(z)) \right],
 \]</span></p>
 <p>which has the same goal (push <span class="math inline">\(D(G(z))\)</span> toward 1) but provides stronger gradients when the generator is doing badly. This is what <code>loss_g = bce(dg, torch.ones_like(dg))</code> computes in the training loop below.</p>
-<p>Goodfellow et al.&nbsp;proposed this switch in the original GAN paper, in its Section 3 <span class="citation" data-cites="goodfellow2014generative">(<a href="../../references.html#ref-goodfellow2014generative" role="doc-biblioref"><strong>goodfellow2014generative?</strong></a>)</span>. The two generator losses have the same end point, <span class="math inline">\(p_G = p_{\text{data}}\)</span> with <span class="math inline">\(D = 1/2\)</span> everywhere, and both push <span class="math inline">\(D(G(z))\)</span> toward 1. But they are not the same objective. With the best discriminator for the current generator, the original minimax objective equals <span class="math inline">\(-\log 4 + 2\,\mathrm{JS}(p_{\text{data}} \parallel p_G)\)</span>, so the generator minimizes the Jensen-Shannon (JS) divergence. The non-saturating loss instead follows the gradient of <span class="math inline">\(\mathrm{KL}(p_G \parallel p_{\text{data}}) - 2\,\mathrm{JS}(p_{\text{data}} \parallel p_G)\)</span> <span class="citation" data-cites="arjovsky2017towards">(<a href="../../references.html#ref-arjovsky2017towards" role="doc-biblioref"><strong>arjovsky2017towards?</strong></a>)</span>. Its reverse Kullback-Leibler (KL) term punishes samples where there are no data much more than it punishes parts of the data that get no samples. This is one reason why GANs tend to drop modes rather than produce garbage. We met both divergences, and the mode-seeking behavior of the reverse KL, in <a href="../../part1/distribution_distance.html">Measuring Distribution Distances</a>.</p>
-</section>
+<p>Goodfellow et al.&nbsp;proposed this switch in the original GAN paper, in its Section 3 <span class="citation" data-cites="goodfellow2014generative">(<a href="../../references.html#ref-goodfellow2014generative" role="doc-biblioref">Goodfellow et al. 2014</a>)</span>. The two generator losses have the same end point, <span class="math inline">\(p_G = p_{\text{data}}\)</span> with <span class="math inline">\(D = 1/2\)</span> everywhere, and both push <span class="math inline">\(D(G(z))\)</span> toward 1. But they are not the same objective. With the best discriminator for the current generator, the original minimax objective equals <span class="math inline">\(-\log 4 + 2\,\mathrm{JS}(p_{\text{data}} \parallel p_G)\)</span>, so the generator minimizes the Jensen-Shannon (JS) divergence. The non-saturating loss instead follows the gradient of <span class="math inline">\(\mathrm{KL}(p_G \parallel p_{\text{data}}) - 2\,\mathrm{JS}(p_{\text{data}} \parallel p_G)\)</span> <span class="citation" data-cites="arjovsky2017towards">(<a href="../../references.html#ref-arjovsky2017towards" role="doc-biblioref">Arjovsky and Bottou 2017</a>)</span>. Its reverse Kullback-Leibler (KL) term punishes samples where there are no data much more than it punishes parts of the data that get no samples. This is one reason why GANs tend to drop modes rather than produce garbage. We met both divergences, and the mode-seeking behavior of the reverse KL, in <a href="../../part1/distribution_distance.html">Measuring Distribution Distances</a>.</p>
+<div class="no-row-height column-margin column-container"><div id="ref-goodfellow2014generative" class="csl-entry" role="listitem">
+Goodfellow, Ian, Jean Pouget-Abadie, Mehdi Mirza, et al. 2014. <span>“Generative Adversarial Nets.”</span> <em>Advances in Neural Information Processing Systems</em> 27.
+</div><div id="ref-arjovsky2017towards" class="csl-entry" role="listitem">
+Arjovsky, Martin, and Léon Bottou. 2017. <span>“Towards Principled Methods for Training Generative Adversarial Networks.”</span> <em>International Conference on Learning Representations</em>.
+</div></div></section>
 </section>
 <section id="a-simple-generative-adversarial-network-gan" class="level2" data-number="10.5">
 <h2 data-number="10.5" class="anchored" data-anchor-id="a-simple-generative-adversarial-network-gan"><span class="header-section-number">10.5</span> A Simple Generative Adversarial Network (GAN)</h2>
@@ -881,7 +904,7 @@ Epoch 120/120 | D 1.368 | G 0.732 | Div 4.444</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"f6102d46863a4cae9190c672427e1f41","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+{"model_id":"56142548f634422aba27af0f8dc5db38","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
 </script>
 </div>
 </div>
@@ -1033,7 +1056,7 @@ Epoch 002/2 | D 1.040 | G 0.874 | Div 2.533</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"6eb204f3d9f14b6083d12277431adf78","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+{"model_id":"f82e7e4bed174c509c6d25e78a257231","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
 </script>
 </div>
 </div>
@@ -1360,6 +1383,266 @@ Epoch 480/480 | D 1.366 | G 0.730 | Div 4.461</code></pre>
 <li>We also cannot yet easily talk about or compute probability mappings between <span class="math inline">\(p(x)\)</span> and <span class="math inline">\(p(z)\)</span>, which would be useful for computing likelihoods of data samples or for evaluating how well the model fits the data distribution, both of which are quite useful. Again, we will see later how both VAEs and NFs address this problem.</li>
 </ul>
 <div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;Of course, I could try to get at this another way, for example, by applying automatic differentiation to the Generator to compute <span class="math inline">\(\frac{\partial f}{\partial z}\)</span> and then use that to estimate <span class="math inline">\(\delta z \approx (\frac{\partial f}{\partial z})^{-1} \delta x\)</span>, but this requires extra work on our part and this is not always straightforward, especially if the Jacobian is ill-conditioned.</p></div></div><p>Before we move beyond GANs, however, we will first explore some of the complex training dynamics and other subtle issues that arise when applying them in practice. This will help you build up your intuition and experience in how to assess problems in generative models and will serve as a strong basis upon which to launch into more complex models later. It will also give us an opportunity to introduce the concept of <strong>Optimal Transport</strong>, which will be useful in its own right later on, and will also help us understand some of the limitations of GANs should you encounter their use in the future.</p>
+</section>
+<section id="exercises" class="level2" data-number="10.10">
+<h2 data-number="10.10" class="anchored" data-anchor-id="exercises"><span class="header-section-number">10.10</span> Exercises</h2>
+<p>The exercises reuse the chapter’s data, networks and training code, so run the chapter’s cells first. Rough time estimates are in the titles.</p>
+<p>Exercise 1 uses a new data set, two moons, and follows single updates of the two networks. The cell below scales the two-moons data set from scikit-learn to about the size of the ring and trains the chapter’s GAN on it with <code>train_vanilla_gan</code> for only 3 epochs. Run it to produce three figures, all drawn with <code>plot_discriminator_map</code>:</p>
+<ol type="1">
+<li>The discriminator’s logit and the generator’s samples after these 3 epochs.</li>
+<li>Panels A to D, which put an arrow on 80 of these samples to demonstrate the direction the generated sample would move.</li>
+<li>The same discriminator again, and three candidate discriminators, A to C. Each candidate starts from that discriminator and takes a short burst of 25 discriminator steps.</li>
+</ol>
+<p>Every map has its own color scale.</p>
+<div id="2c9958f1" class="cell" data-execution_count="20">
+<div class="cell-output cell-output-stdout">
+<pre><code>Epoch 001/3 | D 1.261 | G 0.728 | Div 0.621
+Epoch 003/3 | D 1.467 | G 0.805 | Div 2.755
+Epoch 001/5 | D 1.261 | G 0.728 | Div 0.621
+Epoch 005/5 | D 1.465 | G 0.791 | Div 1.170</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="intro_to_GANS_files/figure-html/cell-21-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="intro_to_GANS_files/figure-html/cell-21-output-3.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="intro_to_GANS_files/figure-html/cell-21-output-4.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Exercise 1 (~5 min): One step at a time
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In the chapter’s training loop, each network takes one step at a time against the other network as it is at that moment.</p>
+<ul>
+<li><ol type="a">
+<li>Which panel of the second figure shows the direction in which each sample moves when the generator takes a step against the discriminator shown? Why? Why are the arrows longer in some places than in others?</li>
+</ol></li>
+<li><ol start="2" type="a">
+<li>Which candidate in the third figure is the discriminator after 25 more discriminator steps against the samples shown? Why do the other two not fit?</li>
+</ol></li>
+</ul>
+</div>
+</div>
+<div id="5e4aec59" class="cell" data-execution_count="21">
+<details class="code-fold">
+<summary>Show Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># You can use this code cell for this exercise, if you like.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<hr>
+<p>Run the cell below to produce the figure for Exercise 2. It draws seven sets of 2048 samples each on top of the ring data (gray). The four ring sets use the ring’s own mode centers and spread; the Gaussian and the disk are centered at the origin; the last set comes from the chapter’s trained <code>G</code>. The chapter’s diversity score of each set, <code>compute_diversity_metric</code>, is printed in a collapsed box after the exercise.</p>
+<div id="da9f06ad" class="cell" data-execution_count="22">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="intro_to_GANS_files/figure-html/cell-23-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Exercise 2 (~5 min): Seven generators, one score
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The chapter tracks the diversity of the generated samples, the per-axis variance averaged over the two axes, as a check against mode collapse.</p>
+<ul>
+<li><ol type="a">
+<li>Before you open the scores below, rank the seven sets by how good a generator of the ring each would be, and predict their diversity scores. Why did you rank them that way?</li>
+</ol></li>
+<li><ol start="2" type="a">
+<li>Five very different sets score about 4.5. Why? What does the metric actually measure, and why does it come out nearly the same for 2, 4 and 8 ring modes?</li>
+</ol></li>
+<li><ol start="3" type="a">
+<li>The chapter’s <code>G</code> scores below the Gaussian blob. Does that make it the worse generator? Why, and what would you need to look at instead?</li>
+</ol></li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Diversity scores (open after you have made your predictions)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div id="ex2score2" class="cell" data-execution_count="23">
+<details class="code-fold">
+<summary>Show Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'Sample set'</span><span class="sc">:28s}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'diversity'</span><span class="sc">:&gt;9s}</span><span class="ss">"</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name, s <span class="kw">in</span> sample_sets.items():</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>name<span class="sc">:28s}</span><span class="ss"> </span><span class="sc">{</span>compute_diversity_metric(torch.from_numpy(np.asarray(s, dtype<span class="op">=</span>np.float32)))<span class="sc">:9.2f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Sample set                   diversity
+Full ring                         4.56
+Two opposite modes                4.54
+Four modes                        4.57
+One mode                          0.06
+Gaussian, std 2.14                4.69
+Uniform disk, radius 4.27         4.58
+The chapter's G                   4.42</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<hr>
+<p>Exercise 3 moves from the ring to an engineering data set. Beams2D, from the EngiBench benchmark, contains beam designs optimized by topology optimization. Each design is a <span class="math inline">\(50 \times 100\)</span> grid of material densities between 0 (void) and 1 (solid). It is the right half of a symmetric, simply supported beam: the left edge is the symmetry line, a roller supports the bottom-right corner, and a downward load acts on the top edge at the red triangle. Each design minimizes the compliance (how much the beam deflects under its load, so lower is stiffer) for four conditions: the target volume fraction (the share of the grid filled with material), the minimum feature size <code>rmin</code>, the load position <code>forcedist</code> (0 at the left edge, 1 at the right) and an overhang flag.</p>
+<p>The cell below loads a conditional GAN generator, <code>CGANGenerator</code> from <code>engibench_gen_models.py</code>, that was trained on the Beams2D training designs. It takes the four conditions and 32 noise values and returns a design. For three rows of the validation set, which the generator never saw, the cell draws the dataset’s optimal design next to three generated designs, each from a different noise vector.</p>
+<div id="7e840a70" class="cell" data-execution_count="24">
+<details class="code-fold">
+<summary>Show Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> engibench.problems.beams2d <span class="im">import</span> Beams2D</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> engibench_gen_models <span class="im">import</span> CGANGenerator</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>BEAMS_GENERATOR_PATH <span class="op">=</span> <span class="st">'../../data/beams2d_cgan_generator.pth'</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>EX3_ROWS <span class="op">=</span> [<span class="dv">178</span>, <span class="dv">708</span>, <span class="dv">494</span>]  <span class="co"># rows of the Beams2D validation set used in Exercise 3</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>beams <span class="op">=</span> Beams2D()</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>beam_keys <span class="op">=</span> beams.conditions_keys  <span class="co"># volfrac, rmin, forcedist, overhang_constraint</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>beams_val <span class="op">=</span> beams.dataset[<span class="st">'val'</span>]</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a><span class="co"># latent_dim=32 as in the training run that produced the weights (beams2d_cgan_cnn_2d, seed 1)</span></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>G_beams <span class="op">=</span> CGANGenerator(latent_dim<span class="op">=</span><span class="dv">32</span>, n_conds<span class="op">=</span><span class="bu">len</span>(beam_keys), design_shape<span class="op">=</span>(<span class="dv">50</span>, <span class="dv">100</span>))</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>G_beams.load_state_dict(torch.load(BEAMS_GENERATOR_PATH, map_location<span class="op">=</span><span class="st">'cpu'</span>))</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>G_beams.<span class="bu">eval</span>()</span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(RNG_SEED)</span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>z_beams <span class="op">=</span> torch.randn(<span class="dv">3</span>, <span class="dv">32</span>, <span class="dv">1</span>, <span class="dv">1</span>)  <span class="co"># three noise vectors, used for every row</span></span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>beam_conditions, beam_optima, beam_designs <span class="op">=</span> [], [], []</span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> EX3_ROWS:</span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a>    cond <span class="op">=</span> {k: beams_val[k][i] <span class="cf">for</span> k <span class="kw">in</span> beam_keys}</span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>    c <span class="op">=</span> torch.tensor([[<span class="bu">float</span>(cond[k]) <span class="cf">for</span> k <span class="kw">in</span> beam_keys]] <span class="op">*</span> <span class="dv">3</span>, dtype<span class="op">=</span>torch.float32).view(<span class="dv">3</span>, <span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a>        <span class="co"># The generator ends in tanh, so map its output from [-1, 1] to densities in [0, 1]</span></span>
+<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a>        designs <span class="op">=</span> ((G_beams(z_beams, c) <span class="op">+</span> <span class="dv">1</span>) <span class="op">/</span> <span class="dv">2</span>).numpy().reshape(<span class="dv">3</span>, <span class="dv">50</span>, <span class="dv">100</span>)</span>
+<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a>    beam_conditions.append(cond)</span>
+<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a>    beam_optima.append(np.array(beams_val[<span class="st">'optimal_design'</span>][i]))</span>
+<span id="cb29-28"><a href="#cb29-28" aria-hidden="true" tabindex="-1"></a>    beam_designs.append(designs)</span>
+<span id="cb29-29"><a href="#cb29-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-30"><a href="#cb29-30" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="bu">len</span>(EX3_ROWS), <span class="dv">4</span>, figsize<span class="op">=</span>(<span class="dv">16</span>, <span class="fl">2.6</span> <span class="op">*</span> <span class="bu">len</span>(EX3_ROWS)))</span>
+<span id="cb29-31"><a href="#cb29-31" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> r, (i, cond) <span class="kw">in</span> <span class="bu">enumerate</span>(<span class="bu">zip</span>(EX3_ROWS, beam_conditions)):</span>
+<span id="cb29-32"><a href="#cb29-32" aria-hidden="true" tabindex="-1"></a>    images <span class="op">=</span> [beam_optima[r]] <span class="op">+</span> <span class="bu">list</span>(beam_designs[r])</span>
+<span id="cb29-33"><a href="#cb29-33" aria-hidden="true" tabindex="-1"></a>    titles <span class="op">=</span> [<span class="st">'Optimal design (dataset)'</span>, <span class="st">'Generated, noise 1'</span>, <span class="st">'Generated, noise 2'</span>, <span class="st">'Generated, noise 3'</span>]</span>
+<span id="cb29-34"><a href="#cb29-34" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> ax, im, title <span class="kw">in</span> <span class="bu">zip</span>(axes[r], images, titles):</span>
+<span id="cb29-35"><a href="#cb29-35" aria-hidden="true" tabindex="-1"></a>        ax.imshow(im, cmap<span class="op">=</span><span class="st">'gray_r'</span>, vmin<span class="op">=</span><span class="dv">0</span>, vmax<span class="op">=</span><span class="dv">1</span>, extent<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">100</span>, <span class="dv">50</span>, <span class="dv">0</span>))</span>
+<span id="cb29-36"><a href="#cb29-36" aria-hidden="true" tabindex="-1"></a>        ax.plot([<span class="dv">100</span> <span class="op">*</span> cond[<span class="st">'forcedist'</span>]], [<span class="op">-</span><span class="fl">2.5</span>], marker<span class="op">=</span><span class="st">'v'</span>, color<span class="op">=</span><span class="st">'crimson'</span>, markersize<span class="op">=</span><span class="dv">10</span>, clip_on<span class="op">=</span><span class="va">False</span>)  <span class="co"># just above the top edge, so it hides no elements</span></span>
+<span id="cb29-37"><a href="#cb29-37" aria-hidden="true" tabindex="-1"></a>        ax.set_title(title, fontsize<span class="op">=</span><span class="dv">11</span>)</span>
+<span id="cb29-38"><a href="#cb29-38" aria-hidden="true" tabindex="-1"></a>        ax.set_xticks([])</span>
+<span id="cb29-39"><a href="#cb29-39" aria-hidden="true" tabindex="-1"></a>        ax.set_yticks([])</span>
+<span id="cb29-40"><a href="#cb29-40" aria-hidden="true" tabindex="-1"></a>    axes[r, <span class="dv">0</span>].set_ylabel(<span class="ss">f"Row </span><span class="sc">{</span>i<span class="sc">}</span><span class="ch">\n</span><span class="ss">volume fraction </span><span class="sc">{</span>cond[<span class="st">'volfrac'</span>]<span class="sc">:.3f}</span><span class="ss">"</span>, fontsize<span class="op">=</span><span class="dv">11</span>)</span>
+<span id="cb29-41"><a href="#cb29-41" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb29-42"><a href="#cb29-42" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="intro_to_GANS_files/figure-html/cell-25-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Exercise 3 (~10 min): It looks like a beam
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A generated design is only useful if it supports its load as well as the optimal design does.</p>
+<ul>
+<li><ol type="a">
+<li>From the pictures alone, predict for each row how the compliance of the generated designs compares with the optimal design’s: about the same, a few times larger, or far larger. Why?</li>
+</ol></li>
+<li><ol start="2" type="a">
+<li>Run the cell below. For every design it prints the volume fraction, whether the design passes <code>beams.check_constraints</code> (which checks that the volume fraction is within 0.01 of the target), its compliance from <code>simulate</code>, and the ratio to the optimal design’s compliance. Were your predictions right? Why or why not? Which designs would the constraint check alone have rejected, and why is that check not enough?</li>
+</ol></li>
+<li><ol start="3" type="a">
+<li>What broke the worst designs? The defect is small, so plot zoomed parts of the generated designs of rows 708 and 494 and of their optima (<code>beam_designs</code> and <code>beam_optima</code>) in the scratch cell below. Why does a defect of this size change the compliance by a factor of hundreds to thousands?</li>
+</ol></li>
+<li><ol start="4" type="a">
+<li>The discriminator that trained this generator also saw the four conditions. Why did it not penalize these designs?</li>
+</ol></li>
+<li><ol start="5" type="a">
+<li>The three designs in each row come from three different noise vectors. Why are they so alike, and what does that mean if you hope to fix a failed design by drawing more samples?</li>
+</ol></li>
+</ul>
+</div>
+</div>
+<div id="7edec3e6" class="cell" data-execution_count="25">
+<details class="code-fold">
+<summary>Show Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'Row'</span><span class="sc">:&gt;4}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'design'</span><span class="sc">:&gt;10}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'vol. frac.'</span><span class="sc">:&gt;10}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'target'</span><span class="sc">:&gt;7}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'constraints'</span><span class="sc">:&gt;12}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'compliance'</span><span class="sc">:&gt;11}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'ratio to optimum'</span><span class="sc">:&gt;17}</span><span class="ss">"</span>)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> r, (i, cond) <span class="kw">in</span> <span class="bu">enumerate</span>(<span class="bu">zip</span>(EX3_ROWS, beam_conditions)):</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Beams2D.simulate sets up its load case on the first call and keeps it,</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># so each condition gets a fresh Beams2D object.</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>    simulator <span class="op">=</span> Beams2D()</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>    c_opt <span class="op">=</span> <span class="bu">float</span>(simulator.simulate(beam_optima[r], config<span class="op">=</span>cond)[<span class="dv">0</span>])</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> name, design <span class="kw">in</span> [(<span class="st">'optimum'</span>, beam_optima[r])] <span class="op">+</span> [(<span class="ss">f'noise </span><span class="sc">{</span>k <span class="op">+</span> <span class="dv">1</span><span class="sc">}</span><span class="ss">'</span>, d) <span class="cf">for</span> k, d <span class="kw">in</span> <span class="bu">enumerate</span>(beam_designs[r])]:</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>        violations <span class="op">=</span> beams.check_constraints(design, config<span class="op">=</span>cond)</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>        compliance <span class="op">=</span> <span class="bu">float</span>(simulator.simulate(design, config<span class="op">=</span>cond)[<span class="dv">0</span>])</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>i<span class="sc">:&gt;4}</span><span class="ss"> </span><span class="sc">{</span>name<span class="sc">:&gt;10}</span><span class="ss"> </span><span class="sc">{</span>design<span class="sc">.</span>mean()<span class="sc">:&gt;10.3f}</span><span class="ss"> </span><span class="sc">{</span>cond[<span class="st">'volfrac'</span>]<span class="sc">:&gt;7.3f}</span><span class="ss"> "</span></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>              <span class="ss">f"</span><span class="sc">{</span><span class="st">'pass'</span> <span class="cf">if</span> <span class="kw">not</span> violations <span class="cf">else</span> <span class="st">'fail'</span><span class="sc">:&gt;12}</span><span class="ss"> </span><span class="sc">{</span>compliance<span class="sc">:&gt;11.1f}</span><span class="ss"> </span><span class="sc">{</span>compliance <span class="op">/</span> c_opt<span class="sc">:&gt;17.3g}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code> Row     design vol. frac.  target  constraints  compliance  ratio to optimum
+ 178    optimum      0.225   0.225         pass       111.0                 1
+ 178    noise 1      0.227   0.225         pass       115.1              1.04
+ 178    noise 2      0.227   0.225         pass       115.2              1.04
+ 178    noise 3      0.221   0.225         pass       118.9              1.07
+ 708    optimum      0.325   0.325         pass        14.1                 1
+ 708    noise 1      0.307   0.325         fail     69037.3           4.9e+03
+ 708    noise 2      0.307   0.325         fail     43874.4          3.11e+03
+ 708    noise 3      0.305   0.325         fail     35380.3          2.51e+03
+ 494    optimum      0.400   0.400         pass        18.5                 1
+ 494    noise 1      0.397   0.400         pass     85550.8          4.62e+03
+ 494    noise 2      0.398   0.400         pass     15383.5               832
+ 494    noise 3      0.392   0.400         pass     11177.5               604</code></pre>
+</div>
+</div>
+<div id="205392d0" class="cell" data-execution_count="26">
+<details class="code-fold">
+<summary>Show Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># You can use this code cell for this exercise, if you like.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+
 
 
 </section>

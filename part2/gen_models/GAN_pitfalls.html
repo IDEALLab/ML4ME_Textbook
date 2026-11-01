@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.10.19">
+<meta name="generator" content="quarto-1.10.20">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -81,7 +81,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-17888a1159294d3eb470f19f6f52f5a5.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../../site_libs/bootstrap/bootstrap-fd33a4952e9ae2782db733e1f7710525.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -420,7 +420,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<div id="9774db43" class="cell">
+<div id="9774db43" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Show Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Setup and Imports (shared utilities)</span></span>
@@ -590,161 +590,231 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> torch.no_grad():</span>
 <span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>            z_eval <span class="op">=</span> torch.randn(<span class="dv">2048</span>, noise_dim, device<span class="op">=</span>device)</span>
 <span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>            samples <span class="op">=</span> G(z_eval).cpu().numpy()</span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Save a shallow copy of generator state and a small sample for visualization</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Save a copy of the generator and discriminator states and a small sample for visualization</span></span>
 <span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>        state <span class="op">=</span> {k: v.cpu().clone() <span class="cf">for</span> k, v <span class="kw">in</span> G.state_dict().items()}</span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>        small_samples <span class="op">=</span> samples[np.random.choice(samples.shape[<span class="dv">0</span>], size<span class="op">=</span><span class="bu">min</span>(<span class="dv">512</span>, samples.shape[<span class="dv">0</span>]), replace<span class="op">=</span><span class="va">False</span>)]</span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>        hist.snapshots.append({<span class="st">"epoch"</span>: ep_idx, <span class="st">"state_dict"</span>: state, <span class="st">"samples"</span>: small_samples})</span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Optionally capture an initial snapshot</span></span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> checkpoint_interval <span class="kw">and</span> checkpoint_interval <span class="op">&gt;</span> <span class="dv">0</span>:</span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>        _capture_snapshot(<span class="dv">0</span>)</span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Now we do the training loop for # epochs defined in `epochs`</span></span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> ep <span class="kw">in</span> <span class="bu">range</span>(epochs):</span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>        d_losses<span class="op">=</span>[]</span>
-<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>        g_losses<span class="op">=</span>[]</span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>        real_scores<span class="op">=</span>[]</span>
-<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>        fake_scores<span class="op">=</span>[]</span>
-<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> (xb,) <span class="kw">in</span> loader:</span>
-<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Send the data to the GPU, if using.</span></span>
-<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>            xb <span class="op">=</span> xb.to(device)</span>
-<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Take a Discriminator step</span></span>
-<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>            z <span class="op">=</span> torch.randn(xb.size(<span class="dv">0</span>), noise_dim, device<span class="op">=</span>device)</span>
-<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>            <span class="cf">with</span> torch.no_grad():</span>
-<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>                x_fake <span class="op">=</span> G(z)</span>
-<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>            opt_d.zero_grad()</span>
-<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>            d_real <span class="op">=</span> D(xb)</span>
-<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>            d_fake <span class="op">=</span> D(x_fake)</span>
-<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>            loss_d <span class="op">=</span> bce(d_real, torch.ones_like(d_real)) <span class="op">+</span> bce(d_fake, torch.zeros_like(d_fake))</span>
-<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>            loss_d.backward()</span>
-<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>            opt_d.step()</span>
-<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>            d_losses.append(<span class="bu">float</span>(loss_d.detach().cpu().item()))</span>
-<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>            real_scores.append(d_real.mean().item())</span>
-<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>            fake_scores.append(d_fake.mean().item())</span>
-<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Take a Generator step</span></span>
-<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>            z <span class="op">=</span> torch.randn(xb.size(<span class="dv">0</span>), noise_dim, device<span class="op">=</span>device)</span>
-<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a>            opt_g.zero_grad()</span>
-<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a>            xg <span class="op">=</span> G(z)</span>
-<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a>            dg <span class="op">=</span> D(xg)</span>
-<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a>            loss_g <span class="op">=</span> bce(dg, torch.ones_like(dg))</span>
-<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a>            loss_g.backward()</span>
-<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a>            opt_g.step()</span>
-<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>            g_losses.append(<span class="bu">float</span>(loss_g.detach().cpu().item()))</span>
-<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a>        <span class="co"># We'll record some epoch metrics</span></span>
-<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> torch.no_grad():</span>
-<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a>            z_eval <span class="op">=</span> torch.randn(<span class="dv">2048</span>, noise_dim, device<span class="op">=</span>device)</span>
-<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a>            samples <span class="op">=</span> G(z_eval)</span>
-<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a>            div <span class="op">=</span> compute_diversity_metric(samples)</span>
-<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Now we'll record the metrics for plotting later and reporting</span></span>
-<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a>        hist.d_loss.append(<span class="bu">float</span>(np.mean(d_losses)))</span>
-<span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a>        hist.g_loss.append(<span class="bu">float</span>(np.mean(g_losses)))</span>
-<span id="cb5-75"><a href="#cb5-75" aria-hidden="true" tabindex="-1"></a>        hist.diversity.append(div)</span>
-<span id="cb5-76"><a href="#cb5-76" aria-hidden="true" tabindex="-1"></a>        hist.real_scores.append(<span class="bu">float</span>(np.mean(real_scores)))</span>
-<span id="cb5-77"><a href="#cb5-77" aria-hidden="true" tabindex="-1"></a>        hist.fake_scores.append(<span class="bu">float</span>(np.mean(fake_scores)))</span>
-<span id="cb5-78"><a href="#cb5-78" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-79"><a href="#cb5-79" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Optionally capture a checkpoint snapshot</span></span>
-<span id="cb5-80"><a href="#cb5-80" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> checkpoint_interval <span class="kw">and</span> checkpoint_interval <span class="op">&gt;</span> <span class="dv">0</span> <span class="kw">and</span> ((ep <span class="op">+</span> <span class="dv">1</span>) <span class="op">%</span> checkpoint_interval <span class="op">==</span> <span class="dv">0</span>):</span>
-<span id="cb5-81"><a href="#cb5-81" aria-hidden="true" tabindex="-1"></a>            _capture_snapshot(ep <span class="op">+</span> <span class="dv">1</span>)</span>
-<span id="cb5-82"><a href="#cb5-82" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-83"><a href="#cb5-83" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (ep<span class="op">+</span><span class="dv">1</span>) <span class="op">%</span> <span class="bu">max</span>(<span class="dv">1</span>, print_every) <span class="op">==</span> <span class="dv">0</span> <span class="kw">or</span> ep<span class="op">==</span><span class="dv">0</span>:</span>
-<span id="cb5-84"><a href="#cb5-84" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"Epoch </span><span class="sc">{</span>ep<span class="op">+</span><span class="dv">1</span><span class="sc">:03d}</span><span class="ss">/</span><span class="sc">{</span>epochs<span class="sc">}</span><span class="ss"> | D </span><span class="sc">{</span>hist<span class="sc">.</span>d_loss[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:.3f}</span><span class="ss"> | G </span><span class="sc">{</span>hist<span class="sc">.</span>g_loss[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:.3f}</span><span class="ss"> | Div </span><span class="sc">{</span>div<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
-<span id="cb5-85"><a href="#cb5-85" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> G, D, hist</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>        d_state <span class="op">=</span> {k: v.cpu().clone() <span class="cf">for</span> k, v <span class="kw">in</span> D.state_dict().items()}</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>        small_samples <span class="op">=</span> samples[np.random.choice(samples.shape[<span class="dv">0</span>], size<span class="op">=</span><span class="bu">min</span>(<span class="dv">512</span>, samples.shape[<span class="dv">0</span>]), replace<span class="op">=</span><span class="va">False</span>)]</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>        hist.snapshots.append({<span class="st">"epoch"</span>: ep_idx, <span class="st">"state_dict"</span>: state, <span class="st">"d_state_dict"</span>: d_state, <span class="st">"samples"</span>: small_samples})</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Optionally capture an initial snapshot</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> checkpoint_interval <span class="kw">and</span> checkpoint_interval <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>        _capture_snapshot(<span class="dv">0</span>)</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Now we do the training loop for # epochs defined in `epochs`</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> ep <span class="kw">in</span> <span class="bu">range</span>(epochs):</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>        d_losses<span class="op">=</span>[]</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>        g_losses<span class="op">=</span>[]</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>        real_scores<span class="op">=</span>[]</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>        fake_scores<span class="op">=</span>[]</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> (xb,) <span class="kw">in</span> loader:</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Send the data to the GPU, if using.</span></span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>            xb <span class="op">=</span> xb.to(device)</span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Take a Discriminator step</span></span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>            z <span class="op">=</span> torch.randn(xb.size(<span class="dv">0</span>), noise_dim, device<span class="op">=</span>device)</span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>            <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>                x_fake <span class="op">=</span> G(z)</span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>            opt_d.zero_grad()</span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>            d_real <span class="op">=</span> D(xb)</span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>            d_fake <span class="op">=</span> D(x_fake)</span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>            loss_d <span class="op">=</span> bce(d_real, torch.ones_like(d_real)) <span class="op">+</span> bce(d_fake, torch.zeros_like(d_fake))</span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>            loss_d.backward()</span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>            opt_d.step()</span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>            d_losses.append(<span class="bu">float</span>(loss_d.detach().cpu().item()))</span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>            real_scores.append(d_real.mean().item())</span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>            fake_scores.append(d_fake.mean().item())</span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Take a Generator step</span></span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a>            z <span class="op">=</span> torch.randn(xb.size(<span class="dv">0</span>), noise_dim, device<span class="op">=</span>device)</span>
+<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a>            opt_g.zero_grad()</span>
+<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a>            xg <span class="op">=</span> G(z)</span>
+<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a>            dg <span class="op">=</span> D(xg)</span>
+<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a>            loss_g <span class="op">=</span> bce(dg, torch.ones_like(dg))</span>
+<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a>            loss_g.backward()</span>
+<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>            opt_g.step()</span>
+<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a>            g_losses.append(<span class="bu">float</span>(loss_g.detach().cpu().item()))</span>
+<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a>        <span class="co"># We'll record some epoch metrics</span></span>
+<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a>            z_eval <span class="op">=</span> torch.randn(<span class="dv">2048</span>, noise_dim, device<span class="op">=</span>device)</span>
+<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a>            samples <span class="op">=</span> G(z_eval)</span>
+<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a>            div <span class="op">=</span> compute_diversity_metric(samples)</span>
+<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Now we'll record the metrics for plotting later and reporting</span></span>
+<span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a>        hist.d_loss.append(<span class="bu">float</span>(np.mean(d_losses)))</span>
+<span id="cb5-75"><a href="#cb5-75" aria-hidden="true" tabindex="-1"></a>        hist.g_loss.append(<span class="bu">float</span>(np.mean(g_losses)))</span>
+<span id="cb5-76"><a href="#cb5-76" aria-hidden="true" tabindex="-1"></a>        hist.diversity.append(div)</span>
+<span id="cb5-77"><a href="#cb5-77" aria-hidden="true" tabindex="-1"></a>        hist.real_scores.append(<span class="bu">float</span>(np.mean(real_scores)))</span>
+<span id="cb5-78"><a href="#cb5-78" aria-hidden="true" tabindex="-1"></a>        hist.fake_scores.append(<span class="bu">float</span>(np.mean(fake_scores)))</span>
+<span id="cb5-79"><a href="#cb5-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-80"><a href="#cb5-80" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Optionally capture a checkpoint snapshot</span></span>
+<span id="cb5-81"><a href="#cb5-81" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> checkpoint_interval <span class="kw">and</span> checkpoint_interval <span class="op">&gt;</span> <span class="dv">0</span> <span class="kw">and</span> ((ep <span class="op">+</span> <span class="dv">1</span>) <span class="op">%</span> checkpoint_interval <span class="op">==</span> <span class="dv">0</span>):</span>
+<span id="cb5-82"><a href="#cb5-82" aria-hidden="true" tabindex="-1"></a>            _capture_snapshot(ep <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb5-83"><a href="#cb5-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-84"><a href="#cb5-84" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (ep<span class="op">+</span><span class="dv">1</span>) <span class="op">%</span> <span class="bu">max</span>(<span class="dv">1</span>, print_every) <span class="op">==</span> <span class="dv">0</span> <span class="kw">or</span> ep<span class="op">==</span><span class="dv">0</span>:</span>
+<span id="cb5-85"><a href="#cb5-85" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"Epoch </span><span class="sc">{</span>ep<span class="op">+</span><span class="dv">1</span><span class="sc">:03d}</span><span class="ss">/</span><span class="sc">{</span>epochs<span class="sc">}</span><span class="ss"> | D </span><span class="sc">{</span>hist<span class="sc">.</span>d_loss[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:.3f}</span><span class="ss"> | G </span><span class="sc">{</span>hist<span class="sc">.</span>g_loss[<span class="op">-</span><span class="dv">1</span>]<span class="sc">:.3f}</span><span class="ss"> | Div </span><span class="sc">{</span>div<span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb5-86"><a href="#cb5-86" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> G, D, hist</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<div id="fd179e70" class="cell" data-execution_count="5">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>G, D, H <span class="op">=</span> train_vanilla_gan(</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    X_ring, epochs<span class="op">=</span><span class="dv">120</span>, batch_size<span class="op">=</span><span class="dv">256</span>,</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    lr_g<span class="op">=</span><span class="fl">1e-5</span>,</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    lr_d<span class="op">=</span><span class="fl">1e-3</span>,</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    hidden_dim<span class="op">=</span><span class="dv">256</span>, noise_dim<span class="op">=</span><span class="dv">2</span>, </span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    checkpoint_interval<span class="op">=</span><span class="dv">10</span>,</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    print_every<span class="op">=</span><span class="dv">40</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>During training we store snapshots of both networks every few epochs. The helpers below let you browse those snapshots and plot the discriminator’s logit over the plane, like the discriminator map from the last chapter: red where the discriminator says “real”, blue where it says “fake”, and a black line where it cannot decide.</p>
+<div id="004fa88c" class="cell" data-execution_count="5">
+<details class="code-fold">
+<summary>Show Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ipywidgets <span class="im">import</span> IntSlider, Output, VBox, Label</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> discriminator_at(cp):</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># A discriminator with the weights it had at checkpoint `cp`</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># (spectral normalization stores its weights under the name 'weight_orig')</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    spectral <span class="op">=</span> <span class="bu">any</span>(k.endswith(<span class="st">'weight_orig'</span>) <span class="cf">for</span> k <span class="kw">in</span> cp[<span class="st">"d_state_dict"</span>])</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># fork_rng keeps the new network's random initialization from changing the random numbers of later cells</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> torch.random.fork_rng():</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>        D_cp <span class="op">=</span> build_discriminator(hidden_dim<span class="op">=</span><span class="dv">256</span>, spectral_normalization<span class="op">=</span>spectral)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    D_cp.load_state_dict({k: v.to(device) <span class="cf">for</span> k, v <span class="kw">in</span> cp[<span class="st">"d_state_dict"</span>].items()})</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># We keep D_cp in training mode, so spectral normalization refines its estimate of each layer's</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># largest singular value on every call, just as it does during training</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> D_cp</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_discriminator_map(D_net, fake_np, ax<span class="op">=</span><span class="va">None</span>, lim<span class="op">=</span><span class="va">None</span>, title<span class="op">=</span><span class="st">''</span>, X_real<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># D's logit over the data space (red: D says "real", blue: D says "fake", black line: logit 0),</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># the real data in gray and the generator's samples in orange</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> X_real <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>        X_real <span class="op">=</span> X_ring</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> ax <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>        fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="fl">6.5</span>, <span class="fl">5.5</span>))</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> lim <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Show at least [-5, 5] x [-5, 5], and widen the window if the generator's samples lie outside it</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>        lim <span class="op">=</span> <span class="bu">max</span>(<span class="fl">5.0</span>, <span class="fl">1.1</span> <span class="op">*</span> np.percentile(np.<span class="bu">abs</span>(fake_np).<span class="bu">max</span>(axis<span class="op">=</span><span class="dv">1</span>), <span class="dv">99</span>))</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>    grid_1d <span class="op">=</span> np.linspace(<span class="op">-</span>lim, lim, <span class="dv">201</span>)</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>    xx, yy <span class="op">=</span> np.meshgrid(grid_1d, grid_1d)</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>    grid <span class="op">=</span> torch.tensor(np.stack([xx.ravel(), yy.ravel()], axis<span class="op">=</span><span class="dv">1</span>), dtype<span class="op">=</span>torch.float32, device<span class="op">=</span>device)</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>        logit <span class="op">=</span> D_net(grid).cpu().numpy().reshape(xx.shape)</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>    v <span class="op">=</span> np.<span class="bu">abs</span>(logit).<span class="bu">max</span>()</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>    im <span class="op">=</span> ax.contourf(xx, yy, logit, levels<span class="op">=</span>np.linspace(<span class="op">-</span>v, v, <span class="dv">31</span>), cmap<span class="op">=</span><span class="st">'RdBu_r'</span>)</span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>    ax.contour(xx, yy, logit, levels<span class="op">=</span>[<span class="dv">0</span>], colors<span class="op">=</span><span class="st">'k'</span>, linewidths<span class="op">=</span><span class="fl">0.8</span>)</span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>    ax.scatter(X_real[:<span class="dv">800</span>, <span class="dv">0</span>], X_real[:<span class="dv">800</span>, <span class="dv">1</span>], s<span class="op">=</span><span class="dv">4</span>, color<span class="op">=</span><span class="st">'0.35'</span>, alpha<span class="op">=</span><span class="fl">0.4</span>, label<span class="op">=</span><span class="st">'Real'</span>)</span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>    ax.scatter(fake_np[:<span class="dv">500</span>, <span class="dv">0</span>], fake_np[:<span class="dv">500</span>, <span class="dv">1</span>], s<span class="op">=</span><span class="dv">6</span>, color<span class="op">=</span><span class="st">'tab:orange'</span>, label<span class="op">=</span><span class="st">'Generated'</span>)</span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>    ax.set_xlim(<span class="op">-</span>lim, lim)</span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>    ax.set_ylim(<span class="op">-</span>lim, lim)</span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>    ax.set_aspect(<span class="st">'equal'</span>)</span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">'x1'</span>)</span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(<span class="st">'x2'</span>)</span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>    ax.set_title(title, fontsize<span class="op">=</span><span class="dv">11</span>)</span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>    plt.colorbar(im, ax<span class="op">=</span>ax, fraction<span class="op">=</span><span class="fl">0.046</span>, label<span class="op">=</span><span class="st">'Discriminator logit'</span>, ticks<span class="op">=</span>np.linspace(<span class="op">-</span>v, v, <span class="dv">5</span>), <span class="bu">format</span><span class="op">=</span><span class="st">'</span><span class="sc">%.3g</span><span class="st">'</span>)</span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ax</span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_discriminator_strip(H, epochs, title<span class="op">=</span><span class="st">''</span>):</span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Discriminator maps at six checkpoints (two rows of three), all with the same window</span></span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>    cps <span class="op">=</span> [cp <span class="cf">for</span> cp <span class="kw">in</span> H.snapshots <span class="cf">if</span> cp[<span class="st">"epoch"</span>] <span class="kw">in</span> epochs]</span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>    lim <span class="op">=</span> <span class="bu">max</span>(<span class="bu">max</span>(<span class="fl">5.0</span>, <span class="fl">1.1</span> <span class="op">*</span> np.percentile(np.<span class="bu">abs</span>(cp[<span class="st">"samples"</span>]).<span class="bu">max</span>(axis<span class="op">=</span><span class="dv">1</span>), <span class="dv">99</span>)) <span class="cf">for</span> cp <span class="kw">in</span> cps)</span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>    fig, axes <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">14</span>, <span class="dv">9</span>))</span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a>    axes <span class="op">=</span> axes.ravel()</span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> ax, cp <span class="kw">in</span> <span class="bu">zip</span>(axes, cps):</span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a>        plot_discriminator_map(discriminator_at(cp), cp[<span class="st">"samples"</span>], ax<span class="op">=</span>ax, lim<span class="op">=</span>lim,</span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a>                               title<span class="op">=</span><span class="ss">f"Epoch </span><span class="sc">{</span>cp[<span class="st">'epoch'</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">0</span>].legend(loc<span class="op">=</span><span class="st">'upper left'</span>, fontsize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a>    fig.suptitle(title)</span>
+<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-61"><a href="#cb6-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-62"><a href="#cb6-62" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> checkpoint_browser(H):</span>
+<span id="cb6-63"><a href="#cb6-63" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Slider over the snapshots stored in history H</span></span>
+<span id="cb6-64"><a href="#cb6-64" aria-hidden="true" tabindex="-1"></a>    out <span class="op">=</span> Output()</span>
+<span id="cb6-65"><a href="#cb6-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-66"><a href="#cb6-66" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> show_checkpoint(idx: <span class="bu">int</span>):</span>
+<span id="cb6-67"><a href="#cb6-67" aria-hidden="true" tabindex="-1"></a>        cp <span class="op">=</span> H.snapshots[idx]</span>
+<span id="cb6-68"><a href="#cb6-68" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Load generator state into a temporary generator instance</span></span>
+<span id="cb6-69"><a href="#cb6-69" aria-hidden="true" tabindex="-1"></a>        G_temp <span class="op">=</span> build_generator(noise_dim<span class="op">=</span><span class="dv">2</span>, hidden_dim<span class="op">=</span><span class="dv">256</span>)</span>
+<span id="cb6-70"><a href="#cb6-70" aria-hidden="true" tabindex="-1"></a>        <span class="co"># load state dict (ensure tensors are moved to device)</span></span>
+<span id="cb6-71"><a href="#cb6-71" aria-hidden="true" tabindex="-1"></a>        state <span class="op">=</span> {k: v.to(device) <span class="cf">for</span> k, v <span class="kw">in</span> cp[<span class="st">"state_dict"</span>].items()}</span>
+<span id="cb6-72"><a href="#cb6-72" aria-hidden="true" tabindex="-1"></a>        G_temp.load_state_dict(state)</span>
+<span id="cb6-73"><a href="#cb6-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-74"><a href="#cb6-74" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> out:</span>
+<span id="cb6-75"><a href="#cb6-75" aria-hidden="true" tabindex="-1"></a>            out.clear_output(wait<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb6-76"><a href="#cb6-76" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Plot diagnostics, the discriminator map and latent interpolation for this checkpoint</span></span>
+<span id="cb6-77"><a href="#cb6-77" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"Checkpoint: index=</span><span class="sc">{</span>idx<span class="sc">}</span><span class="ss"> | epoch=</span><span class="sc">{</span>cp[<span class="st">'epoch'</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb6-78"><a href="#cb6-78" aria-hidden="true" tabindex="-1"></a>            plot_model_diagnostics(H, X_ring, G_temp, noise_dim<span class="op">=</span><span class="dv">2</span>, title_suffix<span class="op">=</span><span class="ss">f" (Checkpoint ep </span><span class="sc">{</span>cp[<span class="st">'epoch'</span>]<span class="sc">}</span><span class="ss">)"</span>)</span>
+<span id="cb6-79"><a href="#cb6-79" aria-hidden="true" tabindex="-1"></a>            plot_discriminator_map(discriminator_at(cp), cp[<span class="st">"samples"</span>],</span>
+<span id="cb6-80"><a href="#cb6-80" aria-hidden="true" tabindex="-1"></a>                                   title<span class="op">=</span><span class="ss">f"Discriminator logit (Checkpoint ep </span><span class="sc">{</span>cp[<span class="st">'epoch'</span>]<span class="sc">}</span><span class="ss">)"</span>)</span>
+<span id="cb6-81"><a href="#cb6-81" aria-hidden="true" tabindex="-1"></a>            plt.show()</span>
+<span id="cb6-82"><a href="#cb6-82" aria-hidden="true" tabindex="-1"></a>            plot_latent_interpolation(G_temp, noise_dim<span class="op">=</span><span class="dv">2</span>, title_suffix<span class="op">=</span><span class="ss">f" (Checkpoint ep </span><span class="sc">{</span>cp[<span class="st">'epoch'</span>]<span class="sc">}</span><span class="ss">)"</span>, real_samples<span class="op">=</span>X_ring, latent_limits<span class="op">=</span>ring_latent_limits, data_limits<span class="op">=</span>ring_data_limits)</span>
+<span id="cb6-83"><a href="#cb6-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-84"><a href="#cb6-84" aria-hidden="true" tabindex="-1"></a>    slider <span class="op">=</span> IntSlider(value<span class="op">=</span><span class="dv">0</span>, <span class="bu">min</span><span class="op">=</span><span class="dv">0</span>, <span class="bu">max</span><span class="op">=</span><span class="bu">len</span>(H.snapshots) <span class="op">-</span> <span class="dv">1</span>, step<span class="op">=</span><span class="dv">1</span>, description<span class="op">=</span><span class="st">'Checkpoint'</span>)</span>
+<span id="cb6-85"><a href="#cb6-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-86"><a href="#cb6-86" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> on_change(change):</span>
+<span id="cb6-87"><a href="#cb6-87" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> change[<span class="st">'name'</span>] <span class="op">==</span> <span class="st">'value'</span>:</span>
+<span id="cb6-88"><a href="#cb6-88" aria-hidden="true" tabindex="-1"></a>            show_checkpoint(change[<span class="st">'new'</span>])</span>
+<span id="cb6-89"><a href="#cb6-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-90"><a href="#cb6-90" aria-hidden="true" tabindex="-1"></a>    slider.observe(on_change)</span>
+<span id="cb6-91"><a href="#cb6-91" aria-hidden="true" tabindex="-1"></a>    display(VBox([Label(<span class="st">'Checkpoint browser'</span>), slider, out]))</span>
+<span id="cb6-92"><a href="#cb6-92" aria-hidden="true" tabindex="-1"></a>    <span class="co"># show initial</span></span>
+<span id="cb6-93"><a href="#cb6-93" aria-hidden="true" tabindex="-1"></a>    show_checkpoint(<span class="dv">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div id="fd179e70" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>G1, D1, H1 <span class="op">=</span> train_vanilla_gan(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    X_ring, epochs<span class="op">=</span><span class="dv">120</span>, batch_size<span class="op">=</span><span class="dv">256</span>,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    lr_g<span class="op">=</span><span class="fl">1e-5</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    lr_d<span class="op">=</span><span class="fl">1e-3</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    hidden_dim<span class="op">=</span><span class="dv">256</span>, noise_dim<span class="op">=</span><span class="dv">2</span>, </span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    checkpoint_interval<span class="op">=</span><span class="dv">10</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    print_every<span class="op">=</span><span class="dv">40</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Epoch 001/120 | D 0.537 | G 1.542 | Div 0.009
 Epoch 040/120 | D 0.331 | G 3.036 | Div 0.307
-Epoch 040/120 | D 0.331 | G 3.036 | Div 0.307
 Epoch 080/120 | D 0.388 | G 2.256 | Div 0.062
-Epoch 080/120 | D 0.388 | G 2.256 | Div 0.062
-Epoch 120/120 | D 0.394 | G 2.226 | Div 0.062
 Epoch 120/120 | D 0.394 | G 2.226 | Div 0.062</code></pre>
 </div>
 </div>
-<div id="3dcd7ef2" class="cell" data-execution_count="6">
+<div id="3dcd7ef2" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>Show Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>plot_model_diagnostics(H, X_ring, G, noise_dim<span class="op">=</span><span class="dv">2</span>, title_suffix<span class="op">=</span><span class="st">' (GAN w/ D &gt;&gt; G)'</span>)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>plot_latent_interpolation(G, noise_dim<span class="op">=</span><span class="dv">2</span>, title_suffix<span class="op">=</span><span class="st">' (GAN w/ D &gt;&gt; G)'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>plot_model_diagnostics(H1, X_ring, G1, noise_dim<span class="op">=</span><span class="dv">2</span>, title_suffix<span class="op">=</span><span class="st">' (GAN w/ D &gt;&gt; G)'</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>plot_latent_interpolation(G1, noise_dim<span class="op">=</span><span class="dv">2</span>, title_suffix<span class="op">=</span><span class="st">' (GAN w/ D &gt;&gt; G)'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="GAN_pitfalls_files/figure-html/cell-7-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="GAN_pitfalls_files/figure-html/cell-8-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="GAN_pitfalls_files/figure-html/cell-7-output-2.png" class="img-fluid figure-img"></p>
+<p><img src="GAN_pitfalls_files/figure-html/cell-8-output-2.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>We can also take a look at this interactively, by viewing various snapshots during training:</p>
-<div id="6ddbffa0" class="cell" data-execution_count="7">
+<div id="2eb3e38f" class="cell" data-execution_count="18">
 <details class="code-fold">
 <summary>Show Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Interactive checkpoint browser (requires ipywidgets)</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> interact <span class="kw">is</span> <span class="va">None</span>:</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"ipywidgets not available. Install ipywidgets to use the interactive checkpoint browser."</span>)</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="im">from</span> ipywidgets <span class="im">import</span> IntSlider, Output, VBox, Label</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    out <span class="op">=</span> Output()</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> show_checkpoint(idx: <span class="bu">int</span>):</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> <span class="bu">hasattr</span>(H, <span class="st">"snapshots"</span>) <span class="kw">or</span> <span class="bu">len</span>(H.snapshots) <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>            <span class="cf">with</span> out:</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>                <span class="bu">print</span>(<span class="st">"No checkpoints available. Rerun training with checkpoint_interval&gt;0 to populate snapshots."</span>)</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>        cp <span class="op">=</span> H.snapshots[idx]</span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Load generator state into a temporary generator instance</span></span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>        G_temp <span class="op">=</span> build_generator(noise_dim<span class="op">=</span><span class="dv">2</span>, hidden_dim<span class="op">=</span><span class="dv">256</span>)</span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>        <span class="co"># load state dict (ensure tensors are moved to device)</span></span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>        state <span class="op">=</span> {k: v.to(device) <span class="cf">for</span> k, v <span class="kw">in</span> cp[<span class="st">"state_dict"</span>].items()}</span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>        G_temp.load_state_dict(state)</span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> out:</span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>            out.clear_output(wait<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Plot diagnostics and latent interpolation for this checkpoint</span></span>
-<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"Checkpoint: index=</span><span class="sc">{</span>idx<span class="sc">}</span><span class="ss"> | epoch=</span><span class="sc">{</span>cp[<span class="st">'epoch'</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>            plot_model_diagnostics(H, X_ring, G_temp, noise_dim<span class="op">=</span><span class="dv">2</span>, title_suffix<span class="op">=</span><span class="ss">f" (Checkpoint ep </span><span class="sc">{</span>cp[<span class="st">'epoch'</span>]<span class="sc">}</span><span class="ss">)"</span>)</span>
-<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>            plot_latent_interpolation(G_temp, noise_dim<span class="op">=</span><span class="dv">2</span>, title_suffix<span class="op">=</span><span class="ss">f" (Checkpoint ep </span><span class="sc">{</span>cp[<span class="st">'epoch'</span>]<span class="sc">}</span><span class="ss">)"</span>, real_samples<span class="op">=</span>X_ring, latent_limits<span class="op">=</span>ring_latent_limits, data_limits<span class="op">=</span>ring_data_limits)</span>
-<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> make_slider():</span>
-<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> <span class="bu">hasattr</span>(H, <span class="st">"snapshots"</span>) <span class="kw">or</span> <span class="bu">len</span>(H.snapshots) <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="st">"No checkpoints available. Rerun training with checkpoint_interval&gt;0 to populate snapshots."</span>)</span>
-<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span></span>
-<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>        max_idx <span class="op">=</span> <span class="bu">len</span>(H.snapshots) <span class="op">-</span> <span class="dv">1</span></span>
-<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>        slider <span class="op">=</span> IntSlider(value<span class="op">=</span><span class="dv">0</span>, <span class="bu">min</span><span class="op">=</span><span class="dv">0</span>, <span class="bu">max</span><span class="op">=</span>max_idx, step<span class="op">=</span><span class="dv">1</span>, description<span class="op">=</span><span class="st">'Checkpoint'</span>)</span>
-<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>        <span class="kw">def</span> on_change(change):</span>
-<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> change[<span class="st">'name'</span>] <span class="op">==</span> <span class="st">'value'</span>:</span>
-<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>                show_checkpoint(change[<span class="st">'new'</span>])</span>
-<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>        slider.observe(on_change)</span>
-<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a>        display(VBox([Label(<span class="st">'Checkpoint browser'</span>), slider, out]))</span>
-<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>        <span class="co"># show initial</span></span>
-<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a>        show_checkpoint(<span class="dv">0</span>)</span>
-<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>    make_slider()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>checkpoint_browser(H1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"07127978db4f4435926888fdf4eda0dc","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+{"model_id":"f8cbf499d5594c27a4a893b8adf1f5f3","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
 </script>
+</div>
+</div>
+<p>Here is how the discriminator’s logit map evolves in this run: watch how large the logits get, and how the blue region shrinks to a small pocket around the generator’s samples.</p>
+<div id="2f0452f8" class="cell" data-execution_count="9">
+<details class="code-fold">
+<summary>Show Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>plot_discriminator_strip(H1, epochs<span class="op">=</span>[<span class="dv">0</span>, <span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">40</span>, <span class="dv">80</span>, <span class="dv">120</span>], title<span class="op">=</span><span class="st">'Discriminator logit during training (GAN w/ D &gt;&gt; G)'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GAN_pitfalls_files/figure-html/cell-10-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
@@ -769,101 +839,70 @@ Epoch 120/120 | D 0.394 | G 2.226 | Div 0.062</code></pre>
 </ul>
 </div>
 </div>
-<div id="13317d47" class="cell" data-execution_count="8">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>G, D, H <span class="op">=</span> train_vanilla_gan(</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    X_ring, epochs<span class="op">=</span><span class="dv">120</span>, batch_size<span class="op">=</span><span class="dv">256</span>,</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    lr_g<span class="op">=</span><span class="fl">1e-4</span>,</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    lr_d<span class="op">=</span><span class="fl">1e-5</span>,</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    hidden_dim<span class="op">=</span><span class="dv">256</span>, noise_dim<span class="op">=</span><span class="dv">2</span>, </span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    checkpoint_interval<span class="op">=</span><span class="dv">10</span>,</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    print_every<span class="op">=</span><span class="dv">40</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="13317d47" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>G2, D2, H2 <span class="op">=</span> train_vanilla_gan(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    X_ring, epochs<span class="op">=</span><span class="dv">120</span>, batch_size<span class="op">=</span><span class="dv">256</span>,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    lr_g<span class="op">=</span><span class="fl">1e-4</span>,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    lr_d<span class="op">=</span><span class="fl">1e-5</span>,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    hidden_dim<span class="op">=</span><span class="dv">256</span>, noise_dim<span class="op">=</span><span class="dv">2</span>, </span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    checkpoint_interval<span class="op">=</span><span class="dv">10</span>,</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    print_every<span class="op">=</span><span class="dv">40</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Epoch 001/120 | D 1.347 | G 0.704 | Div 0.030
 Epoch 040/120 | D 1.346 | G 0.751 | Div 0.015
-Epoch 040/120 | D 1.346 | G 0.751 | Div 0.015
 Epoch 080/120 | D 1.368 | G 0.716 | Div 0.650
-Epoch 080/120 | D 1.368 | G 0.716 | Div 0.650
-Epoch 120/120 | D 1.370 | G 0.731 | Div 0.343
 Epoch 120/120 | D 1.370 | G 0.731 | Div 0.343</code></pre>
 </div>
 </div>
-<div id="419c81c5" class="cell" data-execution_count="9">
+<div id="419c81c5" class="cell" data-execution_count="11">
 <details class="code-fold">
 <summary>Show Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>plot_model_diagnostics(H, X_ring, G, noise_dim<span class="op">=</span><span class="dv">2</span>, title_suffix<span class="op">=</span><span class="st">' (GAN w/ G &gt;&gt; D)'</span>)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>plot_latent_interpolation(G, noise_dim<span class="op">=</span><span class="dv">2</span>, title_suffix<span class="op">=</span><span class="st">' (GAN w/ G &gt;&gt; D)'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>plot_model_diagnostics(H2, X_ring, G2, noise_dim<span class="op">=</span><span class="dv">2</span>, title_suffix<span class="op">=</span><span class="st">' (GAN w/ G &gt;&gt; D)'</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>plot_latent_interpolation(G2, noise_dim<span class="op">=</span><span class="dv">2</span>, title_suffix<span class="op">=</span><span class="st">' (GAN w/ G &gt;&gt; D)'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="GAN_pitfalls_files/figure-html/cell-10-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="GAN_pitfalls_files/figure-html/cell-12-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Ignoring fixed y limits to fulfill fixed data aspect with adjustable data limits.
-Ignoring fixed y limits to fulfill fixed data aspect with adjustable data limits.
 Ignoring fixed y limits to fulfill fixed data aspect with adjustable data limits.</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="GAN_pitfalls_files/figure-html/cell-10-output-3.png" class="img-fluid figure-img"></p>
+<p><img src="GAN_pitfalls_files/figure-html/cell-12-output-3.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>You can also view this interactively at different training snapshots below, which might help illuminate some behavior:</p>
-<div id="db050867" class="cell" data-execution_count="10">
+<div id="140da3fe" class="cell" data-execution_count="12">
 <details class="code-fold">
 <summary>Show Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Interactive checkpoint browser (requires ipywidgets)</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> interact <span class="kw">is</span> <span class="va">None</span>:</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"ipywidgets not available. Install ipywidgets to use the interactive checkpoint browser."</span>)</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="im">from</span> ipywidgets <span class="im">import</span> IntSlider, Output, VBox, Label</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    out <span class="op">=</span> Output()</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> show_checkpoint(idx: <span class="bu">int</span>):</span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> <span class="bu">hasattr</span>(H, <span class="st">"snapshots"</span>) <span class="kw">or</span> <span class="bu">len</span>(H.snapshots) <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>            <span class="cf">with</span> out:</span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>                <span class="bu">print</span>(<span class="st">"No checkpoints available. Rerun training with checkpoint_interval&gt;0 to populate snapshots."</span>)</span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>        cp <span class="op">=</span> H.snapshots[idx]</span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Load generator state into a temporary generator instance</span></span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>        G_temp <span class="op">=</span> build_generator(noise_dim<span class="op">=</span><span class="dv">2</span>, hidden_dim<span class="op">=</span><span class="dv">256</span>)</span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>        <span class="co"># load state dict (ensure tensors are moved to device)</span></span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>        state <span class="op">=</span> {k: v.to(device) <span class="cf">for</span> k, v <span class="kw">in</span> cp[<span class="st">"state_dict"</span>].items()}</span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>        G_temp.load_state_dict(state)</span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> out:</span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>            out.clear_output(wait<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Plot diagnostics and latent interpolation for this checkpoint</span></span>
-<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"Checkpoint: index=</span><span class="sc">{</span>idx<span class="sc">}</span><span class="ss"> | epoch=</span><span class="sc">{</span>cp[<span class="st">'epoch'</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>            plot_model_diagnostics(H, X_ring, G_temp, noise_dim<span class="op">=</span><span class="dv">2</span>, title_suffix<span class="op">=</span><span class="ss">f" (Checkpoint ep </span><span class="sc">{</span>cp[<span class="st">'epoch'</span>]<span class="sc">}</span><span class="ss">)"</span>)</span>
-<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>            plot_latent_interpolation(G_temp, noise_dim<span class="op">=</span><span class="dv">2</span>, title_suffix<span class="op">=</span><span class="ss">f" (Checkpoint ep </span><span class="sc">{</span>cp[<span class="st">'epoch'</span>]<span class="sc">}</span><span class="ss">)"</span>, real_samples<span class="op">=</span>X_ring, latent_limits<span class="op">=</span>ring_latent_limits, data_limits<span class="op">=</span>ring_data_limits)</span>
-<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> make_slider():</span>
-<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> <span class="bu">hasattr</span>(H, <span class="st">"snapshots"</span>) <span class="kw">or</span> <span class="bu">len</span>(H.snapshots) <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="st">"No checkpoints available. Rerun training with checkpoint_interval&gt;0 to populate snapshots."</span>)</span>
-<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span></span>
-<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>        max_idx <span class="op">=</span> <span class="bu">len</span>(H.snapshots) <span class="op">-</span> <span class="dv">1</span></span>
-<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>        slider <span class="op">=</span> IntSlider(value<span class="op">=</span><span class="dv">0</span>, <span class="bu">min</span><span class="op">=</span><span class="dv">0</span>, <span class="bu">max</span><span class="op">=</span>max_idx, step<span class="op">=</span><span class="dv">1</span>, description<span class="op">=</span><span class="st">'Checkpoint'</span>)</span>
-<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>        <span class="kw">def</span> on_change(change):</span>
-<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> change[<span class="st">'name'</span>] <span class="op">==</span> <span class="st">'value'</span>:</span>
-<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>                show_checkpoint(change[<span class="st">'new'</span>])</span>
-<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>        slider.observe(on_change)</span>
-<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>        display(VBox([Label(<span class="st">'Checkpoint browser'</span>), slider, out]))</span>
-<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a>        <span class="co"># show initial</span></span>
-<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a>        show_checkpoint(<span class="dv">0</span>)</span>
-<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a>    make_slider()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>checkpoint_browser(H2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id":"ff2170bba22e49e5a9a76987ca97ebef","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+{"model_id":"baf97f93dd764ed188eceb6fc5e879bd","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
 </script>
+</div>
+</div>
+<p>Here is the same view for this run: compare the size of the logits with Experiment 1, and check whether the black line follows the ring at all.</p>
+<div id="d6a75e36" class="cell" data-execution_count="13">
+<details class="code-fold">
+<summary>Show Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>plot_discriminator_strip(H2, epochs<span class="op">=</span>[<span class="dv">0</span>, <span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">40</span>, <span class="dv">80</span>, <span class="dv">120</span>], title<span class="op">=</span><span class="st">'Discriminator logit during training (GAN w/ G &gt;&gt; D)'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GAN_pitfalls_files/figure-html/cell-14-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
@@ -889,49 +928,71 @@ Ignoring fixed y limits to fulfill fixed data aspect with adjustable data limits
 </ul>
 </div>
 </div>
-<div id="f0b3d915" class="cell" data-execution_count="18">
+<div id="f0b3d915" class="cell" data-execution_count="14">
 <details class="code-fold">
 <summary>Show Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>G, D, H <span class="op">=</span> train_vanilla_gan(</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    X_ring, epochs<span class="op">=</span><span class="dv">240</span>, batch_size<span class="op">=</span><span class="dv">256</span>,</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    lr_g<span class="op">=</span><span class="fl">1e-4</span>,</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    lr_d<span class="op">=</span><span class="fl">5e-4</span>,</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    spectral_normalization<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    hidden_dim<span class="op">=</span><span class="dv">256</span>, noise_dim<span class="op">=</span><span class="dv">2</span>, </span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    print_every<span class="op">=</span><span class="dv">40</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>G3, D3, H3 <span class="op">=</span> train_vanilla_gan(</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    X_ring, epochs<span class="op">=</span><span class="dv">240</span>, batch_size<span class="op">=</span><span class="dv">256</span>,</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    lr_g<span class="op">=</span><span class="fl">1e-4</span>,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    lr_d<span class="op">=</span><span class="fl">5e-4</span>,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    spectral_normalization<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    checkpoint_interval<span class="op">=</span><span class="dv">20</span>,</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    hidden_dim<span class="op">=</span><span class="dv">256</span>, noise_dim<span class="op">=</span><span class="dv">2</span>, </span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    print_every<span class="op">=</span><span class="dv">40</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch 001/240 | D 1.299 | G 0.731 | Div 0.143
-Epoch 040/240 | D 1.371 | G 0.703 | Div 4.572
-Epoch 040/240 | D 1.371 | G 0.703 | Div 4.572
-Epoch 080/240 | D 1.374 | G 0.700 | Div 4.610
-Epoch 080/240 | D 1.374 | G 0.700 | Div 4.610
-Epoch 120/240 | D 1.376 | G 0.700 | Div 4.528
-Epoch 160/240 | D 1.378 | G 0.697 | Div 4.569
-Epoch 200/240 | D 1.381 | G 0.697 | Div 4.568
-Epoch 240/240 | D 1.383 | G 0.699 | Div 4.630</code></pre>
+<pre><code>Epoch 001/240 | D 1.279 | G 0.743 | Div 0.100
+Epoch 040/240 | D 1.370 | G 0.703 | Div 4.585
+Epoch 080/240 | D 1.373 | G 0.700 | Div 4.537
+Epoch 120/240 | D 1.376 | G 0.699 | Div 4.660
+Epoch 160/240 | D 1.379 | G 0.699 | Div 4.553
+Epoch 200/240 | D 1.381 | G 0.698 | Div 4.610
+Epoch 240/240 | D 1.382 | G 0.697 | Div 4.610</code></pre>
 </div>
 </div>
-<div id="fccf81e8" class="cell" data-execution_count="19">
+<div id="fccf81e8" class="cell" data-execution_count="15">
 <details class="code-fold">
 <summary>Show Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>plot_model_diagnostics(H, X_ring, G, noise_dim<span class="op">=</span><span class="dv">2</span>, title_suffix<span class="op">=</span><span class="st">' (GAN w/ D_spec_norm &gt;&gt; G)'</span>)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>plot_latent_interpolation(G, noise_dim<span class="op">=</span><span class="dv">2</span>, title_suffix<span class="op">=</span><span class="st">' (GAN w/ D_spec_norm &gt;&gt; G)'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>plot_model_diagnostics(H3, X_ring, G3, noise_dim<span class="op">=</span><span class="dv">2</span>, title_suffix<span class="op">=</span><span class="st">' (GAN w/ D_spec_norm &gt;&gt; G)'</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>plot_latent_interpolation(G3, noise_dim<span class="op">=</span><span class="dv">2</span>, title_suffix<span class="op">=</span><span class="st">' (GAN w/ D_spec_norm &gt;&gt; G)'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="GAN_pitfalls_files/figure-html/cell-13-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="GAN_pitfalls_files/figure-html/cell-16-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Ignoring fixed y limits to fulfill fixed data aspect with adjustable data limits.</code></pre>
-</div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="GAN_pitfalls_files/figure-html/cell-13-output-3.png" class="img-fluid figure-img"></p>
+<p><img src="GAN_pitfalls_files/figure-html/cell-16-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>You can also browse the snapshots of this run:</p>
+<div id="0741c249" class="cell">
+<details class="code-fold">
+<summary>Show Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>checkpoint_browser(H3)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"d2e0b27c11714ad3a340b814fc9fe3bf","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+</div>
+<p>And here is the discriminator map with spectral normalization: compare the size of the logits and the shape of the red and blue regions with Experiment 1.</p>
+<div id="58dc02c7" class="cell" data-execution_count="17">
+<details class="code-fold">
+<summary>Show Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>plot_discriminator_strip(H3, epochs<span class="op">=</span>[<span class="dv">0</span>, <span class="dv">20</span>, <span class="dv">40</span>, <span class="dv">80</span>, <span class="dv">160</span>, <span class="dv">240</span>], title<span class="op">=</span><span class="st">'Discriminator logit during training (GAN w/ D_spec_norm &gt;&gt; G)'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GAN_pitfalls_files/figure-html/cell-18-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
