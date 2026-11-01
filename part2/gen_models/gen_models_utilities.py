@@ -396,12 +396,13 @@ def plot_conditional_samples_discrete(
         real_labels: Real labels for background coloring
         title: Plot title
     """
-    fig, ax = plt.subplots(figsize=(8, 8))
+    fig, ax = plt.subplots(figsize=(10, 8))
+    # Color label k with the k-th tab10 color for both real and generated points
+    colors = plt.get_cmap("tab10").colors
     ax.scatter(
         real_data[:, 0],
         real_data[:, 1],
-        c=real_labels,
-        cmap="tab10",
+        c=[colors[int(k) % len(colors)] for k in real_labels],
         s=10,
         alpha=0.15,
         label="Real",
@@ -410,6 +411,7 @@ def plot_conditional_samples_discrete(
         ax.scatter(
             samples[:, 0],
             samples[:, 1],
+            color=colors[int(label) % len(colors)],
             s=30,
             alpha=0.7,
             label=f"Generated (label={label})",
@@ -419,7 +421,8 @@ def plot_conditional_samples_discrete(
     ax.set_xlabel("x₁")
     ax.set_ylabel("x₂")
     ax.set_title(title)
-    ax.legend(loc="upper right", frameon=True)
+    # Legend outside the axes so it does not cover any mode
+    ax.legend(loc="upper left", bbox_to_anchor=(1.02, 1.0), frameon=True)
     ax.axis("equal")
     ax.grid(True, alpha=0.2)
     plt.tight_layout()
