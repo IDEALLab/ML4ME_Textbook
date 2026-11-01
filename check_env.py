@@ -38,7 +38,8 @@ REQUIRED_PACKAGES = [
     ("torch", "torch"),
     ("torchvision", "torchvision"),
     ("geomloss", "geomloss"),
-    ("engibench", "engibench"),
+    ("engibench", "engibench[beams2d]"),
+    ("cvxopt", "cvxopt (from engibench[beams2d])"),
     ("ipywidgets", "ipywidgets"),
     ("notebook", "notebook"),
 ]
