@@ -444,7 +444,7 @@ def plot_conditional_samples_continuous(
         title: Plot title
         value_name: Name of the conditioning variable (for legend)
     """
-    fig, ax = plt.subplots(figsize=(8, 8))
+    fig, ax = plt.subplots(figsize=(10, 8))
     ax.scatter(
         real_data[:, 0],
         real_data[:, 1],
@@ -471,8 +471,9 @@ def plot_conditional_samples_continuous(
     ax.set_xlabel("x₁")
     ax.set_ylabel("x₂")
     ax.set_title(title)
-    ax.legend(loc="upper right", frameon=True)
+    # Legend outside the axes so it does not cover any samples
+    ax.legend(loc="upper left", bbox_to_anchor=(1.02, 1.0), frameon=True)
     ax.axis("equal")
     ax.grid(True, alpha=0.2)
-    # plt.tight_layout()
+    plt.tight_layout()
     plt.show()
