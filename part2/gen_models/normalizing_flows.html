@@ -871,10 +871,10 @@ p_X(\mathbf{x}) = p_Z(f^{-1}(\mathbf{x})) \left\lvert \det \frac{\partial f^{-1}
 <h3 data-number="14.3.3" class="anchored" data-anchor-id="from-transforms-to-complex-flows-and-probabilities"><span class="header-section-number">14.3.3</span> From Transforms to Complex Flows and Probabilities</h3>
 <p>In practice, we can stack many such layers of different types to build a deep normalizing flow that can model complex target distributions. Each layer contributes to the overall transformation, and we can compute the log-density of the transformed variable by summing the log-determinants of each layer’s Jacobian. Each transform above comes with a Jacobian determinant that tells us how probability mass re-scales. In one dimension, the recipe is <span class="math display">\[
 \log p_Y(y) = \log p_Z(f^{-1}(y)) + \log\left|\frac{\mathrm{d} f^{-1}(y)}{\mathrm{d} y}\right| = \log p_Z(z) - \log\left|f'(z)\right|.
-\]</span> For multivariate flows with <span class="math inline">\(x = f(z)\)</span>, we track the log-determinant at every layer: <span class="math display">\[
-\log p_X(x) = \log p_Z(z_0) + \sum_{\ell=1}^K \log\left|\det J_{f_\ell}(z_{\ell-1})\right|,
-\]</span></p>
-<p>Computing these terms is why we prefer architectures (like affine coupling, planar, or radial flows) with Jacobians that are either triangular or have closed-form determinants, so that we can avoid very expensive determinant calculations. When training a flow we maximise this exact log-likelihood, and during sampling we simply draw <span class="math inline">\(z \sim p_Z\)</span> and apply the inverses <span class="math inline">\(f_\ell^{-1}\)</span> in reverse order.</p>
+\]</span> For multivariate flows with <span class="math inline">\(x = f(z) = f_K \circ \dots \circ f_1(z)\)</span>, we write <span class="math inline">\(z_\ell = f_\ell(z_{\ell-1})\)</span>, with <span class="math inline">\(z_0 = z\)</span> and <span class="math inline">\(z_K = x\)</span>. We track the log-determinant at every layer: <span class="math display">\[
+\log p_X(x) = \log p_Z(z_0) - \sum_{\ell=1}^K \log\left|\det J_{f_\ell}(z_{\ell-1})\right|.
+\]</span> The minus sign is the same as in the 1D case: a layer that stretches space spreads the probability out, so the density goes down.</p>
+<p>Computing these terms is why we prefer architectures (like affine coupling, planar, or radial flows) with Jacobians that are either triangular or have closed-form determinants, so that we can avoid very expensive determinant calculations. When training a flow we maximize this exact log-likelihood, and during sampling we simply draw <span class="math inline">\(z \sim p_Z\)</span> and apply the layers <span class="math inline">\(f_1, \dots, f_K\)</span> in order.</p>
 </section>
 </section>
 <section id="constructing-a-flow-with-coupling-layers-using-realnvp" class="level2" data-number="14.4">
@@ -990,6 +990,7 @@ p_X(\mathbf{x}) = p_Z(f^{-1}(\mathbf{x})) \left\lvert \det \frac{\partial f^{-1}
 <li>A flow <span class="math inline">\(f_{\theta}\)</span> composed of coupling layers.</li>
 <li>An optimizer to maximize <span class="math inline">\(\log p_X(x) = \log p_0(f(x)) + \log \lvert \det J_f(x) \rvert\)</span>.</li>
 </ol>
+<p>Note the direction here. In the code below, <code>forward</code> maps a data point <span class="math inline">\(x\)</span> to the base, so in this formula <span class="math inline">\(f\)</span> maps <span class="math inline">\(x\)</span> to <span class="math inline">\(z\)</span>. That is the inverse of the map in the section above, which is why its log-determinant is added instead of subtracted. To sample, the code runs the layers backward with <code>inverse</code>, from <span class="math inline">\(z\)</span> to <span class="math inline">\(x\)</span>.</p>
 <div id="66c3f953" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="at">@dataclass</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> FlowHistory:</span>
@@ -1064,16 +1065,10 @@ p_X(\mathbf{x}) = p_Z(f^{-1}(\mathbf{x})) \left\lvert \det \frac{\partial f^{-1}
 <div class="cell-output cell-output-stdout">
 <pre><code>Epoch 002/300 | Loss: 4.634 | Log p(x): -4.634 | Div: 15.833
 Epoch 050/300 | Loss: 2.800 | Log p(x): -2.800 | Div: 4.141
-Epoch 050/300 | Loss: 2.800 | Log p(x): -2.800 | Div: 4.141
-Epoch 100/300 | Loss: 2.591 | Log p(x): -2.591 | Div: 4.106
 Epoch 100/300 | Loss: 2.591 | Log p(x): -2.591 | Div: 4.106
 Epoch 150/300 | Loss: 2.430 | Log p(x): -2.430 | Div: 4.275
-Epoch 150/300 | Loss: 2.430 | Log p(x): -2.430 | Div: 4.275
-Epoch 200/300 | Loss: 2.490 | Log p(x): -2.490 | Div: 4.298
 Epoch 200/300 | Loss: 2.490 | Log p(x): -2.490 | Div: 4.298
 Epoch 250/300 | Loss: 2.383 | Log p(x): -2.383 | Div: 4.308
-Epoch 250/300 | Loss: 2.383 | Log p(x): -2.383 | Div: 4.308
-Epoch 300/300 | Loss: 2.401 | Log p(x): -2.401 | Div: 4.274
 Epoch 300/300 | Loss: 2.401 | Log p(x): -2.401 | Div: 4.274</code></pre>
 </div>
 </div>
@@ -1400,16 +1395,10 @@ Epoch 300/300 | Loss: 2.401 | Log p(x): -2.401 | Div: 4.274</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>Epoch 001/300 | Loss: 5.696 | Log p(x|y): -5.696 | Div: 1.979
 Epoch 050/300 | Loss: 0.038 | Log p(x|y): -0.038 | Div: 4.453
-Epoch 050/300 | Loss: 0.038 | Log p(x|y): -0.038 | Div: 4.453
-Epoch 100/300 | Loss: 0.034 | Log p(x|y): -0.034 | Div: 4.593
 Epoch 100/300 | Loss: 0.034 | Log p(x|y): -0.034 | Div: 4.593
 Epoch 150/300 | Loss: 0.031 | Log p(x|y): -0.031 | Div: 4.486
-Epoch 150/300 | Loss: 0.031 | Log p(x|y): -0.031 | Div: 4.486
-Epoch 200/300 | Loss: 0.026 | Log p(x|y): -0.026 | Div: 4.487
 Epoch 200/300 | Loss: 0.026 | Log p(x|y): -0.026 | Div: 4.487
 Epoch 250/300 | Loss: 0.026 | Log p(x|y): -0.026 | Div: 4.538
-Epoch 250/300 | Loss: 0.026 | Log p(x|y): -0.026 | Div: 4.538
-Epoch 300/300 | Loss: 0.030 | Log p(x|y): -0.030 | Div: 4.522
 Epoch 300/300 | Loss: 0.030 | Log p(x|y): -0.030 | Div: 4.522</code></pre>
 </div>
 </div>
@@ -1585,44 +1574,24 @@ Epoch 300/300 | Loss: 0.030 | Log p(x|y): -0.030 | Div: 4.522</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>Epoch 001/1000 | Loss: 5.550 | Log p(x|r): -5.550 | Div: 1.782
 Epoch 050/1000 | Loss: 3.520 | Log p(x|r): -3.520 | Div: 1.769
-Epoch 050/1000 | Loss: 3.520 | Log p(x|r): -3.520 | Div: 1.769
-Epoch 100/1000 | Loss: 2.914 | Log p(x|r): -2.914 | Div: 1.207
 Epoch 100/1000 | Loss: 2.914 | Log p(x|r): -2.914 | Div: 1.207
 Epoch 150/1000 | Loss: 2.231 | Log p(x|r): -2.231 | Div: 1.432
-Epoch 150/1000 | Loss: 2.231 | Log p(x|r): -2.231 | Div: 1.432
-Epoch 200/1000 | Loss: 1.646 | Log p(x|r): -1.646 | Div: 1.463
 Epoch 200/1000 | Loss: 1.646 | Log p(x|r): -1.646 | Div: 1.463
 Epoch 250/1000 | Loss: 1.415 | Log p(x|r): -1.415 | Div: 1.364
-Epoch 250/1000 | Loss: 1.415 | Log p(x|r): -1.415 | Div: 1.364
-Epoch 300/1000 | Loss: 1.422 | Log p(x|r): -1.422 | Div: 1.379
 Epoch 300/1000 | Loss: 1.422 | Log p(x|r): -1.422 | Div: 1.379
 Epoch 350/1000 | Loss: 1.006 | Log p(x|r): -1.006 | Div: 1.336
-Epoch 350/1000 | Loss: 1.006 | Log p(x|r): -1.006 | Div: 1.336
-Epoch 400/1000 | Loss: 1.299 | Log p(x|r): -1.299 | Div: 1.354
 Epoch 400/1000 | Loss: 1.299 | Log p(x|r): -1.299 | Div: 1.354
 Epoch 450/1000 | Loss: 0.982 | Log p(x|r): -0.982 | Div: 1.283
-Epoch 450/1000 | Loss: 0.982 | Log p(x|r): -0.982 | Div: 1.283
-Epoch 500/1000 | Loss: 1.962 | Log p(x|r): -1.962 | Div: 1.277
 Epoch 500/1000 | Loss: 1.962 | Log p(x|r): -1.962 | Div: 1.277
 Epoch 550/1000 | Loss: 0.960 | Log p(x|r): -0.960 | Div: 1.249
-Epoch 550/1000 | Loss: 0.960 | Log p(x|r): -0.960 | Div: 1.249
-Epoch 600/1000 | Loss: 1.101 | Log p(x|r): -1.101 | Div: 1.212
 Epoch 600/1000 | Loss: 1.101 | Log p(x|r): -1.101 | Div: 1.212
 Epoch 650/1000 | Loss: 1.320 | Log p(x|r): -1.320 | Div: 1.249
-Epoch 650/1000 | Loss: 1.320 | Log p(x|r): -1.320 | Div: 1.249
-Epoch 700/1000 | Loss: 0.844 | Log p(x|r): -0.844 | Div: 1.241
 Epoch 700/1000 | Loss: 0.844 | Log p(x|r): -0.844 | Div: 1.241
 Epoch 750/1000 | Loss: 1.324 | Log p(x|r): -1.324 | Div: 1.296
-Epoch 750/1000 | Loss: 1.324 | Log p(x|r): -1.324 | Div: 1.296
-Epoch 800/1000 | Loss: 0.794 | Log p(x|r): -0.794 | Div: 1.246
 Epoch 800/1000 | Loss: 0.794 | Log p(x|r): -0.794 | Div: 1.246
 Epoch 850/1000 | Loss: 1.003 | Log p(x|r): -1.003 | Div: 1.241
-Epoch 850/1000 | Loss: 1.003 | Log p(x|r): -1.003 | Div: 1.241
-Epoch 900/1000 | Loss: 0.865 | Log p(x|r): -0.865 | Div: 1.259
 Epoch 900/1000 | Loss: 0.865 | Log p(x|r): -0.865 | Div: 1.259
 Epoch 950/1000 | Loss: 1.090 | Log p(x|r): -1.090 | Div: 1.219
-Epoch 950/1000 | Loss: 1.090 | Log p(x|r): -1.090 | Div: 1.219
-Epoch 1000/1000 | Loss: 0.639 | Log p(x|r): -0.639 | Div: 1.280
 Epoch 1000/1000 | Loss: 0.639 | Log p(x|r): -0.639 | Div: 1.280</code></pre>
 </div>
 </div>
