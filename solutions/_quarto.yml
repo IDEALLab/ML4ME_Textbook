@@ -24,6 +24,7 @@ book:
     - review_neural_networks_solutions.ipynb
     - intro_to_GANS_solutions.ipynb
     - score_matching_solutions.ipynb
+    - diffusion_models_solutions.ipynb
 
 bibliography: ../references.bib
 
