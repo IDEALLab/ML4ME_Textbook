@@ -26,6 +26,7 @@ book:
     - score_matching_solutions.ipynb
     - diffusion_models_solutions.ipynb
     - flow_matching_solutions.ipynb
+    - transformers_solutions.ipynb
 
 bibliography: ../references.bib
 

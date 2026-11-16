@@ -1,0 +1,13 @@
+model,n_points,cpu_time_ms,gpu_mb
+Transformer,128,5.693,2.7
+Transformer,256,11.601,9.598
+Transformer,512,41.203,35.979
+Transformer,1024,210.56,139.071
+Transformer,2048,1512.363,547.236
+Transformer,4096,5250.792,2168.219
+PointNet,128,0.458,0.065
+PointNet,256,0.795,0.131
+PointNet,512,1.128,0.262
+PointNet,1024,1.822,0.524
+PointNet,2048,3.934,1.048
+PointNet,4096,5.7,3.136
